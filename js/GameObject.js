@@ -79,6 +79,18 @@ TankJS.GameObject.prototype.getComponent = function(componentName)
   return this._components[componentName];
 }
 
+TankJS.GameObject.prototype.attr = function(componentName, attrs)
+{
+  var c = this.getComponent(componentName);
+  if (!c)
+    return;
+
+  for (var i in attrs)
+    c[i] = attrs[i];
+
+  return this;
+}
+
 TankJS.GameObject.prototype.uninit = function()
 {
   // Remove all components

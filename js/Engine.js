@@ -64,6 +64,18 @@ TankJS.removeNamedObject = function(name)
   TankJS.removeObject(obj.id);
 }
 
+// Get a game object by id
+TankJS.getGameObject = function(id)
+{
+  return TankJS._objects[id];
+}
+
+// Get a named game object
+TankJS.getNamedGameObject = function(name)
+{
+  return TankJS._objectsNamed[name];
+}
+
 // Register a new component type
 TankJS.addComponent = function(componentName)
 {
