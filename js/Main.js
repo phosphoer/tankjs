@@ -1,9 +1,13 @@
 function main()
 {
-  var e = TankJS.addObject("Engine")
-          .addComponents("InputManager, Canvas, RenderManager");
+  // Create the "engine" object with the main components
+  var e = TankJS.addObject("Engine").addComponents("InputManager, Canvas, RenderManager");
+
+  // Point the render manager's context to the canvas one
+  // Would be nice not to require this somehow?
   e.attr("RenderManager", {context: e.getComponent("Canvas").context})
 
+  // Create a player object
   TankJS.addObject("Player").addComponents("Sprite, TopDownMovement");
 
   TankJS.start();
