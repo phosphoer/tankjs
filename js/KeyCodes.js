@@ -1,0 +1,52 @@
+(function (TankJS, undefined)
+{
+
+TankJS.LEFT_ARROW = 37;
+TankJS.UP_ARROW = 38;
+TankJS.RIGHT_ARROW = 39;
+TankJS.DOWN_ARROW = 40;
+TankJS.SHIFT = 16;
+TankJS.BACKSPACE = 8;
+TankJS.ESCAPE = 27;
+TankJS.SPACE = 32;
+TankJS.CONTROL = 17;
+TankJS.ALT = 18;
+TankJS.SUPER = 91;
+TankJS.A = 65;
+TankJS.B = 66;
+TankJS.C = 67;
+TankJS.D = 68;
+TankJS.E = 69;
+TankJS.F = 70;
+TankJS.G = 71;
+TankJS.H = 72;
+TankJS.I = 73;
+TankJS.J = 74;
+TankJS.K = 75;
+TankJS.L = 76;
+TankJS.M = 77;
+TankJS.N = 78;
+TankJS.O = 79;
+TankJS.P = 80;
+TankJS.Q = 81;
+TankJS.R = 82;
+TankJS.S = 83;
+TankJS.T = 84;
+TankJS.U = 85;
+TankJS.V = 86;
+TankJS.W = 87;
+TankJS.X = 88;
+TankJS.Y = 89;
+TankJS.Z = 90;
+TankJS.NUM1 = 49;
+TankJS.NUM2 = 50;
+TankJS.NUM3 = 51;
+TankJS.NUM4 = 52;
+TankJS.NUM5 = 53;
+TankJS.NUM6 = 54;
+TankJS.NUM7 = 55;
+TankJS.NUM8 = 56;
+TankJS.NUM9 = 57;
+TankJS.NUM0 = 48;
+
+} (window.TankJS = window.TankJS || {}));
