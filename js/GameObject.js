@@ -36,11 +36,28 @@ TankJS.GameObject.prototype.addComponent = function(componentName)
   var c = componentDef.clone();
   this._components[componentName] = c;
 
+  // Track this component by its tags
+  for (var i in componentDef._tags)
+  {
+    // Get the list of components with this tag
+    var componentList = TankJS._taggedComponents[componentDef._tags[i]];
+    if (!componentList)
+    {
+      componentList = {};
+      TankJS._taggedComponents[componentDef._tags[i]] = componentList;
+    }
+
+    componentList[this.name + "." + componentDef.name] = c;
+  }
+
   // Set some attributes of the component instance
   c.parent = this;
 
   // Initialize the component
   c.init.apply(c);
+
+  // Inform the engine this component was initialized
+  TankJS.dispatchEvent("OnComponentInitialized", c);
 
   return this;
 }
@@ -67,8 +84,23 @@ TankJS.GameObject.prototype.removeComponent = function(componentName)
   if (!c)
     return;
 
+  // Inform the engine this component was uninitialized
+  TankJS.dispatchEvent("OnComponentUninitialized", c);
+
   // Uninitialize the component
   c.uninit.apply(c);
+
+  // Stop tracking this component by its tags
+  var componentDef = TankJS._components[componentName];
+  for (var i in componentDef._tags)
+  {
+    // Get the list of components with this tag
+    var componentList = TankJS._taggedComponents[componentDef._tags[i]];
+    if (!componentList)
+      continue;
+
+    delete componentList[this.name + "." + componentDef.name];
+  }
 
   // Remove component
   delete this._components[componentName];

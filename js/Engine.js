@@ -15,11 +15,18 @@ TankJS._objectsDeleted = [];
 // Key is the name of the component
 TankJS._components = {};
 
+// Map of existing component instances sorted by tag names
+// Key is the name of the tag
+TankJS._taggedComponents = {};
+
 // Map of objects listening for a message
 TankJS._events = {};
 
 // Current ID for game objects
 TankJS._currentID = 0;
+
+// Last update time
+TankJS._lastTime = new Date();
 
 // Create a game object
 TankJS.addObject = function(name)
@@ -84,34 +91,50 @@ TankJS.addComponent = function(componentName)
   return c;
 }
 
-TankJS.addEventListener = function(eventName, func, thisObj)
+// Get all component instances of a particular tag
+TankJS.getComponentsWithTag = function(tag)
 {
-  // Get map of listeners
+  return TankJS._taggedComponents[tag];
+}
+
+// Reigster a function as an event handler
+TankJS.addEventListener = function(eventName, obj)
+{
+  // Get array of listeners
   var listeners = TankJS._events[eventName];
   if (!listeners)
   {
-    listeners = {};
+    listeners = [];
     TankJS._events[eventName] = listeners;
   }
 
   // Add listener to the map
-  listeners[func] = {func: func, thisObj: thisObj};
+  listeners.push(obj);
 }
 
-TankJS.removeEventListener = function(eventName, func)
+// Unregister a function as an event handler
+TankJS.removeEventListener = function(eventName, obj)
 {
-  // Get map of listeners
+  // Get array of listeners
   var listeners = TankJS._events[eventName];
   if (!listeners)
     return;
 
   // Delete the listener from the map
-  delete listeners[func];
+  for (var i in listeners)
+  {
+    if (listeners[i] === obj)
+    {
+      listeners.splice(i, 1);
+      break;
+    }
+  }
 }
 
+// Send out an event with arguments
 TankJS.dispatchEvent = function(eventName, args)
 {
-  // Get map of listeners
+  // Get array of listeners
   var listeners = TankJS._events[eventName];
   if (!listeners)
     return;
@@ -125,20 +148,27 @@ TankJS.dispatchEvent = function(eventName, args)
   var func, thisObj;
   for (var i in listeners)
   {
-    func = listeners[i].func;
-    thisObj = listeners[i].thisObj;
-    if (thisObj)
+    func = listeners[i][eventName];
+    thisObj = listeners[i];
+    if (func)
       func.apply(thisObj, message_args);
     else
-      func.apply(func, message_args);
+      console.log("TanksJS: " + thisObj + " is listening for " + eventName + " but does not implement a method of the same name");
   }
+}
+
+TankJS.start = function()
+{
+  TankJS._lastTime = new Date();
+  update();
+  return this;
 }
 
 function update()
 {
   // Get dt
   var new_time = new Date();
-  var dt = (new_time - TomatoJS.Core.last_time) / 1000.0;
+  var dt = (new_time - TankJS._lastTime) / 1000.0;
   if (dt > 0.05)
     dt = 0.05;
 
@@ -152,8 +182,11 @@ function update()
   }
   TankJS._objectsDeleted = [];
 
+  // Dispatch enter frame message
+  TankJS.dispatchEvent("OnEnterFrame", dt);
+
   // Queue next frame
-  requestAnimFrame(this);
+  requestAnimFrame(update);
 }
 
 } (window.TankJS = window.TankJS || {}));

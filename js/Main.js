@@ -1,50 +1,20 @@
 function main()
 {
   TankJS.addComponent("Sprite")
+        .tags("Drawable")
         .initFunction(function()
         {
-          console.log(this.name + " initialized in " + this.parent.name);
-          TankJS.addEventListener("TestEvent", this.myFunction, this);
-        });
-
-  TankJS.addComponent("Canvas")
-        .initFunction(function()
-        {
-          console.log(this.name + " initialized in " + this.parent.name);
-
-          this.canvas = document.createElement("canvas");
-          this.canvas.width = 640;
-          this.canvas.height = 480;
-
-          addProperty(this, "width",
-            function()
-            {
-              return this.canvas.width;
-            },
-            function(val)
-            {
-              this.canvas.width = val;
-            });
-
-          addProperty(this, "height",
-            function()
-            {
-              return this.canvas.height;
-            },
-            function(val)
-            {
-              this.canvas.height = val;
-            });
-
-          document.body.appendChild(this.canvas);
+          this.zdepth = 0;
         })
-        .uninitFunction(function()
+        .addFunction("draw", function(ctx)
         {
-          console.log(this.name + " uninitialized in " + this.parent.name);
-
-          document.removeChild(this.canvas);
-          this.canvas = null;
+          ctx.fillStyle = "#000";
+          ctx.fillRect(0, 0, 50, 50);
         });
 
-  TankJS.addObject("Canvas").addComponents("Canvas").attr("Canvas", {width: 800, height: 600});
+  var c = TankJS.addObject("Canvas").addComponents("Canvas");
+  TankJS.addObject("Manager").addComponents("RenderManager").attr("RenderManager", {context: c.getComponent("Canvas").context});
+  TankJS.addObject("Player").addComponents("Sprite");
+
+  TankJS.start();
 }

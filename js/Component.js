@@ -6,6 +6,7 @@ TankJS.Component = function(name)
   this.name = name;
   this._functions = {};
   this._includes = [];
+  this._tags = [];
 }
 
 TankJS.Component.prototype.clone = function()
@@ -15,6 +16,11 @@ TankJS.Component.prototype.clone = function()
   // Default functions
   c.init = function() {};
   c.uninit = function() {};
+
+  // Add tags
+  c.tags = {};
+  for (var i in this._tags)
+    c.tags[this._tags[i]] = true;
 
   // Add functions
   for (var i in this._functions)
@@ -35,6 +41,14 @@ TankJS.Component.prototype.includes = function(componentNames)
   componentNames = componentNames.replace(/\s/g, "");
   this._includes = componentNames.split(",");
 
+  return this;
+}
+
+TankJS.Component.prototype.tags = function(tagNames)
+{
+  // Get array of tag anmes
+  tagNames = tagNames.replace(/\s/g, "");
+  this._tags = tagNames.split(",");
   return this;
 }
 
