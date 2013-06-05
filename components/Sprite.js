@@ -13,5 +13,5 @@ TankJS.addComponent("Sprite")
 {
   var t = this.parent.getComponent("2D");
   ctx.fillStyle = "#000";
-  ctx.fillRect(t.x, t.y, 50, 50);
+  ctx.fillRect(t.x - 25, t.y - 25, 50, 50);
 });
