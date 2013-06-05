@@ -8,9 +8,14 @@ function main()
   e.attr("RenderManager", {context: e.getComponent("Canvas").context})
 
   // Create a player object
-  TankJS.addObject("Player").addComponents("ColoredBox, TopDownMovement, Collider").attr("2D", {x: 300, y: 50});;
+  TankJS.addObject("Player").addComponents("ColoredBox, TopDownMovement, Collider")
+                            .attr("2D", {x: 300, y: 50})
+                            .attr("ColoredBox", {color: "#66c"});
+
   TankJS.addObject().addComponents("ColoredBox, Collider").attr("2D", {x: 100, y: 100});
   TankJS.addObject().addComponents("ColoredBox, Collider").attr("2D", {x: 100, y: 150});
+  TankJS.addObject().addComponents("ColoredBox, Collider").attr("2D", {x: 150, y: 150});
+  TankJS.addObject().addComponents("ColoredBox, Collider").attr("2D", {x: 200, y: 150});
 
   TankJS.start();
 }
