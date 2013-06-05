@@ -4,4 +4,5 @@ TankJS.addComponent("2D")
 {
   this.x = 0;
   this.y = 0;
+  this.rotation = 0;
 });
