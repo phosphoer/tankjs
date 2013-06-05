@@ -1,4 +1,4 @@
-TankJS.addComponent("Sprite")
+TankJS.addComponent("ColoredBox")
 
 .tags("Drawable")
 

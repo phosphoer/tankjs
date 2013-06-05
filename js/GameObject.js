@@ -11,6 +11,9 @@ TankJS.GameObject = function(id)
 
   // Map of components by component name
   this._components = {};
+
+  // Map of components by component tag
+  this._taggedComponents = {};
 }
 
 TankJS.GameObject.prototype.addComponent = function(componentName)
@@ -41,13 +44,20 @@ TankJS.GameObject.prototype.addComponent = function(componentName)
   {
     // Get the list of components with this tag
     var componentList = TankJS._taggedComponents[componentDef._tags[i]];
+    var componentListLocal = this._taggedComponents[componentDef._tags[i]];
     if (!componentList)
     {
       componentList = {};
       TankJS._taggedComponents[componentDef._tags[i]] = componentList;
     }
+    if (!componentListLocal)
+    {
+      componentListLocal = {};
+      this._taggedComponents[componentDef._tags[i]] = componentListLocal;
+    }
 
     componentList[this.name + "." + componentDef.name] = c;
+    componentListLocal[componentDef.name] = c;
   }
 
   // Set some attributes of the component instance
@@ -96,10 +106,12 @@ TankJS.GameObject.prototype.removeComponent = function(componentName)
   {
     // Get the list of components with this tag
     var componentList = TankJS._taggedComponents[componentDef._tags[i]];
-    if (!componentList)
-      continue;
+    var componentListLocal = this._taggedComponents[componentDef._tags[i]];
 
-    delete componentList[this.name + "." + componentDef.name];
+    if (componentList)
+      delete componentList[this.name + "." + componentDef.name];
+    if (componentListLocal)
+      delete componentListLocal[componentDef.name];
   }
 
   // Remove component
@@ -109,6 +121,11 @@ TankJS.GameObject.prototype.removeComponent = function(componentName)
 TankJS.GameObject.prototype.getComponent = function(componentName)
 {
   return this._components[componentName];
+}
+
+TankJS.GameObject.prototype.getComponentsWithTag = function(tagName)
+{
+  return this._taggedComponents[tagName];
 }
 
 TankJS.GameObject.prototype.attr = function(componentName, attrs)
