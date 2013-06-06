@@ -11,6 +11,9 @@ TankJS._objectsNamed = {};
 // List of objects to delete
 TankJS._objectsDeleted = [];
 
+// Map of prefabs with name as key
+TankJS._prefabs = {};
+
 // Map of current registered component types
 // Key is the name of the component
 TankJS._components = {};
@@ -47,6 +50,32 @@ TankJS.addObject = function(name)
   return obj;
 }
 
+// Create a game object from a prefab
+TankJS.addObjectFromPrefab = function(prefabName, objName)
+{
+  var prefab = TankJS.getPrefab(prefabName);
+  if (!prefab)
+  {
+    console.log("TankJS.addObjectFromPrefab: Could not find a prefab named " + prefabName);
+    return;
+  }
+
+  var obj = TankJS.addObject(objName);
+
+  for (var i in prefab)
+  {
+    var cData = prefab[i];
+    obj.addComponent(i);
+    var c = obj.getComponent(i);
+    for (var j in cData)
+    {
+      c[j] = cData[j];
+    }
+  }
+
+  return obj;
+}
+
 // Remove a game object
 TankJS.removeObject = function(id)
 {
@@ -76,6 +105,18 @@ TankJS.getObject = function(id)
 TankJS.getNamedGameObject = function(name)
 {
   return TankJS._objectsNamed[name];
+}
+
+// Create a game object prefab
+TankJS.addPrefab = function(name, data)
+{
+  TankJS._prefabs[name] = data;
+}
+
+// Get a prefab data
+TankJS.getPrefab = function(name)
+{
+  return TankJS._prefabs[name];
 }
 
 // Register a new component type
@@ -148,7 +189,7 @@ TankJS.dispatchEvent = function(eventName, args)
     if (func)
       func.apply(thisObj, message_args);
     else
-      console.log("TanksJS: " + thisObj + " is listening for " + eventName + " but does not implement a method of the same name");
+      console.log("TanksJS.dispatchEvent: " + thisObj + " is listening for " + eventName + " but does not implement a method of the same name");
   }
 }
 
