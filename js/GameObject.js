@@ -16,6 +16,11 @@ TankJS.GameObject = function(id)
   this._taggedComponents = {};
 }
 
+TankJS.GameObject.prototype.remove = function()
+{
+  TankJS.removeObject(this.id);
+}
+
 TankJS.GameObject.prototype.addComponent = function(componentName)
 {
   // Check if we have this component already
@@ -126,6 +131,21 @@ TankJS.GameObject.prototype.getComponent = function(componentName)
 TankJS.GameObject.prototype.getComponentsWithTag = function(tagName)
 {
   return this._taggedComponents[tagName];
+}
+
+TankJS.GameObject.prototype.invoke = function(funcName, args)
+{
+  // Construct arguments
+  var message_args = [];
+  for (var i = 1; i < arguments.length; ++i)
+    message_args.push(arguments[i]);
+
+  // Invoke on each component
+  for (var i in this._components)
+  {
+    if (this._components[i][funcName])
+      this._components[i][funcName].apply(this._components[i], message_args);
+  }
 }
 
 TankJS.GameObject.prototype.attr = function(componentName, attrs)
