@@ -43,11 +43,19 @@ TankJS.addComponent("CollisionManager")
     var c = this._colliders[i];
     if (c.isStatic)
       continue;
+
     for (var j in this._colliders)
     {
       if (i === j)
         continue;
-      c.collide(this._colliders[j]);
+
+      if (c.collide(this._colliders[j]))
+      {
+        c.parent.invoke("OnCollide", this._colliders[j].parent);
+      }
+      else
+      {
+      }
     }
   }
 });
