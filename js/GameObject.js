@@ -25,10 +25,15 @@ TankJS.GameObject.prototype.addComponent = function(componentName)
 {
   // Check if we have this component already
   if (this.getComponent(componentName))
-    return;
+    return this;
 
   // Get the component definition object
   var componentDef = TankJS._components[componentName];
+  if (!componentDef)
+  {
+    console.log("GameObject.addComponent: No component registered with name " + componentName);
+    return this;
+  }
 
   // Temporarily add a fake component just to mark this one as added
   // for the upcoming recursive calls
