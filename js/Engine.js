@@ -50,13 +50,8 @@ TankJS.addObject = function(name)
 // Remove a game object
 TankJS.removeObject = function(id)
 {
-  // Uninitialize the game object
-  var obj = TankJS._objects[id];
-  obj.uninit();
-
-  // Remove from object map
-  delete TankJS._objects[id];
-  delete TankJS._objects[obj.name];
+  // Add object to trash
+  TankJS._objectsDeleted.push(TankJS.getObject(id));
 }
 
 // Remove a named game object
@@ -72,7 +67,7 @@ TankJS.removeNamedObject = function(name)
 }
 
 // Get a game object by id
-TankJS.getGameObject = function(id)
+TankJS.getObject = function(id)
 {
   return TankJS._objects[id];
 }
