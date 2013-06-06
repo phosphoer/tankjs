@@ -17,13 +17,13 @@ TankJS.addComponent("Collider")
   var transB = other.parent.getComponent("2D");
 
   if (transA.x + this.width / 2 < transB.x - other.width / 2)
-    return;
+    return false;
   if (transA.x - this.width / 2 > transB.x + other.width / 2)
-    return;
+    return false;
   if (transA.y + this.height / 2 < transB.y - other.height / 2)
-    return;
+    return false;
   if (transA.y - this.height / 2 > transB.y + other.height / 2)
-    return;
+    return false;
 
   var pen = [0, 0];
   var centerA = [transA.x, transA.y];
@@ -46,4 +46,6 @@ TankJS.addComponent("Collider")
   {
     transA.y -= pen[1];
   }
+
+  return true;
 });
