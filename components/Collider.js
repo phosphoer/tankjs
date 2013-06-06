@@ -8,6 +8,7 @@ TankJS.addComponent("Collider")
 {
   this.width = 50;
   this.height = 50;
+  this.isStatic = false;
 })
 
 .addFunction("collide", function(other)

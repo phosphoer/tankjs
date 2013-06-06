@@ -41,6 +41,8 @@ TankJS.addComponent("CollisionManager")
   for (var i in this._colliders)
   {
     var c = this._colliders[i];
+    if (c.isStatic)
+      continue;
     for (var j in this._colliders)
     {
       if (i === j)
