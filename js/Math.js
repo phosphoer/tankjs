@@ -4,6 +4,11 @@
 (function (Math, jsMath, undefined)
 {
 
+Math.angleToPoint = function(fromPoint, toPoint)
+{
+  return jsMath.atan2(toPoint[1] - fromPoint[1], toPoint[0] - fromPoint[0]);
+}
+
 Math.pointDistancePoint = function(pointA, pointB)
 {
   return jsMath.sqrt((pointA[0] - pointB[0]) * (pointA[0] - pointB[0]) + (pointA[1] - pointB[1]) * (pointA[1] - pointB[1]));
