@@ -102,7 +102,7 @@ TankJS.getObject = function(id)
 }
 
 // Get a named game object
-TankJS.getNamedGameObject = function(name)
+TankJS.getNamedObject = function(name)
 {
   return TankJS._objectsNamed[name];
 }
