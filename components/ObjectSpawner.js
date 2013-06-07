@@ -8,6 +8,8 @@ TankJS.addComponent("ObjectSpawner")
   this.spawnDelay = 0.5;
   this.spawnVelocity = 100;
   this.spawnDistance = 40;
+  this.triggerKey = null;
+
   this._spawnTimer = 0;
   TankJS.addEventListener("OnKeyPressed", this);
   TankJS.addEventListener("OnEnterFrame", this);
@@ -21,7 +23,23 @@ TankJS.addComponent("ObjectSpawner")
 
 .addFunction("OnKeyPressed", function(key)
 {
-  if (key == TankJS.SPACE && this._spawnTimer >= this.spawnDelay)
+  if (this.triggerKey === null)
+    return;
+
+  if (key == this.triggerKey)
+  {
+    this.spawn();
+  }
+})
+
+.addFunction("OnEnterFrame", function(dt)
+{
+  this._spawnTimer += dt;
+})
+
+.addFunction("spawn", function(dt)
+{
+  if (this._spawnTimer >= this.spawnDelay)
   {
     var t = this.parent.getComponent("2D");
     var obj = TankJS.addObjectFromPrefab(this.objectPrefab);
@@ -29,9 +47,4 @@ TankJS.addComponent("ObjectSpawner")
     obj.attr("Velocity", {x: Math.cos(t.rotation) * this.spawnVelocity, y: Math.sin(t.rotation) * this.spawnVelocity});
     this._spawnTimer = 0;
   }
-})
-
-.addFunction("OnEnterFrame", function(dt)
-{
-  this._spawnTimer += dt;
 });
