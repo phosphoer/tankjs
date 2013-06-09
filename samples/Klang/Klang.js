@@ -19,13 +19,13 @@ function main()
 
   // Create a player object
   TankJS.addObject("Player").addComponents("Image, TopDownMovement, RotateController, ObjectSpawner, Collider")
-                            .attr("2D", {x: 300, y: 50})
+                            .attr("2D", {x: 150, y: 100})
                             .attr("Image", {imagePath: "res/BlueBall.png"})
                             .attr("ObjectSpawner", {objectPrefab: "Bullet", triggerKey: TankJS.SPACE});
 
   // Create AI object
   TankJS.addObject("AI").addComponents("Image, KlangAI, ObjectSpawner, Collider")
-                        .attr("2D", {x: 300, y: 50})
+                        .attr("2D", {x: 450, y: 400})
                         .attr("Image", {imagePath: "res/RedBall.png"})
                         .attr("ObjectSpawner", {objectPrefab: "Bullet"});
 
@@ -40,6 +40,12 @@ function main()
   TankJS.addObject().addComponents("ColoredBox, Collider").attr("2D", {x: 100, y: 150}).attr("Collider", {isStatic: true});
   TankJS.addObject().addComponents("ColoredBox, Collider").attr("2D", {x: 150, y: 150}).attr("Collider", {isStatic: true});
   TankJS.addObject().addComponents("ColoredBox, Collider").attr("2D", {x: 200, y: 150}).attr("Collider", {isStatic: true});
+  TankJS.addObject().addComponents("ColoredBox, Collider").attr("2D", {x: 200, y: 100}).attr("Collider", {isStatic: true});
+
+  TankJS.addObject().addComponents("ColoredBox, Collider").attr("2D", {x: 400, y: 350}).attr("Collider", {isStatic: true});
+  TankJS.addObject().addComponents("ColoredBox, Collider").attr("2D", {x: 450, y: 350}).attr("Collider", {isStatic: true});
+  TankJS.addObject().addComponents("ColoredBox, Collider").attr("2D", {x: 500, y: 350}).attr("Collider", {isStatic: true});
+  TankJS.addObject().addComponents("ColoredBox, Collider").attr("2D", {x: 500, y: 400}).attr("Collider", {isStatic: true});
 
   TankJS.start();
 }
