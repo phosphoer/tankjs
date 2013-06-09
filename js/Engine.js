@@ -95,6 +95,13 @@ TankJS.removeNamedObject = function(name)
   TankJS.removeObject(obj.id);
 }
 
+// Clear all existing objects
+TankJS.removeAllObjects = function()
+{
+  for (var i in TankJS._objects)
+    TankJS.removeObject(i);
+}
+
 // Get a game object by id
 TankJS.getObject = function(id)
 {
