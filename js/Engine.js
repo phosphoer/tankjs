@@ -31,6 +31,12 @@ TankJS._currentID = 0;
 // Last update time
 TankJS._lastTime = new Date();
 
+// Whether or not the engine is running
+TankJS._running = false;
+
+// Whether or not the engine is in the resetting state
+TankJS._resetting = false;
+
 // Create a game object
 TankJS.addObject = function(name)
 {
@@ -153,6 +159,8 @@ TankJS.addEventListener = function(eventName, obj)
 
   // Add listener to the map
   listeners.push(obj);
+
+  return this;
 }
 
 // Unregister a function as an event handler
@@ -161,7 +169,7 @@ TankJS.removeEventListener = function(eventName, obj)
   // Get array of listeners
   var listeners = TankJS._events[eventName];
   if (!listeners)
-    return;
+    return this;
 
   // Delete the listener from the map
   for (var i in listeners)
@@ -172,6 +180,8 @@ TankJS.removeEventListener = function(eventName, obj)
       break;
     }
   }
+
+  return this;
 }
 
 // Send out an event with arguments
@@ -196,14 +206,30 @@ TankJS.dispatchEvent = function(eventName, args)
     if (func)
       func.apply(thisObj, message_args);
     else
-      console.log("TanksJS.dispatchEvent: " + thisObj + " is listening for " + eventName + " but does not implement a method of the same name");
+      console.log("TankJS.dispatchEvent: " + thisObj + " is listening for " + eventName + " but does not implement a method of the same name");
   }
+
+  return this;
 }
 
 TankJS.start = function()
 {
   TankJS._lastTime = new Date();
+  TankJS._running = true;
   update();
+  return this;
+}
+
+TankJS.stop = function()
+{
+  TankJS._running = false;
+  return this;
+}
+
+TankJS.reset = function()
+{
+  TankJS._resetting = true;
+  TankJS.removeAllObjects();
   return this;
 }
 
@@ -225,11 +251,22 @@ function update()
   }
   TankJS._objectsDeleted = [];
 
+  // If we are resetting the engine, stop updating before the next frame but after
+  // we've cleared up the deleted objects
+  if (TankJS._resetting)
+  {
+    TankJS._resetting = false;
+    TankJS._running = false;
+    main();
+    return;
+  }
+
   // Dispatch enter frame message
   TankJS.dispatchEvent("OnEnterFrame", dt);
 
   // Queue next frame
-  requestAnimFrame(update);
+  if (TankJS._running)
+    requestAnimFrame(update);
 }
 
 } (window.TankJS = window.TankJS || {}));
