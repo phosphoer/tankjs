@@ -14,21 +14,33 @@ function main()
     "Velocity": {},
     "Collider": { width: 5, height: 5 },
     "DeleteOnCollide": {},
-    "DeleteOutOfBounds": {}
+    "DeleteOutOfBounds": {},
+    "InvokeOnCollide": {invokeOther: "TakeDamage", argOther: 1}
   });
 
   // Create a player object
-  TankJS.addObject("Player").addComponents("Image, TopDownMovement, RotateController, ObjectSpawner, Collider")
+  TankJS.addObject("Player").addComponents("Text, Image, TopDownMovement, RotateController, ObjectSpawner, Collider, Health, CustomUpdate")
                             .attr("2D", {x: 150, y: 100})
                             .attr("Image", {imagePath: "res/BlueBall.png"})
-                            .attr("ObjectSpawner", {objectPrefab: "Bullet", triggerKey: TankJS.SPACE});
+                            .attr("Health", {max: 50, value: 50})
+                            .attr("Text", {color: "#000", text: "50", zdepth: 1, offsetX: -5, offsetY: 4})
+                            .attr("ObjectSpawner", {objectPrefab: "Bullet", triggerKey: TankJS.SPACE})
+                            .attr("CustomUpdate", {func: function(dt)
+                              {
+                                this.getComponent("Text").text = this.getComponent("Health").value;
+                              }});
 
   // Create AI object
-  TankJS.addObject("AI").addComponents("Image, KlangAI, ObjectSpawner, Collider")
+  TankJS.addObject("AI").addComponents("Text, Image, KlangAI, ObjectSpawner, Collider, Health, CustomUpdate")
                         .attr("2D", {x: 450, y: 400})
                         .attr("Image", {imagePath: "res/RedBall.png"})
-                        .attr("ObjectSpawner", {objectPrefab: "Bullet"});
-
+                        .attr("Health", {max: 50, value: 50})
+                        .attr("Text", {color: "#000", text: "50", zdepth: 1, offsetX: -5, offsetY: 4})
+                        .attr("ObjectSpawner", {objectPrefab: "Bullet"})
+                        .attr("CustomUpdate", {func: function(dt)
+                          {
+                            this.getComponent("Text").text = this.getComponent("Health").value;
+                          }});
 
   // Create walls around edges
   TankJS.addObject().addComponents("ColoredBox, Collider").attr("2D", {x: 640 / 2, y: -25}).attr("Collider", {isStatic: true, width: 640});
@@ -80,6 +92,9 @@ TankJS.addComponent("KlangAI")
   this._rotateTimer -= dt;
 
   var player = TankJS.getNamedObject("Player");
+  if (!player)
+    return;
+
   var playerPos = player.getComponent("2D");
   var pos = this.parent.getComponent("2D");
   var gun = this.parent.getComponent("ObjectSpawner");
