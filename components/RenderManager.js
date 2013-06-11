@@ -8,7 +8,7 @@ TankJS.addComponent("RenderManager")
 
   var existing = TankJS.getComponentsWithTag("Drawable");
   for (var i in existing)
-    this._drawables[existing[i].parent.id] = existing[i];
+    this._drawables[existing[i].name + existing[i].parent.id] = existing[i];
   this.sort();
 
   TankJS.addEventListener("OnEnterFrame", this);
@@ -27,7 +27,7 @@ TankJS.addComponent("RenderManager")
 {
   if (c.tags["Drawable"])
   {
-    this._drawables[c.parent.id] = c;
+    this._drawables[c.name + c.parent.id] = c;
     this.sort();
   }
 })
@@ -36,7 +36,7 @@ TankJS.addComponent("RenderManager")
 {
   if (c.tags["Drawable"])
   {
-    delete this._drawables[c.parent.id];
+    delete this._drawables[c.name + c.parent.id];
     this.sort();
   }
 })
@@ -56,6 +56,6 @@ TankJS.addComponent("RenderManager")
     this._drawablesSorted.push(this._drawables[i]);
   this._drawablesSorted.sort(function(a, b)
   {
-    return a.zDepth - b.zDepth;
+    return a.zdepth - b.zdepth;
   });
 });
