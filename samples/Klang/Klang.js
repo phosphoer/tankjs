@@ -1,7 +1,7 @@
 function main()
 {
   // Create the "engine" object with the main components
-  var e = TankJS.addObject("Engine").addComponents("InputManager, Canvas, CollisionManager, RenderManager");
+  var e = TankJS.addObject("Engine").addComponents("InputManager, Canvas, CollisionManager, RenderManager, GameLogic");
 
   // Point the render manager's context to the canvas one
   // Would be nice not to require this somehow?
@@ -22,7 +22,7 @@ function main()
   TankJS.addObject("Player").addComponents("Text, Image, TopDownMovement, RotateController, ObjectSpawner, Collider, Health, CustomUpdate")
                             .attr("2D", {x: 150, y: 100})
                             .attr("Image", {imagePath: "res/BlueBall.png"})
-                            .attr("Health", {max: 50, value: 50})
+                            .attr("Health", {max: 50, value: 1})
                             .attr("Text", {color: "#000", text: "50", zdepth: 1, offsetX: -5, offsetY: 4})
                             .attr("ObjectSpawner", {objectPrefab: "Bullet", triggerKey: TankJS.SPACE})
                             .attr("CustomUpdate", {func: function(dt)
@@ -62,8 +62,28 @@ function main()
   TankJS.start();
 }
 
-// Custom component to implement AI for the other player
+// Custom game logic component to manage general state of game
+TankJS.addComponent("GameLogic")
 
+.initFunction(function()
+{
+  TankJS.addEventListener("OnEnterFrame", this);
+})
+
+.uninitFunction(function()
+{
+  TankJS.removeEventListener("OnEnterFrame", this);
+})
+
+.addFunction("OnEnterFrame", function(dt)
+{
+  if (!TankJS.getNamedObject("Player") || !TankJS.getNamedObject("AI"))
+  {
+    TankJS.reset();
+  }
+});
+
+// Custom component to implement AI for the other player
 TankJS.addComponent("KlangAI")
 
 .includes("2D")
