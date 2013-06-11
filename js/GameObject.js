@@ -157,7 +157,10 @@ TankJS.GameObject.prototype.attr = function(componentName, attrs)
 {
   var c = this.getComponent(componentName);
   if (!c)
+  {
+    console.log("GameObject.attr: Could not find component with name " + componentName);
     return;
+  }
 
   for (var i in attrs)
     c[i] = attrs[i];
