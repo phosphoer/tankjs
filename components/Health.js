@@ -4,6 +4,7 @@ TankJS.addComponent("Health")
 {
   this.value = 1;
   this.max = 1;
+  this.deleteAtZero = true;
 })
 
 .addFunction("FillHealth", function(amount)
@@ -21,6 +22,8 @@ TankJS.addComponent("Health")
   this.value -= damage;
   if (this.value <= 0)
   {
-    this.parent.remove();
+    this.value = 0;
+    if (this.deleteAtZero)
+      this.parent.remove();
   }
 });
