@@ -1,46 +1,17 @@
+// The main TankJS file that provides access to the core functionality of the engine.
+// This includes creating and manipulating game objects, registering components, and listening for / dispatching events.
+
 (function (TankJS, undefined)
 {
 
-// Map of objects tracked by the core
-// Key is the id of the object
-TankJS._objects = {};
-
-// Secondary map of objects with name as key
-TankJS._objectsNamed = {};
-
-// List of objects to delete
-TankJS._objectsDeleted = [];
-
-// Map of prefabs with name as key
-TankJS._prefabs = {};
-
-// Map of current registered component types
-// Key is the name of the component
-TankJS._components = {};
-
-// Map of existing component instances sorted by tag names
-// Key is the name of the tag
-TankJS._taggedComponents = {};
-
-// Map of objects listening for a message
-TankJS._events = {};
-
-// Current ID for game objects
-TankJS._currentID = 0;
-
-// Last update time
-TankJS._lastTime = new Date();
-
-// Whether or not the engine is running
-TankJS._running = false;
-
-// Whether or not the engine is in the resetting state
-TankJS._resetting = false;
-
-// Create a game object
+// ### Create a GameObject
+// Creates a new `GameObject` and begins tracking it.
+//
+// - `name`: (optional) A unique name to track the game object by. If the name is
+// not unique the existing object by that name will no longer be findable by its name.
+// - `return`: A new `GameObject`.
 TankJS.addObject = function(name)
 {
-  // Create the object
   var obj = new TankJS.GameObject(this._currentID++);
 
   // If a name was specified, track it by the name
@@ -56,7 +27,13 @@ TankJS.addObject = function(name)
   return obj;
 }
 
-// Create a game object from a prefab
+// ### Create GameObject from Prefab
+// Creates a new `GameObject` using a given prefab and begins tracking it.
+//
+// - `prefabName`: Name of the prefab to clone.
+// - `objName`: (optional) A unique name to track the game object by. If the name is
+// not unique the existing object by that name will no longer be findable by its name.
+// - `return`: A new `GameObject`.
 TankJS.addObjectFromPrefab = function(prefabName, objName)
 {
   var prefab = TankJS.getPrefab(prefabName);
@@ -68,6 +45,7 @@ TankJS.addObjectFromPrefab = function(prefabName, objName)
 
   var obj = TankJS.addObject(objName);
 
+  // Add all the defined prefab components and set the relevant fields
   for (var i in prefab)
   {
     var cData = prefab[i];
@@ -82,14 +60,22 @@ TankJS.addObjectFromPrefab = function(prefabName, objName)
   return obj;
 }
 
-// Remove a game object
+// ### Remove a gameobject
+// Schedules the given object to be deleted on the next frame.
+// Will cause `uninit` to be called on all components of the object before it is deleted.
+//
+// `id`: The id of the object. (`GameObject.id`)
 TankJS.removeObject = function(id)
 {
   // Add object to trash
   TankJS._objectsDeleted.push(TankJS.getObject(id));
 }
 
-// Remove a named game object
+// ### Remove a gameobject by name
+// Schedules the given object to be deleted on the next frame.
+// Will cause `uninit` to be called on all components of the object before it is deleted.
+//
+// `name`: The unique name of the object. (`GameObject.name`)
 TankJS.removeNamedObject = function(name)
 {
   // Don't bother if it doesn't exist
@@ -101,26 +87,45 @@ TankJS.removeNamedObject = function(name)
   TankJS.removeObject(obj.id);
 }
 
-// Clear all existing objects
+// ### Remove all gameobjects
+// Equivalent to calling `removeObject` on all objects.
 TankJS.removeAllObjects = function()
 {
   for (var i in TankJS._objects)
     TankJS.removeObject(i);
 }
 
-// Get a game object by id
+// ### Get a gameobject by id
+//
+// - `id`: The id of the game object to get
+// - `return`: The requested `GameObject` or `undefined`
 TankJS.getObject = function(id)
 {
   return TankJS._objects[id];
 }
 
-// Get a named game object
+// ### Get a gameobject by name
+//
+// - `name`: The name of the game object to get
+// - `return`: The requested `GameObject` or `undefined`
 TankJS.getNamedObject = function(name)
 {
   return TankJS._objectsNamed[name];
 }
 
-// Create a game object prefab
+// ### Register an object prefab
+// Use this to define a gameobject with a set of components that
+// can be instantiated later, like a blueprint.
+//
+// - `name`: The name of the prefab to store it under.
+// - `data`: A JSON object describing the components the prefab should contain,
+// with the following format:
+//
+//       {
+//         "2D": { x: 0, y: 42 },
+//         "Velocity": {},
+//         "Collider": { width: 5, height: 5 },
+//       }
 TankJS.addPrefab = function(name, data)
 {
   TankJS._prefabs[name] = data;
@@ -268,5 +273,41 @@ function update()
   if (TankJS._running)
     requestAnimFrame(update);
 }
+
+// Map of objects tracked by the core
+// Key is the id of the object
+TankJS._objects = {};
+
+// Secondary map of objects with name as key
+TankJS._objectsNamed = {};
+
+// List of objects to delete
+TankJS._objectsDeleted = [];
+
+// Map of prefabs with name as key
+TankJS._prefabs = {};
+
+// Map of current registered component types
+// Key is the name of the component
+TankJS._components = {};
+
+// Map of existing component instances sorted by tag names
+// Key is the name of the tag
+TankJS._taggedComponents = {};
+
+// Map of objects listening for a message
+TankJS._events = {};
+
+// Current ID for game objects
+TankJS._currentID = 0;
+
+// Last update time
+TankJS._lastTime = new Date();
+
+// Whether or not the engine is running
+TankJS._running = false;
+
+// Whether or not the engine is in the resetting state
+TankJS._resetting = false;
 
 } (window.TankJS = window.TankJS || {}));
