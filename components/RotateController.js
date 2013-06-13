@@ -8,19 +8,19 @@ TankJS.addComponent("RotateController")
   this.right = false;
   this.rotateSpeed = 2;
 
-  TankJS.addEventListener("OnKeyPressed", this);
-  TankJS.addEventListener("OnKeyReleased", this);
+  TankJS.addEventListener("OnKeyPress", this);
+  TankJS.addEventListener("OnKeyRelease", this);
   TankJS.addEventListener("OnEnterFrame", this);
 })
 
 .uninitFunction(function()
 {
-  TankJS.removeEventListener("OnKeyPressed", this);
-  TankJS.removeEventListener("OnKeyReleased", this);
+  TankJS.removeEventListener("OnKeyPress", this);
+  TankJS.removeEventListener("OnKeyRelease", this);
   TankJS.removeEventListener("OnEnterFrame", this);
 })
 
-.addFunction("OnKeyPressed", function(key)
+.addFunction("OnKeyPress", function(key)
 {
   if (key == TankJS.Q)
     this.left = true;
@@ -28,7 +28,7 @@ TankJS.addComponent("RotateController")
     this.right = true;
 })
 
-.addFunction("OnKeyReleased", function(key)
+.addFunction("OnKeyRelease", function(key)
 {
   if (key == TankJS.Q)
     this.left = false;

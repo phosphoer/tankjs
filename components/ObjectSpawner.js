@@ -11,17 +11,17 @@ TankJS.addComponent("ObjectSpawner")
   this.triggerKey = null;
 
   this._spawnTimer = 0;
-  TankJS.addEventListener("OnKeyPressed", this);
+  TankJS.addEventListener("OnKeyPress", this);
   TankJS.addEventListener("OnEnterFrame", this);
 })
 
 .uninitFunction(function()
 {
-  TankJS.removeEventListener("OnKeyPressed", this);
+  TankJS.removeEventListener("OnKeyPress", this);
   TankJS.removeEventListener("OnEnterFrame", this);
 })
 
-.addFunction("OnKeyPressed", function(key)
+.addFunction("OnKeyPress", function(key)
 {
   if (this.triggerKey === null)
     return;

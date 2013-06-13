@@ -7,6 +7,12 @@ TankJS.addComponent("InputManager")
   // ### Mouse position
   // Stored as an array [x, y]
   this.mousePos = [0, 0];
+  this.lastMousePos = [0, 0];
+
+  // ### Mouse movement
+  // The last delta the mouse had
+  // Stored as array [x, y]
+  this.mouseDelta = [0, 0];
 
   // ### Input UI element
   // Defines which HTML element mouse input is relative to
@@ -33,6 +39,7 @@ TankJS.addComponent("InputManager")
   this._context = null;
   this._keyDownEvents = [];
   this._keyUpEvents = [];
+  this._mouseMoveEvents = []
   this._keysHeld = {};
 
   var that = this;
@@ -50,12 +57,7 @@ TankJS.addComponent("InputManager")
 
   this.mousemove = function(e)
   {
-    that.mousePos = [e.x, e.y];
-    if (that._context)
-    {
-      that.mousePos[0] -= that._context.offsetLeft;
-      that.mousePos[1] -= that._context.offsetTop;
-    }
+    that._mouseMoveEvents.push(e);
   }
 
   addEventListener("keydown", this.keydown);
@@ -86,7 +88,7 @@ TankJS.addComponent("InputManager")
   for (var i in this._keyDownEvents)
   {
     e = this._keyDownEvents[i];
-    TankJS.dispatchEvent("OnKeyPressed", e.keyCode, this._keysHeld);
+    TankJS.dispatchEvent("OnKeyPress", e.keyCode, this._keysHeld);
     this._keysHeld[e.keyCode] = true;
   }
   this._keyDownEvents = [];
@@ -99,8 +101,32 @@ TankJS.addComponent("InputManager")
   for (var i in this._keyUpEvents)
   {
     e = this._keyUpEvents[i];
-    TankJS.dispatchEvent("OnKeyReleased", e.keyCode, this._keysHeld);
+    TankJS.dispatchEvent("OnKeyRelease", e.keyCode, this._keysHeld);
     delete this._keysHeld[e.keyCode];
   }
   this._keyUpEvents = [];
+
+  for (var i in this._mouseMoveEvents)
+  {
+    e = this._mouseMoveEvents[i];
+
+    this.mousePos = [e.x, e.y];
+    if (this._context)
+    {
+      this.mousePos[0] -= this._context.offsetLeft;
+      this.mousePos[1] -= this._context.offsetTop;
+    }
+    this.mouseDelta = [this.mousePos[0] - this.lastMousePos[0], this.mousePos[1] - this.lastMousePos[1]];
+
+    this.lastMousePos[0] = this.mousePos[0];
+    this.lastMousePos[1] = this.mousePos[1];
+
+    var mouseEvent = {};
+    mouseEvent.x = this.mousePos[0];
+    mouseEvent.y = this.mousePos[1];
+    mouseEvent.moveX = this.mouseDelta[0];
+    mouseEvent.moveY = this.mouseDelta[1];
+    TankJS.dispatchEvent("OnMouseMove", mouseEvent, this._keysHeld);
+  }
+  this._mouseMoveEvents = [];
 });
