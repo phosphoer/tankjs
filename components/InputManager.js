@@ -2,6 +2,35 @@ TankJS.addComponent("InputManager")
 
 .initFunction(function()
 {
+  var that = this;
+
+  // ### Mouse position
+  // Stored as an array [x, y]
+  this.mousePos = [0, 0];
+
+  // ### Input UI element
+  // Defines which HTML element mouse input is relative to
+  // If left null mouse input will be relative to window
+  addProperty(this, "context",
+    function()
+    {
+      return that._context;
+    },
+    function(val)
+    {
+      if (that._context)
+        that.context.removeEventListener("mousemove", that.mousemove);
+      else
+        removeEventListener("mousemove", that.mousemove);
+
+      that._context = val;
+      if (that._context)
+        that.context.addEventListener("mousemove", that.mousemove);
+      else
+        addEventListener("mousemove", that.mousemove);
+    });
+
+  this._context = null;
   this._keyDownEvents = [];
   this._keyUpEvents = [];
   this._keysHeld = {};
@@ -19,8 +48,23 @@ TankJS.addComponent("InputManager")
       that._keyUpEvents.push(e);
   };
 
+  this.mousemove = function(e)
+  {
+    that.mousePos = [e.x, e.y];
+    if (that._context)
+    {
+      that.mousePos[0] -= that._context.offsetLeft;
+      that.mousePos[1] -= that._context.offsetTop;
+    }
+  }
+
   addEventListener("keydown", this.keydown);
   addEventListener("keyup", this.keyup);
+  if (this.context)
+    this.context.addEventListener("mousemove", this.mousemove);
+  else
+    addEventListener("mousemove", this.mousemove);
+
   TankJS.addEventListener("OnEnterFrame", this);
 })
 
@@ -28,6 +72,11 @@ TankJS.addComponent("InputManager")
 {
   removeEventListener("keydown", this.keydown);
   removeEventListener("keyup", this.keyup);
+  if (this.context)
+    this.context.removeEventListener("mousemove", this.mousemove);
+  else
+    removeEventListener("mousemove", this.mousemove);
+
   TankJS.removeEventListener("OnEnterFrame", this);
 })
 
