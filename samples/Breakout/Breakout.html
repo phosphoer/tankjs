@@ -34,8 +34,35 @@
 
   </head>
   <body>
+    <style>
+      #stage
+      {
+        width: 320;
+        height: 416;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        position: absolute;
+        margin: auto;
+        display: block;
+      }
+
+      #stage canvas
+      {
+        position: absolute;
+        left: 0;
+        top: 0;
+        cursor: none;
+      }
+    </style>
+
     <script type="text/javascript">
     window.addEventListener("load", main);
     </script>
+
+    <div id="stage">
+      <canvas id="screen" width='320' height='416'></canvas>
+    </div>
   </body>
 </html>
