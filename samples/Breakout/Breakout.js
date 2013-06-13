@@ -16,32 +16,73 @@ function main()
   player.Image.imagePath = "res/tiles.png";
   player.Image.subRectOrigin = [0, 64];
   player.Image.subRectCorner = [48, 80];
-  player.Image.zdepth = 10;
+  player.Image.zdepth = 1;
   player.Pos2D.x = 160;
   player.Pos2D.y = 376;
+
+  // Define a ball prefab so it is easy to quickly spawn them
+  TankJS.addPrefab("Ball",
+  {
+    "Image": {imagePath: "res/tiles.png", subRectOrigin: [48, 64], subRectCorner: [64, 80], zdepth: 1},
+    "Ball": {},
+    "Velocity": {}
+  });
 
   // Begin running the engine
   TankJS.start();
 }
 
-// Custom game logic component to manage general state of game
+// ### Game logic component
+// Manages general state of the game
 TankJS.addComponent("GameLogic")
 
 .initFunction(function()
 {
+  // Keep track of how many balls exist
+  this.numBalls = 0;
+
+  // Keep track of player lives
+  this.lives = 3;
+
   TankJS.addEventListener("OnEnterFrame", this);
+  TankJS.addEventListener("OnBallAdded", this);
 })
 
 .uninitFunction(function()
 {
   TankJS.removeEventListener("OnEnterFrame", this);
+  TankJS.removeEventListener("OnBallRemoved", this);
+})
+
+.addFunction("OnBallAdded", function(dt)
+{
+  ++this.numBalls;
+})
+
+.addFunction("OnBallRemoved", function(dt)
+{
+  --this.numBalls;
 })
 
 .addFunction("OnEnterFrame", function(dt)
 {
+  // If no balls exist, spawn a new one and decrement lives
+  if (this.numBalls === 0)
+  {
+    --this.lives;
+
+    var ball = TankJS.addObjectFromPrefab("Ball");
+    ball.Pos2D.x = 50;
+    ball.Pos2D.y = 200;
+    ball.Velocity.x = 40;
+    ball.Velocity.y = 40;
+  }
 });
 
-// Custom game logic component to manage general state of game
+// ### Paddle component
+// Handles paddle input
+// Could be just implemented in the game logic component but I
+// wanted to demonstrate using components for smaller tasks
 TankJS.addComponent("Paddle")
 
 .initFunction(function()
@@ -61,4 +102,59 @@ TankJS.addComponent("Paddle")
     this.parent.Pos2D.x = 24
   if (this.parent.Pos2D.x + 24 > 320)
     this.parent.Pos2D.x = 320 - 24;
+});
+
+// ### Ball logic
+// Handles moving the ball and bouncing off blocks
+// Could be just implemented in the game logic component but I
+// wanted to demonstrate using components for smaller tasks
+TankJS.addComponent("Ball")
+
+.initFunction(function()
+{
+  // Send out an event that a ball was created
+  TankJS.dispatchEvent("OnBallAdded", this.parent);
+
+  TankJS.addEventListener("OnEnterFrame", this);
+})
+
+.uninitFunction(function()
+{
+  // Send out an event that a ball was destroyed
+  TankJS.dispatchEvent("OnBallRemoved", this.parent);
+
+  TankJS.removeEventListener("OnEnterFrame", this);
+})
+
+.addFunction("OnEnterFrame", function(dt)
+{
+  // Collide ball with boundaries
+  if (this.parent.Pos2D.x + this.parent.Image.width / 2 > 320 - 16)
+  {
+    this.parent.Pos2D.x = 320 - 16 - this.parent.Image.width / 2;
+    this.parent.Velocity.x *= -1;
+  }
+  if (this.parent.Pos2D.x - this.parent.Image.width / 2 < 0 + 16)
+  {
+    this.parent.Pos2D.x = 0 + 16 + this.parent.Image.width / 2;
+    this.parent.Velocity.x *= -1;
+  }
+  if (this.parent.Pos2D.y - this.parent.Image.height / 2 < 0 + 16)
+  {
+    this.parent.Pos2D.y = 0 + 16 + this.parent.Image.height / 2;
+    this.parent.Velocity.y *= -1;
+  }
+
+  // Collide ball with paddle
+  var paddle = TankJS.getNamedObject("Player");
+  if (this.parent.Pos2D.x + this.parent.Image.width / 2 > paddle.Pos2D.x - paddle.Image.width / 2 &&
+      this.parent.Pos2D.x - this.parent.Image.width / 2 < paddle.Pos2D.x + paddle.Image.width / 2)
+  {
+    if (this.parent.Pos2D.y + this.parent.Image.height / 2 > paddle.Pos2D.y - paddle.Image.height / 2 &&
+        this.parent.Pos2D.y - this.parent.Image.height / 2 < paddle.Pos2D.y + paddle.Image.height / 2)
+    {
+      this.parent.Pos2D.y = paddle.Pos2D.y - paddle.Image.height / 2 - this.parent.Image.height / 2;
+      this.parent.Velocity.y *= -1;
+    }
+  }
 });
