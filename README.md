@@ -15,7 +15,7 @@ The core engine is very small, and provides 3 main objects.
 
 - TankJS: The main interface through which all the functionality of the engine is accessed.
 - GameObject: A container for components with methods to manipulate them.
-- Component: Used to define a "blueprint" of a component that can be added to a GameObject. Components can be given "tags" which are used to define what sort of functionality they provide. For example, the `RenderManager` component looks for components with the `drawable` component and draws them.
+- Component: Used to define a "blueprint" of a component that can be added to a GameObject. Components can be given "tags" which are used to define what sort of functionality they provide. For example, the `RenderManager` component looks for components with the `Drawable` tag and draws them.
 
 ###Components
 Most of the engine functionality is achieved through extra components that are either custom-made or come with the engine. The set of components that you choose to include determines the graphics, physics, and other capabilities of your game.
