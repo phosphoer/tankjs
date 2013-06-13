@@ -1,11 +1,12 @@
 function main()
 {
   // Create the "engine" object with the main components
-  var e = TankJS.addObject("Engine").addComponents("InputManager, Canvas, CollisionManager, RenderManager, GameLogic");
+  var e = TankJS.addObject("Engine").addComponents("InputManager, CollisionManager, RenderManager, GameLogic");
 
   // Point the render manager's context to the canvas one
   // Would be nice not to require this somehow?
-  e.attr("RenderManager", {context: e.Canvas.context})
+  e.RenderManager.context = document.getElementById("screen").getContext("2d");
+  e.InputManager.context = document.getElementById("stage");
 
   // Create a bullet object prefab
   TankJS.addPrefab("Bullet",
@@ -17,6 +18,14 @@ function main()
     "DeleteOutOfBounds": {},
     "InvokeOnCollide": {invokeOther: "TakeDamage", argOther: 1}
   });
+
+  // Create background object
+  var bg = TankJS.addObject().addComponents("ColoredBox");
+  bg.ColoredBox.width = 640;
+  bg.ColoredBox.height = 480;
+  bg.ColoredBox.color = "#fff";
+  bg.ColoredBox.zdepth = -1;
+  bg.ColoredBox.centered = false;
 
   // Create a player object
   TankJS.addObject("Player")
