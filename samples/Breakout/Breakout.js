@@ -12,11 +12,14 @@ function main()
   TankJS.addObject().addComponents("Image").attr("Image", {imagePath: "res/bg_prerendered.png", centered: false});
 
   // Add paddle
-  var player = TankJS.addObject("Player").addComponents("Image, Paddle");
+  var player = TankJS.addObject("Player").addComponents("Image, Paddle, Collider");
   player.Image.imagePath = "res/tiles.png";
   player.Image.subRectOrigin = [0, 64];
   player.Image.subRectCorner = [48, 80];
   player.Image.zdepth = 1;
+  player.Collider.width = player.Image.width;
+  player.Collider.height = player.Image.height;
+  player.Collider.isStatic = true;
   player.Pos2D.x = 160;
   player.Pos2D.y = 376;
 
@@ -25,6 +28,7 @@ function main()
   {
     "Image": {imagePath: "res/tiles.png", subRectOrigin: [48, 64], subRectCorner: [64, 80], zdepth: 1},
     "Ball": {},
+    "Collider": {width: 16, height: 16},
     "Velocity": {}
   });
 
@@ -32,6 +36,7 @@ function main()
   TankJS.addPrefab("RedBrick",
   {
     "Image": {imagePath: "res/tiles.png", subRectOrigin: [0, 32], subRectCorner: [32, 48], zdepth: 1},
+    "Collider": {width: 32, height: 16, isStatic: true},
     "Brick": {}
   });
 
@@ -39,6 +44,7 @@ function main()
   TankJS.addPrefab("BlueBrick",
   {
     "Image": {imagePath: "res/tiles.png", subRectOrigin: [0, 0], subRectCorner: [32, 16], zdepth: 1},
+    "Collider": {width: 32, height: 16, isStatic: true},
     "Brick": {}
   });
 
@@ -46,6 +52,7 @@ function main()
   TankJS.addPrefab("GreenBrick",
   {
     "Image": {imagePath: "res/tiles.png", subRectOrigin: [0, 48], subRectCorner: [32, 64], zdepth: 1},
+    "Collider": {width: 32, height: 16, isStatic: true},
     "Brick": {}
   });
 
@@ -53,6 +60,7 @@ function main()
   TankJS.addPrefab("OrangeBrick",
   {
     "Image": {imagePath: "res/tiles.png", subRectOrigin: [0, 16], subRectCorner: [32, 32], zdepth: 1},
+    "Collider": {width: 32, height: 16, isStatic: true},
     "Brick": {}
   });
 
@@ -126,15 +134,17 @@ TankJS.addComponent("GameLogic")
       var ball = TankJS.addObjectFromPrefab("Ball");
       ball.Pos2D.x = 50;
       ball.Pos2D.y = 200;
-      ball.Velocity.x = 30;
-      ball.Velocity.y = 40;
+      TankJS.dispatchEvent("OnLevelStart");
     }
   }
 
   // If no bricks exist, build the next level
   if (this.numBricks === 0)
   {
+    ++this.lives;
     ++this.level;
+    TankJS.dispatchEvent("OnLevelComplete");
+
     if (this.level === Breakout.levels.length)
     {
     }
@@ -183,6 +193,7 @@ TankJS.addComponent("Paddle")
 
 .addFunction("OnEnterFrame", function(dt)
 {
+  this.parent.Pos2D.x = TankJS.getNamedObject("Engine").InputManager.mousePos[0];
   if (this.parent.Pos2D.x - 24 < 0)
     this.parent.Pos2D.x = 24
   if (this.parent.Pos2D.x + 24 > 320)
@@ -201,6 +212,8 @@ TankJS.addComponent("Ball")
   TankJS.dispatchEvent("OnBallAdded", this.parent);
 
   TankJS.addEventListener("OnEnterFrame", this);
+  TankJS.addEventListener("OnLevelComplete", this);
+  TankJS.addEventListener("OnLevelStart", this);
 })
 
 .uninitFunction(function()
@@ -209,6 +222,59 @@ TankJS.addComponent("Ball")
   TankJS.dispatchEvent("OnBallRemoved", this.parent);
 
   TankJS.removeEventListener("OnEnterFrame", this);
+  TankJS.removeEventListener("OnLevelComplete", this);
+  TankJS.removeEventListener("OnLevelStart", this);
+})
+
+.addFunction("OnCollide", function(other)
+{
+  var centerA = [this.parent.Pos2D.x, this.parent.Pos2D.y];
+  var centerB = [other.Pos2D.x, other.Pos2D.y];
+  var halfSizeA = [this.parent.Collider.width / 2, this.parent.Collider.height / 2];
+  var halfSizeB = [other.Collider.width / 2, other.Collider.height / 2];
+
+  // Bounce off player
+  if (other.Paddle)
+  {
+    this.parent.Velocity.x = ((centerA[0] - centerB[0]) / halfSizeB[0]) * 30;
+    this.parent.Velocity.y *= -1;
+  }
+
+  if (other.Brick)
+  {
+    var pen = [0, 0];
+    if (centerA[0] < centerB[0])
+      pen[0] = (centerA[0] + halfSizeA[0]) - (centerB[0] - halfSizeB[0]);
+    else
+      pen[0] = (centerA[0] - halfSizeA[0]) - (centerB[0] + halfSizeB[0]);
+
+    if (centerA[1] < centerB[1])
+      pen[1] = (centerA[1] + halfSizeA[1]) - (centerB[1] - halfSizeB[1]);
+    else
+      pen[1] = (centerA[1] - halfSizeA[1]) - (centerB[1] + halfSizeB[1]);
+
+    if (Math.abs(pen[0]) < Math.abs(pen[1]))
+    {
+      this.parent.Velocity.x *= -1;
+    }
+    else
+    {
+      this.parent.Velocity.y *= -1;
+    }
+
+    other.remove();
+  }
+})
+
+.addFunction("OnLevelComplete", function()
+{
+  this.parent.remove();
+})
+
+.addFunction("OnLevelStart", function()
+{
+  this.parent.Velocity.x = 30;
+  this.parent.Velocity.y = 40;
 })
 
 .addFunction("OnEnterFrame", function(dt)
@@ -230,19 +296,6 @@ TankJS.addComponent("Ball")
     this.parent.Velocity.y *= -1;
   }
 
-  // Collide ball with paddle
-  var paddle = TankJS.getNamedObject("Player");
-  if (this.parent.Pos2D.x + this.parent.Image.width / 2 > paddle.Pos2D.x - paddle.Image.width / 2 &&
-      this.parent.Pos2D.x - this.parent.Image.width / 2 < paddle.Pos2D.x + paddle.Image.width / 2)
-  {
-    if (this.parent.Pos2D.y + this.parent.Image.height / 2 > paddle.Pos2D.y - paddle.Image.height / 2 &&
-        this.parent.Pos2D.y - this.parent.Image.height / 2 < paddle.Pos2D.y + paddle.Image.height / 2)
-    {
-      this.parent.Pos2D.y = paddle.Pos2D.y - paddle.Image.height / 2 - this.parent.Image.height / 2;
-      this.parent.Velocity.y *= -1;
-    }
-  }
-
   // Remove ball if it goes off screen
   if (this.parent.Pos2D.y > 416)
   {
@@ -259,13 +312,11 @@ TankJS.addComponent("Brick")
 .initFunction(function()
 {
   TankJS.dispatchEvent("OnBrickAdded", this);
-  // TankJS.addEventListener("OnEnterFrame", this);
 })
 
 .uninitFunction(function()
 {
   TankJS.dispatchEvent("OnBrickRemoved", this);
-  // TankJS.removeEventListener("OnEnterFrame", this);
 })
 
 .addFunction("OnEnterFrame", function(dt)
