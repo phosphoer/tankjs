@@ -22,9 +22,9 @@ Most of the engine functionality is achieved through extra components that are e
 
 For example, TankJS comes with a `Canvas` component which provides an HTML5 canvas to perform drawing on, an `Image` component which draws an image on a given canvas, and a `RenderManager` component which takes care of drawing `Image` components for you.
 
-One of the simplest components in TankJS is the `2D` component, which allows a GameObject to have an x and y position, and rotation.
+One of the simplest components in TankJS is the `Pos2D` component, which allows a GameObject to have an x and y position, and rotation.
 
-    TankJS.addComponent("2D")
+    TankJS.addComponent("Pos2D")
     .initFunction(function()
     {
       this.x = 0;
@@ -32,4 +32,4 @@ One of the simplest components in TankJS is the `2D` component, which allows a G
       this.rotation = 0;
     });
 
-This snippet registers a `Component` type named `2D`. In the `init` function it defines an x, y, and rotation field for the component. For more examples, look in the `samples/` directory.
+This snippet registers a `Component` type named `Pos2D`. In the `init` function it defines an x, y, and rotation field for the component. For more examples, look in the `samples/` directory.
