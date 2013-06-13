@@ -164,7 +164,7 @@ TankJS.GameObject.prototype.addComponent = <span class="keyword">function</span>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="keyword">if</span> (<span class="keyword">this</span>.getComponent(componentName))
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">if</span> (<span class="keyword">this</span>[componentName])
     <span class="keyword">return</span> <span class="keyword">this</span>;</pre></div></div>
             
         </li>
@@ -183,7 +183,7 @@ TankJS.GameObject.prototype.addComponent = <span class="keyword">function</span>
             <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> componentDef = TankJS._components[componentName];
   <span class="keyword">if</span> (!componentDef)
   {
-    console.log(<span class="string">"GameObject.addComponent: No component registered with name "</span> + componentName);
+    TankJS.error(<span class="string">"No component registered with name "</span> + componentName);
     <span class="keyword">return</span> <span class="keyword">this</span>;
   }</pre></div></div>
             
@@ -201,7 +201,8 @@ for the upcoming recursive calls</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="keyword">this</span>._components[componentName] = <span class="string">"Placeholder"</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">this</span>._components[componentName] = <span class="string">"Placeholder"</span>;
+  <span class="keyword">this</span>[componentName] = <span class="string">"Placeholder"</span>;</pre></div></div>
             
         </li>
         
@@ -235,7 +236,8 @@ for the upcoming recursive calls</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> c = componentDef.clone();
-  <span class="keyword">this</span>._components[componentName] = c;</pre></div></div>
+  <span class="keyword">this</span>._components[componentName] = c;
+  <span class="keyword">this</span>[componentName] = c;</pre></div></div>
             
         </li>
         
@@ -387,7 +389,7 @@ TankJS.GameObject.prototype.removeComponent = <span class="keyword">function</sp
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> c = <span class="keyword">this</span>.getComponent(componentName);
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> c = <span class="keyword">this</span>[componentName];
   <span class="keyword">if</span> (!c)
     <span class="keyword">return</span>;</pre></div></div>
             
@@ -476,11 +478,6 @@ TankJS.GameObject.prototype.removeComponent = <span class="keyword">function</sp
             <div class="content"><div class='highlight'><pre>  <span class="keyword">delete</span> <span class="keyword">this</span>._components[componentName];
 }
 
-TankJS.GameObject.prototype.getComponent = <span class="keyword">function</span>(componentName)
-{
-  <span class="keyword">return</span> <span class="keyword">this</span>._components[componentName];
-}
-
 TankJS.GameObject.prototype.getComponentsWithTag = <span class="keyword">function</span>(tagName)
 {
   <span class="keyword">return</span> <span class="keyword">this</span>._taggedComponents[tagName];
@@ -528,11 +525,11 @@ TankJS.GameObject.prototype.invoke = <span class="keyword">function</span>(funcN
 
 TankJS.GameObject.prototype.attr = <span class="keyword">function</span>(componentName, attrs)
 {
-  <span class="keyword">var</span> c = <span class="keyword">this</span>.getComponent(componentName);
+  <span class="keyword">var</span> c = <span class="keyword">this</span>[componentName]
   <span class="keyword">if</span> (!c)
   {
-    console.log(<span class="string">"GameObject.attr: Could not find component with name "</span> + componentName);
-    <span class="keyword">return</span>;
+    TankJS.error(<span class="string">"Could not find component with name "</span> + componentName);
+    <span class="keyword">return</span> <span class="keyword">this</span>;
   }
 
   <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> attrs)

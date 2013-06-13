@@ -77,19 +77,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>(<span class="function"><span class="keyword">function</span> <span class="params">(TankJS, undefined)</span>
-{</span>
-
-TankJS.Component = <span class="keyword">function</span>(name)
-{
-  <span class="keyword">this</span>.name = name;
-  <span class="keyword">this</span>._functions = {};
-  <span class="keyword">this</span>._includes = [];
-  <span class="keyword">this</span>._tags = [];
-}
-
-TankJS.Component.prototype.clone = <span class="keyword">function</span>()
-{
-  <span class="keyword">var</span> c = {};</pre></div></div>
+{</span></pre></div></div>
             
         </li>
         
@@ -97,15 +85,21 @@ TankJS.Component.prototype.clone = <span class="keyword">function</span>()
         <li id="section-2">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h3">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>Default functions</p>
+              <h3>Component object</h3>
+<p>Defines a blueprint for components.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  c.init = <span class="keyword">function</span>() {};
-  c.uninit = <span class="keyword">function</span>() {};</pre></div></div>
+            <div class="content"><div class='highlight'><pre>TankJS.Component = <span class="keyword">function</span>(name)
+{
+  <span class="keyword">this</span>.name = name;
+  <span class="keyword">this</span>._functions = {};
+  <span class="keyword">this</span>._includes = [];
+  <span class="keyword">this</span>._tags = [];
+}</pre></div></div>
             
         </li>
         
@@ -113,8 +107,46 @@ TankJS.Component.prototype.clone = <span class="keyword">function</span>()
         <li id="section-3">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h3">
                 <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <h3>Instantiate a component</h3>
+<p>Creates a component object from this blueprint.</p>
+<ul>
+<li><code>return</code>: The new component object.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>TankJS.Component.prototype.clone = <span class="keyword">function</span>()
+{
+  <span class="keyword">var</span> c = {};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Default functions</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  c.construct = <span class="keyword">function</span>() {};
+  c.init = <span class="keyword">function</span>() {};
+  c.uninit = <span class="keyword">function</span>() {};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <p>Add tags</p>
 
@@ -127,11 +159,11 @@ TankJS.Component.prototype.clone = <span class="keyword">function</span>()
         </li>
         
         
-        <li id="section-4">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>Add functions</p>
 
@@ -145,11 +177,11 @@ TankJS.Component.prototype.clone = <span class="keyword">function</span>()
         </li>
         
         
-        <li id="section-5">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>Set properties</p>
 
@@ -163,13 +195,19 @@ TankJS.Component.prototype.clone = <span class="keyword">function</span>()
         </li>
         
         
-        <li id="section-6">
+        <li id="section-8">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p>Define a list of components that are required by this one</p>
+              <h3>Require other components</h3>
+<p>Defines a list of components that are required by this one
+and will be automatically added before this one is added.</p>
+<ul>
+<li><code>componentNames</code>: A comma-deliminated string of component names, e.g., &quot;Pos2D, Sprite&quot;.</li>
+<li><code>return</code>: A reference to itself.</li>
+</ul>
 
             </div>
             
@@ -179,11 +217,11 @@ TankJS.Component.prototype.clone = <span class="keyword">function</span>()
         </li>
         
         
-        <li id="section-7">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <p>Get array of component names</p>
 
@@ -193,19 +231,39 @@ TankJS.Component.prototype.clone = <span class="keyword">function</span>()
   <span class="keyword">this</span>._includes = componentNames.split(<span class="string">","</span>);
 
   <span class="keyword">return</span> <span class="keyword">this</span>;
-}
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <h3>Tag the component</h3>
+<p>Defines a list of tags that apply to this component
+Useful for specifying functionality that the component implements.
+Common tags include <code>Drawable</code>, and <code>Collidable</code></p>
+<ul>
+<li><code>tagNames</code>: A comma-deliminated string of tag names, e.g., &quot;Drawable, Collidable&quot;.</li>
+<li><code>return</code>: A reference to itself.</li>
+</ul>
 
-TankJS.Component.prototype.tags = <span class="keyword">function</span>(tagNames)
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>TankJS.Component.prototype.tags = <span class="keyword">function</span>(tagNames)
 {</pre></div></div>
             
         </li>
         
         
-        <li id="section-8">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p>Get array of tag anmes</p>
 
@@ -219,13 +277,45 @@ TankJS.Component.prototype.tags = <span class="keyword">function</span>(tagNames
         </li>
         
         
-        <li id="section-9">
+        <li id="section-12">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>Define the initialization function for this component</p>
+              <h3>Set constructor function</h3>
+<p>Defines a function to be called after the component has been instantiated.
+This is commonly where you would define member fields with default values.
+The function will be called such that the <code>this</code> variable points to the component instance.</p>
+<ul>
+<li><code>func</code>: A function to call after instantiation.</li>
+<li><code>return</code>: A reference to itself.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>TankJS.Component.prototype.constructFunction = <span class="keyword">function</span>(func)
+{
+  <span class="keyword">this</span>._functions.construct = func;
+  <span class="keyword">return</span> <span class="keyword">this</span>;
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <h3>Set init function</h3>
+<p>Defines a function to be called after the component has been constructed and added to a game object.
+The function will be called such that the <code>this</code> variable points to the component instance.</p>
+<ul>
+<li><code>func</code>: A function to call upon initialization.</li>
+<li><code>return</code>: A reference to itself.</li>
+</ul>
 
             </div>
             
@@ -238,13 +328,19 @@ TankJS.Component.prototype.tags = <span class="keyword">function</span>(tagNames
         </li>
         
         
-        <li id="section-10">
+        <li id="section-14">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>Define the uninitialization function for this component</p>
+              <h3>Set uninit function</h3>
+<p>Defines a function to be called after the component has been removed from a game object.
+The function will be called such that the <code>this</code> variable points to the component instance.</p>
+<ul>
+<li><code>func</code>: A function to call upon uninitialization.</li>
+<li><code>return</code>: A reference to itself.</li>
+</ul>
 
             </div>
             
@@ -257,13 +353,19 @@ TankJS.Component.prototype.tags = <span class="keyword">function</span>(tagNames
         </li>
         
         
-        <li id="section-11">
+        <li id="section-15">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>Add a custom named function to the component</p>
+              <h3>Set a custom function</h3>
+<p>Defines a custom-named function to be added to the component.
+The function will be called such that the <code>this</code> variable points to the component instance.</p>
+<ul>
+<li><code>func</code>: A function object.</li>
+<li><code>return</code>: A reference to itself.</li>
+</ul>
 
             </div>
             
