@@ -5,7 +5,7 @@ function main()
 
   // Point the render manager's context to the canvas one
   // Would be nice not to require this somehow?
-  e.attr("RenderManager", {context: e.getComponent("Canvas").context})
+  e.attr("RenderManager", {context: e.Canvas.context})
 
   // Create a bullet object prefab
   TankJS.addPrefab("Bullet",
@@ -20,44 +20,44 @@ function main()
 
   // Create a player object
   TankJS.addObject("Player").addComponents("Text, Image, TopDownMovement, RotateController, ObjectSpawner, Collider, Health, CustomUpdate")
-                            .attr("2D", {x: 150, y: 100})
+                            .attr("Pos2D", {x: 150, y: 100})
                             .attr("Image", {imagePath: "res/BlueBall.png"})
                             .attr("Health", {max: 20, value: 20})
                             .attr("Text", {color: "#000", zdepth: 1, offsetX: -5, offsetY: 4})
                             .attr("ObjectSpawner", {objectPrefab: "Bullet", triggerKey: TankJS.SPACE})
                             .attr("CustomUpdate", {func: function(dt)
                               {
-                                this.getComponent("Text").text = this.getComponent("Health").value;
+                                this.Text.text = this.Health.value;
                               }});
 
   // Create AI object
   TankJS.addObject("AI").addComponents("Text, Image, KlangAI, ObjectSpawner, Collider, Health, CustomUpdate")
-                        .attr("2D", {x: 450, y: 400})
+                        .attr("Pos2D", {x: 450, y: 400})
                         .attr("Image", {imagePath: "res/RedBall.png"})
                         .attr("Health", {max: 20, value: 20})
                         .attr("Text", {color: "#000", zdepth: 1, offsetX: -5, offsetY: 4})
                         .attr("ObjectSpawner", {objectPrefab: "Bullet"})
                         .attr("CustomUpdate", {func: function(dt)
                           {
-                            this.getComponent("Text").text = this.getComponent("Health").value;
+                            this.Text.text = this.Health.value;
                           }});
 
   // Create walls around edges
-  TankJS.addObject().addComponents("ColoredBox, Collider").attr("2D", {x: 640 / 2, y: -25}).attr("Collider", {isStatic: true, width: 640});
-  TankJS.addObject().addComponents("ColoredBox, Collider").attr("2D", {x: 640 / 2, y: 480 + 25}).attr("Collider", {isStatic: true, width: 640});
-  TankJS.addObject().addComponents("ColoredBox, Collider").attr("2D", {x: -25, y: 480 / 2}).attr("Collider", {isStatic: true, height: 480});
-  TankJS.addObject().addComponents("ColoredBox, Collider").attr("2D", {x: 640 + 25, y: 480 / 2}).attr("Collider", {isStatic: true, height: 480});
+  TankJS.addObject().addComponents("ColoredBox, Collider").attr("Pos2D", {x: 640 / 2, y: -25}).attr("Collider", {isStatic: true, width: 640});
+  TankJS.addObject().addComponents("ColoredBox, Collider").attr("Pos2D", {x: 640 / 2, y: 480 + 25}).attr("Collider", {isStatic: true, width: 640});
+  TankJS.addObject().addComponents("ColoredBox, Collider").attr("Pos2D", {x: -25, y: 480 / 2}).attr("Collider", {isStatic: true, height: 480});
+  TankJS.addObject().addComponents("ColoredBox, Collider").attr("Pos2D", {x: 640 + 25, y: 480 / 2}).attr("Collider", {isStatic: true, height: 480});
 
 
-  TankJS.addObject().addComponents("ColoredBox, Collider").attr("2D", {x: 100, y: 150}).attr("Collider", {isStatic: true});
-  TankJS.addObject().addComponents("ColoredBox, Collider").attr("2D", {x: 150, y: 150}).attr("Collider", {isStatic: true});
-  TankJS.addObject().addComponents("ColoredBox, Collider").attr("2D", {x: 200, y: 150}).attr("Collider", {isStatic: true});
-  TankJS.addObject().addComponents("ColoredBox, Collider").attr("2D", {x: 200, y: 100}).attr("Collider", {isStatic: true});
+  TankJS.addObject().addComponents("ColoredBox, Collider").attr("Pos2D", {x: 100, y: 150}).attr("Collider", {isStatic: true});
+  TankJS.addObject().addComponents("ColoredBox, Collider").attr("Pos2D", {x: 150, y: 150}).attr("Collider", {isStatic: true});
+  TankJS.addObject().addComponents("ColoredBox, Collider").attr("Pos2D", {x: 200, y: 150}).attr("Collider", {isStatic: true});
+  TankJS.addObject().addComponents("ColoredBox, Collider").attr("Pos2D", {x: 200, y: 100}).attr("Collider", {isStatic: true});
 
-  TankJS.addObject().addComponents("ColoredBox, Collider").attr("2D", {x: 400, y: 350}).attr("Collider", {isStatic: true});
-  TankJS.addObject().addComponents("ColoredBox, Collider").attr("2D", {x: 450, y: 350}).attr("Collider", {isStatic: true});
-  TankJS.addObject().addComponents("ColoredBox, Collider").attr("2D", {x: 500, y: 350}).attr("Collider", {isStatic: true});
-  TankJS.addObject().addComponents("ColoredBox, Collider").attr("2D", {x: 500, y: 400}).attr("Collider", {isStatic: true});
+  TankJS.addObject().addComponents("ColoredBox, Collider").attr("Pos2D", {x: 400, y: 350}).attr("Collider", {isStatic: true});
+  TankJS.addObject().addComponents("ColoredBox, Collider").attr("Pos2D", {x: 450, y: 350}).attr("Collider", {isStatic: true});
+  TankJS.addObject().addComponents("ColoredBox, Collider").attr("Pos2D", {x: 500, y: 350}).attr("Collider", {isStatic: true});
+  TankJS.addObject().addComponents("ColoredBox, Collider").attr("Pos2D", {x: 500, y: 400}).attr("Collider", {isStatic: true});
 
   TankJS.start();
 }
@@ -86,7 +86,7 @@ TankJS.addComponent("GameLogic")
 // Custom component to implement AI for the other player
 TankJS.addComponent("KlangAI")
 
-.includes("2D")
+.includes("Pos2D")
 
 .initFunction(function()
 {
@@ -115,9 +115,9 @@ TankJS.addComponent("KlangAI")
   if (!player)
     return;
 
-  var playerPos = player.getComponent("2D");
-  var pos = this.parent.getComponent("2D");
-  var gun = this.parent.getComponent("ObjectSpawner");
+  var playerPos = player.Pos2D;
+  var pos = this.parent.Pos2D;
+  var gun = this.parent.ObjectSpawner;
 
   // Shoot randomly
   if (Math.random() < 0.05)
