@@ -57,4 +57,8 @@ TankJS.addComponent("Paddle")
 .addFunction("OnEnterFrame", function(dt)
 {
   this.parent.Pos2D.x = TankJS.getNamedObject("Engine").InputManager.mousePos[0];
+  if (this.parent.Pos2D.x - 24 < 0)
+    this.parent.Pos2D.x = 24
+  if (this.parent.Pos2D.x + 24 > 320)
+    this.parent.Pos2D.x = 320 - 24;
 });
