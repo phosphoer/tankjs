@@ -28,6 +28,34 @@ function main()
     "Velocity": {}
   });
 
+  // Define a red brick prefab
+  TankJS.addPrefab("RedBrick",
+  {
+    "Image": {imagePath: "res/tiles.png", subRectOrigin: [0, 32], subRectCorner: [32, 48], zdepth: 1},
+    "Brick": {}
+  });
+
+  // Define a blue brick prefab
+  TankJS.addPrefab("BlueBrick",
+  {
+    "Image": {imagePath: "res/tiles.png", subRectOrigin: [0, 0], subRectCorner: [32, 16], zdepth: 1},
+    "Brick": {}
+  });
+
+  // Define a green brick prefab
+  TankJS.addPrefab("GreenBrick",
+  {
+    "Image": {imagePath: "res/tiles.png", subRectOrigin: [0, 48], subRectCorner: [32, 64], zdepth: 1},
+    "Brick": {}
+  });
+
+  // Define an orange brick prefab
+  TankJS.addPrefab("OrangeBrick",
+  {
+    "Image": {imagePath: "res/tiles.png", subRectOrigin: [0, 16], subRectCorner: [32, 32], zdepth: 1},
+    "Brick": {}
+  });
+
   // Begin running the engine
   TankJS.start();
 }
@@ -38,8 +66,9 @@ TankJS.addComponent("GameLogic")
 
 .initFunction(function()
 {
-  // Keep track of how many balls exist
+  // Keep track of how many balls and bricks exist
   this.numBalls = 0;
+  this.numBricks = 0;
 
   // Keep track of player lives
   this.lives = 3;
@@ -47,6 +76,8 @@ TankJS.addComponent("GameLogic")
   TankJS.addEventListener("OnEnterFrame", this);
   TankJS.addEventListener("OnBallAdded", this);
   TankJS.addEventListener("OnBallRemoved", this);
+  TankJS.addEventListener("OnBrickAdded", this);
+  TankJS.addEventListener("OnBrickRemoved", this);
 })
 
 .uninitFunction(function()
@@ -54,6 +85,8 @@ TankJS.addComponent("GameLogic")
   TankJS.removeEventListener("OnEnterFrame", this);
   TankJS.removeEventListener("OnBallAdded", this);
   TankJS.removeEventListener("OnBallRemoved", this);
+  TankJS.removeEventListener("OnBrickAdded", this);
+  TankJS.removeEventListener("OnBrickRemoved", this);
 })
 
 .addFunction("OnBallAdded", function()
@@ -66,6 +99,16 @@ TankJS.addComponent("GameLogic")
   --this.numBalls;
 })
 
+.addFunction("OnBrickAdded", function()
+{
+  ++this.numBricks;
+})
+
+.addFunction("OnBrickRemoved", function()
+{
+  --this.numBricks;
+})
+
 .addFunction("OnEnterFrame", function(dt)
 {
   // If no balls exist, spawn a new one and decrement lives
@@ -76,6 +119,7 @@ TankJS.addComponent("GameLogic")
       TankJS.reset();
     else
     {
+      // Create a new ball
       var ball = TankJS.addObjectFromPrefab("Ball");
       ball.Pos2D.x = 50;
       ball.Pos2D.y = 200;
