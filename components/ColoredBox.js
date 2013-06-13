@@ -10,11 +10,19 @@ TankJS.addComponent("ColoredBox")
   this.width = 50;
   this.height = 50;
   this.color = "#000";
+  this.centered = true;
 })
 
 .addFunction("draw", function(ctx)
 {
   var t = this.parent.Pos2D;
+  ctx.save();
   ctx.fillStyle = this.color;
-  ctx.fillRect(t.x - this.width / 2, t.y - this.height / 2, this.width, this.height);
+
+  if (this.centered)
+    ctx.fillRect(t.x - this.width / 2, t.y - this.height / 2, this.width, this.height);
+  else
+    ctx.fillRect(t.x, t.y, this.width, this.height);
+
+  ctx.restore();
 });
