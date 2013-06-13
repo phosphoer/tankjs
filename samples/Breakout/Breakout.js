@@ -46,20 +46,22 @@ TankJS.addComponent("GameLogic")
 
   TankJS.addEventListener("OnEnterFrame", this);
   TankJS.addEventListener("OnBallAdded", this);
+  TankJS.addEventListener("OnBallRemoved", this);
 })
 
 .uninitFunction(function()
 {
   TankJS.removeEventListener("OnEnterFrame", this);
+  TankJS.removeEventListener("OnBallAdded", this);
   TankJS.removeEventListener("OnBallRemoved", this);
 })
 
-.addFunction("OnBallAdded", function(dt)
+.addFunction("OnBallAdded", function()
 {
   ++this.numBalls;
 })
 
-.addFunction("OnBallRemoved", function(dt)
+.addFunction("OnBallRemoved", function()
 {
   --this.numBalls;
 })
@@ -70,12 +72,16 @@ TankJS.addComponent("GameLogic")
   if (this.numBalls === 0)
   {
     --this.lives;
-
-    var ball = TankJS.addObjectFromPrefab("Ball");
-    ball.Pos2D.x = 50;
-    ball.Pos2D.y = 200;
-    ball.Velocity.x = 40;
-    ball.Velocity.y = 40;
+    if (this.lives === 0)
+      TankJS.reset();
+    else
+    {
+      var ball = TankJS.addObjectFromPrefab("Ball");
+      ball.Pos2D.x = 50;
+      ball.Pos2D.y = 200;
+      ball.Velocity.x = 30;
+      ball.Velocity.y = 40;
+    }
   }
 });
 
@@ -88,16 +94,22 @@ TankJS.addComponent("Paddle")
 .initFunction(function()
 {
   TankJS.addEventListener("OnEnterFrame", this);
+  TankJS.addEventListener("OnMouseMove", this);
 })
 
 .uninitFunction(function()
 {
   TankJS.removeEventListener("OnEnterFrame", this);
+  TankJS.removeEventListener("OnMouseMove", this);
+})
+
+.addFunction("OnMouseMove", function(e)
+{
+  this.parent.Pos2D.x += e.moveX;
 })
 
 .addFunction("OnEnterFrame", function(dt)
 {
-  this.parent.Pos2D.x = TankJS.getNamedObject("Engine").InputManager.mousePos[0];
   if (this.parent.Pos2D.x - 24 < 0)
     this.parent.Pos2D.x = 24
   if (this.parent.Pos2D.x + 24 > 320)
@@ -156,5 +168,11 @@ TankJS.addComponent("Ball")
       this.parent.Pos2D.y = paddle.Pos2D.y - paddle.Image.height / 2 - this.parent.Image.height / 2;
       this.parent.Velocity.y *= -1;
     }
+  }
+
+  // Remove ball if it goes off screen
+  if (this.parent.Pos2D.y > 416)
+  {
+    this.parent.remove();
   }
 });
