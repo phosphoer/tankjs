@@ -2,7 +2,7 @@ TankJS.addComponent("Image")
 
 .tags("Drawable")
 
-.includes("2D")
+.includes("Pos2D")
 
 .initFunction(function()
 {
@@ -40,7 +40,7 @@ TankJS.addComponent("Image")
 
 .addFunction("draw", function(ctx)
 {
-  var t = this.parent.getComponent("2D");
+  var t = this.parent.Pos2D;
   ctx.save();
   ctx.translate(t.x, t.y);
   ctx.rotate(t.rotation)

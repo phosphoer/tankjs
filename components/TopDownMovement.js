@@ -1,6 +1,6 @@
 TankJS.addComponent("TopDownMovement")
 
-.includes("2D")
+.includes("Pos2D")
 
 .initFunction(function()
 {
@@ -48,7 +48,7 @@ TankJS.addComponent("TopDownMovement")
 
 .addFunction("OnEnterFrame", function(dt)
 {
-  var t = this.parent.getComponent("2D");
+  var t = this.parent.Pos2D;
   if (this.left)
     t.x -= this.movementSpeed * dt;
   if (this.up)

@@ -2,7 +2,7 @@ TankJS.addComponent("Collider")
 
 .tags("Collidable")
 
-.includes("2D")
+.includes("Pos2D")
 
 .initFunction(function()
 {
@@ -13,8 +13,8 @@ TankJS.addComponent("Collider")
 
 .addFunction("collide", function(other)
 {
-  var transA = this.parent.getComponent("2D");
-  var transB = other.parent.getComponent("2D");
+  var transA = this.parent.Pos2D
+  var transB = other.parent.Pos2D
 
   if (transA.x + this.width / 2 < transB.x - other.width / 2)
     return false;

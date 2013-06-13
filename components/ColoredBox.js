@@ -2,7 +2,7 @@ TankJS.addComponent("ColoredBox")
 
 .tags("Drawable")
 
-.includes("2D")
+.includes("Pos2D")
 
 .initFunction(function()
 {
@@ -14,7 +14,7 @@ TankJS.addComponent("ColoredBox")
 
 .addFunction("draw", function(ctx)
 {
-  var t = this.parent.getComponent("2D");
+  var t = this.parent.Pos2D;
   ctx.fillStyle = this.color;
   ctx.fillRect(t.x - this.width / 2, t.y - this.height / 2, this.width, this.height);
 });

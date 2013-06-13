@@ -1,6 +1,6 @@
 TankJS.addComponent("ObjectSpawner")
 
-.includes("2D")
+.includes("Pos2D")
 
 .initFunction(function()
 {
@@ -41,9 +41,9 @@ TankJS.addComponent("ObjectSpawner")
 {
   if (this._spawnTimer >= this.spawnDelay)
   {
-    var t = this.parent.getComponent("2D");
+    var t = this.parent.Pos2D;
     var obj = TankJS.addObjectFromPrefab(this.objectPrefab);
-    obj.attr("2D", {x: t.x + Math.cos(t.rotation) * this.spawnDistance, y: t.y + Math.sin(t.rotation) * this.spawnDistance});
+    obj.attr("Pos2D", {x: t.x + Math.cos(t.rotation) * this.spawnDistance, y: t.y + Math.sin(t.rotation) * this.spawnDistance});
     obj.attr("Velocity", {x: Math.cos(t.rotation) * this.spawnVelocity, y: Math.sin(t.rotation) * this.spawnVelocity});
     this._spawnTimer = 0;
   }

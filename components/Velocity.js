@@ -1,6 +1,6 @@
 TankJS.addComponent("Velocity")
 
-.includes("2D")
+.includes("Pos2D")
 
 .initFunction(function()
 {
@@ -17,7 +17,7 @@ TankJS.addComponent("Velocity")
 
 .addFunction("OnEnterFrame", function(dt)
 {
-  var t = this.parent.getComponent("2D");
+  var t = this.parent.Pos2D;
   t.x += this.x * dt;
   t.y += this.y * dt;
 });

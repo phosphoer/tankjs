@@ -24,20 +24,21 @@ TankJS.GameObject.prototype.remove = function()
 TankJS.GameObject.prototype.addComponent = function(componentName)
 {
   // Check if we have this component already
-  if (this.getComponent(componentName))
+  if (this[componentName])
     return this;
 
   // Get the component definition object
   var componentDef = TankJS._components[componentName];
   if (!componentDef)
   {
-    console.log("GameObject.addComponent: No component registered with name " + componentName);
+    TankJS.error("No component registered with name " + componentName);
     return this;
   }
 
   // Temporarily add a fake component just to mark this one as added
   // for the upcoming recursive calls
   this._components[componentName] = "Placeholder";
+  this[componentName] = "Placeholder";
 
   // Add all the included components
   for (var i in componentDef._includes)
@@ -48,6 +49,7 @@ TankJS.GameObject.prototype.addComponent = function(componentName)
   // Clone the component into our list of components
   var c = componentDef.clone();
   this._components[componentName] = c;
+  this[componentName] = c;
 
   // Track this component by its tags
   for (var i in componentDef._tags)
@@ -100,7 +102,7 @@ TankJS.GameObject.prototype.addComponents = function(componentNames)
 TankJS.GameObject.prototype.removeComponent = function(componentName)
 {
   // If we don't have the component then just return
-  var c = this.getComponent(componentName);
+  var c = this[componentName];
   if (!c)
     return;
 
@@ -128,11 +130,6 @@ TankJS.GameObject.prototype.removeComponent = function(componentName)
   delete this._components[componentName];
 }
 
-TankJS.GameObject.prototype.getComponent = function(componentName)
-{
-  return this._components[componentName];
-}
-
 TankJS.GameObject.prototype.getComponentsWithTag = function(tagName)
 {
   return this._taggedComponents[tagName];
@@ -155,11 +152,11 @@ TankJS.GameObject.prototype.invoke = function(funcName, args)
 
 TankJS.GameObject.prototype.attr = function(componentName, attrs)
 {
-  var c = this.getComponent(componentName);
+  var c = this[componentName]
   if (!c)
   {
-    console.log("GameObject.attr: Could not find component with name " + componentName);
-    return;
+    TankJS.error("Could not find component with name " + componentName);
+    return this;
   }
 
   for (var i in attrs)

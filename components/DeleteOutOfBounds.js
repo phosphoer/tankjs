@@ -1,6 +1,6 @@
 TankJS.addComponent("DeleteOutOfBounds")
 
-.includes("2D")
+.includes("Pos2D")
 
 .initFunction(function()
 {
@@ -17,7 +17,7 @@ TankJS.addComponent("DeleteOutOfBounds")
 
 .addFunction("OnEnterFrame", function(dt)
 {
-  var t = this.parent.getComponent("2D");
+  var t = this.parent.Pos2D;
   if (!TankJS.Math.pointInRect([t.x, t.y], this.topLeft, this.bottomRight))
     this.parent.remove();
 });

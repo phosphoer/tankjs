@@ -1,6 +1,6 @@
 TankJS.addComponent("RotateController")
 
-.includes("2D")
+.includes("Pos2D")
 
 .initFunction(function()
 {
@@ -38,7 +38,7 @@ TankJS.addComponent("RotateController")
 
 .addFunction("OnEnterFrame", function(dt)
 {
-  var t = this.parent.getComponent("2D");
+  var t = this.parent.Pos2D;
   if (this.left)
     t.rotation -= this.rotateSpeed * dt;
   if (this.right)

@@ -1,4 +1,4 @@
-TankJS.addComponent("2D")
+TankJS.addComponent("Pos2D")
 
 .initFunction(function()
 {

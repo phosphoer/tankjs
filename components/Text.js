@@ -2,7 +2,7 @@ TankJS.addComponent("Text")
 
 .tags("Drawable")
 
-.includes("2D")
+.includes("Pos2D")
 
 .initFunction(function()
 {
@@ -15,7 +15,7 @@ TankJS.addComponent("Text")
 
 .addFunction("draw", function(ctx)
 {
-  var t = this.parent.getComponent("2D");
+  var t = this.parent.Pos2D;
   ctx.fillStyle = this.color;
   ctx.lineWidth = 0;
   ctx.fillText(this.text, t.x + this.offsetX, t.y + this.offsetY);

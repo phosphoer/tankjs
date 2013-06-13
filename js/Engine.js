@@ -4,6 +4,15 @@
 (function (TankJS, undefined)
 {
 
+// ### Enable/Disable error messages
+TankJS.errorsEnabled = true;
+
+// ### Enable/Disable warning messages
+TankJS.warningsEnabled = true;
+
+// ### Enable/Disable logging messages
+TankJS.logsEnabled = true;
+
 // ### Create a GameObject
 // Creates a new `GameObject` and begins tracking it.
 //
@@ -39,7 +48,7 @@ TankJS.addObjectFromPrefab = function(prefabName, objName)
   var prefab = TankJS.getPrefab(prefabName);
   if (!prefab)
   {
-    console.log("TankJS.addObjectFromPrefab: Could not find a prefab named " + prefabName);
+    TankJS.log("Could not find a prefab named " + prefabName);
     return;
   }
 
@@ -50,7 +59,7 @@ TankJS.addObjectFromPrefab = function(prefabName, objName)
   {
     var cData = prefab[i];
     obj.addComponent(i);
-    var c = obj.getComponent(i);
+    var c = obj[i];
     for (var j in cData)
     {
       c[j] = cData[j];
@@ -122,7 +131,7 @@ TankJS.getNamedObject = function(name)
 // with the following format:
 //
 //       {
-//         "2D": { x: 0, y: 42 },
+//         "Pos2D": { x: 0, y: 42 },
 //         "Velocity": {},
 //         "Collider": { width: 5, height: 5 },
 //       }
@@ -140,6 +149,13 @@ TankJS.getPrefab = function(name)
 // Register a new component type
 TankJS.addComponent = function(componentName)
 {
+  // Warn about components with invalid identifiers
+  if (componentName[0] >= 0 && componentName[0] <= 9 || componentName.search(" ") >= 0)
+  {
+    TankJS.error(componentName + " is an invalid identifier and won't be accessible without [] operator");
+    return;
+  }
+
   var c = new TankJS.Component(componentName);
   TankJS._components[componentName] = c;
   return c;
@@ -211,7 +227,7 @@ TankJS.dispatchEvent = function(eventName, args)
     if (func)
       func.apply(thisObj, message_args);
     else
-      console.log("TankJS.dispatchEvent: " + thisObj + " is listening for " + eventName + " but does not implement a method of the same name");
+      TankJS.log(thisObj + " is listening for " + eventName + " but does not implement a method of the same name");
   }
 
   return this;
@@ -236,6 +252,39 @@ TankJS.reset = function()
   TankJS._resetting = true;
   TankJS.removeAllObjects();
   return this;
+}
+
+TankJS.log = function(text)
+{
+  if (!TankJS.logsEnabled)
+    return;
+
+  if (arguments.callee.caller.name)
+    console.log(arguments.callee.caller.name + ": " + text);
+  else
+    console.log("(anonymous function): " + text);
+}
+
+TankJS.warn = function(text)
+{
+  if (!TankJS.warningsEnabled)
+    return;
+
+  if (arguments.callee.caller.name)
+    console.warn(arguments.callee.caller.name + ": " + text);
+  else
+    console.warn("(anonymous function): " + text);
+}
+
+TankJS.error = function(text)
+{
+  if (!TankJS.errorsEnabled)
+    return;
+
+  if (arguments.callee.caller.name)
+    console.error(arguments.callee.caller.name + ": " + text);
+  else
+    console.error("(anonymous function): " + text);
 }
 
 function update()
