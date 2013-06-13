@@ -1,6 +1,8 @@
 (function (TankJS, undefined)
 {
 
+// ### Component object
+// Defines a blueprint for components.
 TankJS.Component = function(name)
 {
   this.name = name;
@@ -9,11 +11,16 @@ TankJS.Component = function(name)
   this._tags = [];
 }
 
+// ### Instantiate a component
+// Creates a component object from this blueprint.
+//
+// - `return`: The new component object.
 TankJS.Component.prototype.clone = function()
 {
   var c = {};
 
   // Default functions
+  c.construct = function() {};
   c.init = function() {};
   c.uninit = function() {};
 
@@ -34,7 +41,12 @@ TankJS.Component.prototype.clone = function()
   return c;
 }
 
-// Define a list of components that are required by this one
+// ### Require other components
+// Defines a list of components that are required by this one
+// and will be automatically added before this one is added.
+//
+// - `componentNames`: A comma-deliminated string of component names, e.g., "Pos2D, Sprite".
+// - `return`: A reference to itself.
 TankJS.Component.prototype.includes = function(componentNames)
 {
   // Get array of component names
@@ -44,6 +56,13 @@ TankJS.Component.prototype.includes = function(componentNames)
   return this;
 }
 
+// ### Tag the component
+// Defines a list of tags that apply to this component
+// Useful for specifying functionality that the component implements.
+// Common tags include `Drawable`, and `Collidable`
+//
+// - `tagNames`: A comma-deliminated string of tag names, e.g., "Drawable, Collidable".
+// - `return`: A reference to itself.
 TankJS.Component.prototype.tags = function(tagNames)
 {
   // Get array of tag anmes
@@ -52,21 +71,49 @@ TankJS.Component.prototype.tags = function(tagNames)
   return this;
 }
 
-// Define the initialization function for this component
+// ### Set constructor function
+// Defines a function to be called after the component has been instantiated.
+// This is commonly where you would define member fields with default values.
+// The function will be called such that the `this` variable points to the component instance.
+//
+// - `func`: A function to call after instantiation.
+// - `return`: A reference to itself.
+TankJS.Component.prototype.constructFunction = function(func)
+{
+  this._functions.construct = func;
+  return this;
+}
+
+// ### Set init function
+// Defines a function to be called after the component has been constructed and added to a game object.
+// The function will be called such that the `this` variable points to the component instance.
+//
+// - `func`: A function to call upon initialization.
+// - `return`: A reference to itself.
 TankJS.Component.prototype.initFunction = function(func)
 {
   this._functions.init = func;
   return this;
 }
 
-// Define the uninitialization function for this component
+// ### Set uninit function
+// Defines a function to be called after the component has been removed from a game object.
+// The function will be called such that the `this` variable points to the component instance.
+//
+// - `func`: A function to call upon uninitialization.
+// - `return`: A reference to itself.
 TankJS.Component.prototype.uninitFunction = function(func)
 {
   this._functions.uninit = func;
   return this;
 }
 
-// Add a custom named function to the component
+// ### Set a custom function
+// Defines a custom-named function to be added to the component.
+// The function will be called such that the `this` variable points to the component instance.
+//
+// - `func`: A function object.
+// - `return`: A reference to itself.
 TankJS.Component.prototype.addFunction = function(name, func)
 {
   this._functions[name] = func;
