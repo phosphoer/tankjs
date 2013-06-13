@@ -9,6 +9,7 @@ TankJS.addComponent("Collider")
   this.width = 50;
   this.height = 50;
   this.isStatic = false;
+  this.isGhost = false;
 })
 
 .addFunction("collide", function(other)
@@ -24,6 +25,9 @@ TankJS.addComponent("Collider")
     return false;
   if (transA.y - this.height / 2 > transB.y + other.height / 2)
     return false;
+
+  if (this.isGhost)
+    return true;
 
   var pen = [0, 0];
   var centerA = [transA.x, transA.y];
