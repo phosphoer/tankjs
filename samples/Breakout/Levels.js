@@ -1,10 +1,10 @@
 (function (Breakout, undefined)
 {
 
-var r = 'red';
-var b = 'blue';
-var o = 'orange';
-var g = 'green';
+var r = 'Red';
+var b = 'Blue';
+var o = 'Orange';
+var g = 'Green';
 var X = null;
 
 Breakout.levels =

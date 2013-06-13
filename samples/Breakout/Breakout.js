@@ -70,6 +70,9 @@ TankJS.addComponent("GameLogic")
   this.numBalls = 0;
   this.numBricks = 0;
 
+  // Keep track of current level
+  this.level = -1;
+
   // Keep track of player lives
   this.lives = 3;
 
@@ -125,6 +128,32 @@ TankJS.addComponent("GameLogic")
       ball.Pos2D.y = 200;
       ball.Velocity.x = 30;
       ball.Velocity.y = 40;
+    }
+  }
+
+  // If no bricks exist, build the next level
+  if (this.numBricks === 0)
+  {
+    ++this.level;
+    if (this.level === Breakout.levels.length)
+    {
+    }
+    else
+    {
+      var data = Breakout.levels[this.level];
+      for (var row in data.bricks)
+      {
+        for (var col in data.bricks[row])
+        {
+          var brickType = data.bricks[row][col];
+          if (!brickType)
+            continue;
+
+          var brick = TankJS.addObjectFromPrefab(brickType + "Brick");
+          brick.Pos2D.x = 64 + col * brick.Image.width;
+          brick.Pos2D.y = 64 + row * brick.Image.height;
+        }
+      }
     }
   }
 });
@@ -219,4 +248,26 @@ TankJS.addComponent("Ball")
   {
     this.parent.remove();
   }
+});
+
+// ### Brick component
+// Handles brick logic
+// Could be just implemented in the game logic component but I
+// wanted to demonstrate using components for smaller tasks
+TankJS.addComponent("Brick")
+
+.initFunction(function()
+{
+  TankJS.dispatchEvent("OnBrickAdded", this);
+  // TankJS.addEventListener("OnEnterFrame", this);
+})
+
+.uninitFunction(function()
+{
+  TankJS.dispatchEvent("OnBrickRemoved", this);
+  // TankJS.removeEventListener("OnEnterFrame", this);
+})
+
+.addFunction("OnEnterFrame", function(dt)
+{
 });
