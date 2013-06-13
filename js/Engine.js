@@ -161,10 +161,14 @@ TankJS.addComponent = function(componentName)
   return c;
 }
 
-// Get all component instances of a particular tag
-TankJS.getComponentsWithTag = function(tag)
+// ### Find components with interface
+// Gets all component instances that implement a particular interface
+//
+// - `interfaceName`: Name of the interface that returned components should implement
+// - `return`: An array of component instances
+TankJS.getComponentsWithInterface = function(interfaceName)
 {
-  return TankJS._taggedComponents[tag];
+  return TankJS._interfaceComponents[interfaceName];
 }
 
 // Reigster a function as an event handler
@@ -342,7 +346,7 @@ TankJS._components = {};
 
 // Map of existing component instances sorted by tag names
 // Key is the name of the tag
-TankJS._taggedComponents = {};
+TankJS._interfaceComponents = {};
 
 // Map of objects listening for a message
 TankJS._events = {};

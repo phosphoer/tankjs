@@ -8,7 +8,7 @@ TankJS.Component = function(name)
   this.name = name;
   this._functions = {};
   this._includes = [];
-  this._tags = [];
+  this._interfaces = [];
 }
 
 // ### Instantiate a component
@@ -24,10 +24,10 @@ TankJS.Component.prototype.clone = function()
   c.init = function() {};
   c.uninit = function() {};
 
-  // Add tags
-  c.tags = {};
-  for (var i in this._tags)
-    c.tags[this._tags[i]] = true;
+  // Add interfaces
+  c.interfaces = {};
+  for (var i in this._interfaces)
+    c.interfaces[this._interfaces[i]] = true;
 
   // Add functions
   for (var i in this._functions)
@@ -47,7 +47,7 @@ TankJS.Component.prototype.clone = function()
 //
 // - `componentNames`: A comma-deliminated string of component names, e.g., "Pos2D, Sprite".
 // - `return`: A reference to itself.
-TankJS.Component.prototype.includes = function(componentNames)
+TankJS.Component.prototype.requires = function(componentNames)
 {
   // Get array of component names
   componentNames = componentNames.replace(/\s/g, "");
@@ -56,18 +56,18 @@ TankJS.Component.prototype.includes = function(componentNames)
   return this;
 }
 
-// ### Tag the component
-// Defines a list of tags that apply to this component
-// Useful for specifying functionality that the component implements.
-// Common tags include `Drawable`, and `Collidable`
+// ### Interfaces
+// Defines a list of interfaces that this component implements.
+// Manager components often look for components that implement a particular interface.
+// Common interfaces include `Drawable2D`, and `Collidable`
 //
-// - `tagNames`: A comma-deliminated string of tag names, e.g., "Drawable, Collidable".
+// - `interfaces`: A comma-deliminated string of interface names, e.g., "Drawable2D, Collidable".
 // - `return`: A reference to itself.
-TankJS.Component.prototype.tags = function(tagNames)
+TankJS.Component.prototype.implements = function(interfaces)
 {
-  // Get array of tag anmes
-  tagNames = tagNames.replace(/\s/g, "");
-  this._tags = tagNames.split(",");
+  // Get array of interface names
+  interfaces = interfaces.replace(/\s/g, "");
+  this._interfaces = interfaces.split(",");
   return this;
 }
 

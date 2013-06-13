@@ -1,6 +1,6 @@
 TankJS.addComponent("TopDownMovement")
 
-.includes("Pos2D")
+.requires("Pos2D")
 
 .initFunction(function()
 {

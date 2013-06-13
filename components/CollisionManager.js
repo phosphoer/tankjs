@@ -4,7 +4,7 @@ TankJS.addComponent("CollisionManager")
 {
   this._colliders = {};
 
-  var existing = TankJS.getComponentsWithTag("Collidable");
+  var existing = TankJS.getComponentsWithInterface("Collidable");
   for (var i in existing)
     this._colliders[existing[i].parent.id] = existing[i];
 
@@ -22,7 +22,7 @@ TankJS.addComponent("CollisionManager")
 
 .addFunction("OnComponentInitialized", function(c)
 {
-  if (c.tags["Collidable"])
+  if (c.interfaces["Collidable"])
   {
     this._colliders[c.parent.id] = c;
   }
@@ -30,7 +30,7 @@ TankJS.addComponent("CollisionManager")
 
 .addFunction("OnComponentUninitialized", function(c)
 {
-  if (c.tags["Collidable"])
+  if (c.interfaces["Collidable"])
   {
     delete this._colliders[c.parent.id];
   }

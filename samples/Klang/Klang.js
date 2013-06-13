@@ -97,7 +97,7 @@ TankJS.addComponent("GameLogic")
 // Custom component to implement AI for the other player
 TankJS.addComponent("KlangAI")
 
-.includes("Pos2D")
+.requires("Pos2D")
 
 .initFunction(function()
 {

@@ -9,11 +9,8 @@ TankJS.GameObject = function(id)
   // ID of the game object
   this.id = id;
 
-  // Map of components by component name
+  // Map of components by name
   this._components = {};
-
-  // Map of components by component tag
-  this._taggedComponents = {};
 }
 
 TankJS.GameObject.prototype.remove = function()
@@ -37,8 +34,8 @@ TankJS.GameObject.prototype.addComponent = function(componentName)
 
   // Temporarily add a fake component just to mark this one as added
   // for the upcoming recursive calls
-  this._components[componentName] = "Placeholder";
   this[componentName] = "Placeholder";
+  this._components[componentName] = "Placeholder";
 
   // Add all the included components
   for (var i in componentDef._includes)
@@ -48,28 +45,21 @@ TankJS.GameObject.prototype.addComponent = function(componentName)
 
   // Clone the component into our list of components
   var c = componentDef.clone();
-  this._components[componentName] = c;
   this[componentName] = c;
+  this._components[componentName] = c;
 
-  // Track this component by its tags
-  for (var i in componentDef._tags)
+  // Track this component by its interaces
+  for (var i in componentDef._interfaces)
   {
-    // Get the list of components with this tag
-    var componentList = TankJS._taggedComponents[componentDef._tags[i]];
-    var componentListLocal = this._taggedComponents[componentDef._tags[i]];
+    // Get the list of components with this interface
+    var componentList = TankJS._interfaceComponents[componentDef._interfaces[i]];
     if (!componentList)
     {
       componentList = {};
-      TankJS._taggedComponents[componentDef._tags[i]] = componentList;
-    }
-    if (!componentListLocal)
-    {
-      componentListLocal = {};
-      this._taggedComponents[componentDef._tags[i]] = componentListLocal;
+      TankJS._interfaceComponents[componentDef._interfaces[i]] = componentList;
     }
 
     componentList[this.name + "." + componentDef.name] = c;
-    componentListLocal[componentDef.name] = c;
   }
 
   // Set some attributes of the component instance
@@ -112,27 +102,20 @@ TankJS.GameObject.prototype.removeComponent = function(componentName)
   // Uninitialize the component
   c.uninit.apply(c);
 
-  // Stop tracking this component by its tags
+  // Stop tracking this component by its interfaces
   var componentDef = TankJS._components[componentName];
-  for (var i in componentDef._tags)
+  for (var i in componentDef._interfaces)
   {
-    // Get the list of components with this tag
-    var componentList = TankJS._taggedComponents[componentDef._tags[i]];
-    var componentListLocal = this._taggedComponents[componentDef._tags[i]];
+    // Get the list of components with this interface
+    var componentList = TankJS._interfaceComponents[componentDef._interfaces[i]];
 
     if (componentList)
       delete componentList[this.name + "." + componentDef.name];
-    if (componentListLocal)
-      delete componentListLocal[componentDef.name];
   }
 
   // Remove component
   delete this._components[componentName];
-}
-
-TankJS.GameObject.prototype.getComponentsWithTag = function(tagName)
-{
-  return this._taggedComponents[tagName];
+  delete this[componentName];
 }
 
 TankJS.GameObject.prototype.invoke = function(funcName, args)

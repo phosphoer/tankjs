@@ -1,8 +1,8 @@
 TankJS.addComponent("ColoredBox")
 
-.tags("Drawable")
+.implements("Drawable")
 
-.includes("Pos2D")
+.requires("Pos2D")
 
 .initFunction(function()
 {

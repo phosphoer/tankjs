@@ -1,6 +1,6 @@
 TankJS.addComponent("Velocity")
 
-.includes("Pos2D")
+.requires("Pos2D")
 
 .initFunction(function()
 {

@@ -6,7 +6,7 @@ TankJS.addComponent("RenderManager")
   this._drawables = {};
   this._drawablesSorted = [];
 
-  var existing = TankJS.getComponentsWithTag("Drawable");
+  var existing = TankJS.getComponentsWithInterface("Drawable");
   for (var i in existing)
     this._drawables[existing[i].name + existing[i].parent.id] = existing[i];
   this.sort();
@@ -25,7 +25,7 @@ TankJS.addComponent("RenderManager")
 
 .addFunction("OnComponentInitialized", function(c)
 {
-  if (c.tags["Drawable"])
+  if (c.interfaces["Drawable"])
   {
     this._drawables[c.name + c.parent.id] = c;
     this.sort();
@@ -34,7 +34,7 @@ TankJS.addComponent("RenderManager")
 
 .addFunction("OnComponentUninitialized", function(c)
 {
-  if (c.tags["Drawable"])
+  if (c.interfaces["Drawable"])
   {
     delete this._drawables[c.name + c.parent.id];
     this.sort();

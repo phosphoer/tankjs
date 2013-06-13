@@ -1,8 +1,8 @@
 TankJS.addComponent("Image")
 
-.tags("Drawable")
+.implements("Drawable")
 
-.includes("Pos2D")
+.requires("Pos2D")
 
 .initFunction(function()
 {
