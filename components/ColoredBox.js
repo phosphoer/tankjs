@@ -4,7 +4,7 @@ TankJS.addComponent("ColoredBox")
 
 .requires("Pos2D")
 
-.initFunction(function()
+.construct(function ()
 {
   this.zdepth = 0;
   this.width = 50;
@@ -13,7 +13,7 @@ TankJS.addComponent("ColoredBox")
   this.centered = true;
 })
 
-.addFunction("draw", function(ctx)
+.addFunction("draw", function (ctx)
 {
   var t = this.parent.Pos2D;
   ctx.save();

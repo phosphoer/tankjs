@@ -4,7 +4,7 @@ TankJS.addComponent("Collider")
 
 .requires("Pos2D")
 
-.initFunction(function()
+.construct(function ()
 {
   this.width = 50;
   this.height = 50;
@@ -12,7 +12,7 @@ TankJS.addComponent("Collider")
   this.isGhost = false;
 })
 
-.addFunction("collide", function(other)
+.addFunction("collide", function (other)
 {
   var transA = this.parent.Pos2D
   var transB = other.parent.Pos2D

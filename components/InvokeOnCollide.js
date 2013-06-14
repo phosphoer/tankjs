@@ -1,6 +1,6 @@
 TankJS.addComponent("InvokeOnCollide")
 
-.initFunction(function()
+.construct(function ()
 {
   this.requiredComponent = "";
   this.invokeSelf = "";
@@ -9,7 +9,7 @@ TankJS.addComponent("InvokeOnCollide")
   this.argOther = undefined;
 })
 
-.addFunction("OnCollide", function(obj)
+.addFunction("OnCollide", function (obj)
 {
   if (this.requiredComponent && !obj.getComponent(this.requiredComponent))
     return;

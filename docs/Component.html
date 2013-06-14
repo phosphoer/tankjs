@@ -319,7 +319,7 @@ The function will be called such that the <code>this</code> variable points to t
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS.Component.prototype.initFunction = <span class="keyword">function</span>(func)
+            <div class="content"><div class='highlight'><pre>TankJS.Component.prototype.initialize = <span class="keyword">function</span>(func)
 {
   <span class="keyword">this</span>._functions.init = func;
   <span class="keyword">return</span> <span class="keyword">this</span>;
@@ -344,7 +344,7 @@ The function will be called such that the <code>this</code> variable points to t
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS.Component.prototype.uninitFunction = <span class="keyword">function</span>(func)
+            <div class="content"><div class='highlight'><pre>TankJS.Component.prototype.destruct = <span class="keyword">function</span>(func)
 {
   <span class="keyword">this</span>._functions.uninit = func;
   <span class="keyword">return</span> <span class="keyword">this</span>;

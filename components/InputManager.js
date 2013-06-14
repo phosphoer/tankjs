@@ -1,6 +1,6 @@
 TankJS.addComponent("InputManager")
 
-.initFunction(function()
+.construct(function ()
 {
   var that = this;
 
@@ -17,24 +17,22 @@ TankJS.addComponent("InputManager")
   // ### Input UI element
   // Defines which HTML element mouse input is relative to
   // If left null mouse input will be relative to window
-  addProperty(this, "context",
-    function()
-    {
-      return that._context;
-    },
-    function(val)
-    {
-      if (that._context)
-        that.context.removeEventListener("mousemove", that.mousemove);
-      else
-        removeEventListener("mousemove", that.mousemove);
+  addProperty(this, "context", function ()
+  {
+    return that._context;
+  }, function (val)
+  {
+    if (that._context)
+      that.context.removeEventListener("mousemove", that.mousemove);
+    else
+      removeEventListener("mousemove", that.mousemove);
 
-      that._context = val;
-      if (that._context)
-        that.context.addEventListener("mousemove", that.mousemove);
-      else
-        addEventListener("mousemove", that.mousemove);
-    });
+    that._context = val;
+    if (that._context)
+      that.context.addEventListener("mousemove", that.mousemove);
+    else
+      addEventListener("mousemove", that.mousemove);
+  });
 
   this._context = null;
   this._keyDownEvents = [];
@@ -43,19 +41,19 @@ TankJS.addComponent("InputManager")
   this._keysHeld = {};
 
   var that = this;
-  this.keydown = function(e)
+  this.keydown = function (e)
   {
     if (!that._keysHeld[e.keyCode])
       that._keyDownEvents.push(e);
   };
 
-  this.keyup = function(e)
+  this.keyup = function (e)
   {
     if (that._keysHeld[e.keyCode])
       that._keyUpEvents.push(e);
   };
 
-  this.mousemove = function(e)
+  this.mousemove = function (e)
   {
     that._mouseMoveEvents.push(e);
   }
@@ -70,7 +68,7 @@ TankJS.addComponent("InputManager")
   TankJS.addEventListener("OnEnterFrame", this);
 })
 
-.uninitFunction(function()
+.destruct(function ()
 {
   removeEventListener("keydown", this.keydown);
   removeEventListener("keyup", this.keyup);
@@ -82,7 +80,7 @@ TankJS.addComponent("InputManager")
   TankJS.removeEventListener("OnEnterFrame", this);
 })
 
-.addFunction("OnEnterFrame", function(dt)
+.addFunction("OnEnterFrame", function (dt)
 {
   var e;
   for (var i in this._keyDownEvents)

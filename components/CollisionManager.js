@@ -1,6 +1,6 @@
 TankJS.addComponent("CollisionManager")
 
-.initFunction(function()
+.initialize(function ()
 {
   this._colliders = {};
 
@@ -13,14 +13,14 @@ TankJS.addComponent("CollisionManager")
   TankJS.addEventListener("OnComponentUninitialized", this);
 })
 
-.uninitFunction(function()
+.destruct(function ()
 {
   TankJS.removeEventListener("OnEnterFrame", this);
   TankJS.removeEventListener("OnComponentInitialized", this);
   TankJS.removeEventListener("OnComponentUninitialized", this);
 })
 
-.addFunction("OnComponentInitialized", function(c)
+.addFunction("OnComponentInitialized", function (c)
 {
   if (c.interfaces["Collidable"])
   {
@@ -28,7 +28,7 @@ TankJS.addComponent("CollisionManager")
   }
 })
 
-.addFunction("OnComponentUninitialized", function(c)
+.addFunction("OnComponentUninitialized", function (c)
 {
   if (c.interfaces["Collidable"])
   {
@@ -36,7 +36,7 @@ TankJS.addComponent("CollisionManager")
   }
 })
 
-.addFunction("OnEnterFrame", function(dt)
+.addFunction("OnEnterFrame", function (dt)
 {
   for (var i in this._colliders)
   {
@@ -54,8 +54,7 @@ TankJS.addComponent("CollisionManager")
         c.parent.invoke("OnCollide", this._colliders[j].parent);
       }
       else
-      {
-      }
+      {}
     }
   }
 });

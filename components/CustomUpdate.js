@@ -1,18 +1,18 @@
 TankJS.addComponent("CustomUpdate")
 
-.initFunction(function()
+.initialize(function ()
 {
-  this.func = function() {};
+    this.func = function () {};
 
-  TankJS.addEventListener("OnEnterFrame", this);
+    TankJS.addEventListener("OnEnterFrame", this);
 })
 
-.uninitFunction(function()
+.destruct(function ()
 {
-  TankJS.removeEventListener("OnEnterFrame", this);
+    TankJS.removeEventListener("OnEnterFrame", this);
 })
 
-.addFunction("OnEnterFrame", function(dt)
+.addFunction("OnEnterFrame", function (dt)
 {
-  this.func.apply(this.parent, [dt]);
+    this.func.apply(this.parent, [dt]);
 });

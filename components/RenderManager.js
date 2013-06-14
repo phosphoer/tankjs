@@ -1,6 +1,6 @@
 TankJS.addComponent("RenderManager")
 
-.initFunction(function()
+.initialize(function ()
 {
   this.context = null;
   this._drawables = {};
@@ -16,14 +16,14 @@ TankJS.addComponent("RenderManager")
   TankJS.addEventListener("OnComponentUninitialized", this);
 })
 
-.uninitFunction(function()
+.destruct(function ()
 {
   TankJS.removeEventListener("OnEnterFrame", this);
   TankJS.removeEventListener("OnComponentInitialized", this);
   TankJS.removeEventListener("OnComponentUninitialized", this);
 })
 
-.addFunction("OnComponentInitialized", function(c)
+.addFunction("OnComponentInitialized", function (c)
 {
   if (c.interfaces["Drawable"])
   {
@@ -32,7 +32,7 @@ TankJS.addComponent("RenderManager")
   }
 })
 
-.addFunction("OnComponentUninitialized", function(c)
+.addFunction("OnComponentUninitialized", function (c)
 {
   if (c.interfaces["Drawable"])
   {
@@ -41,7 +41,7 @@ TankJS.addComponent("RenderManager")
   }
 })
 
-.addFunction("OnEnterFrame", function(dt)
+.addFunction("OnEnterFrame", function (dt)
 {
   for (var i in this._drawablesSorted)
   {
@@ -49,12 +49,12 @@ TankJS.addComponent("RenderManager")
   }
 })
 
-.addFunction("sort", function()
+.addFunction("sort", function ()
 {
   this._drawablesSorted = [];
   for (var i in this._drawables)
     this._drawablesSorted.push(this._drawables[i]);
-  this._drawablesSorted.sort(function(a, b)
+  this._drawablesSorted.sort(function (a, b)
   {
     return a.zdepth - b.zdepth;
   });

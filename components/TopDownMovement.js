@@ -2,7 +2,7 @@ TankJS.addComponent("TopDownMovement")
 
 .requires("Pos2D")
 
-.initFunction(function()
+.construct(function ()
 {
   this.left = false;
   this.up = false;
@@ -15,14 +15,14 @@ TankJS.addComponent("TopDownMovement")
   TankJS.addEventListener("OnEnterFrame", this);
 })
 
-.uninitFunction(function()
+.destruct(function ()
 {
   TankJS.removeEventListener("OnKeyPress", this);
   TankJS.removeEventListener("OnKeyRelease", this);
   TankJS.removeEventListener("OnEnterFrame", this);
 })
 
-.addFunction("OnKeyPress", function(key)
+.addFunction("OnKeyPress", function (key)
 {
   if (key == TankJS.W)
     this.up = true;
@@ -34,7 +34,7 @@ TankJS.addComponent("TopDownMovement")
     this.right = true;
 })
 
-.addFunction("OnKeyRelease", function(key)
+.addFunction("OnKeyRelease", function (key)
 {
   if (key == TankJS.W)
     this.up = false;
@@ -46,7 +46,7 @@ TankJS.addComponent("TopDownMovement")
     this.right = false;
 })
 
-.addFunction("OnEnterFrame", function(dt)
+.addFunction("OnEnterFrame", function (dt)
 {
   var t = this.parent.Pos2D;
   if (this.left)

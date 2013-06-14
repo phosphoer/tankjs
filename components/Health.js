@@ -1,13 +1,13 @@
 TankJS.addComponent("Health")
 
-.initFunction(function()
+.construct(function ()
 {
   this.value = 1;
   this.max = 1;
   this.deleteAtZero = true;
 })
 
-.addFunction("FillHealth", function(amount)
+.addFunction("FillHealth", function (amount)
 {
   if (amount)
     this.value += amount;
@@ -17,7 +17,7 @@ TankJS.addComponent("Health")
     this.value = this.max;
 })
 
-.addFunction("TakeDamage", function(damage)
+.addFunction("TakeDamage", function (damage)
 {
   this.value -= damage;
   if (this.value <= 0)
