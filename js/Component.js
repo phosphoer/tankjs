@@ -63,7 +63,7 @@ TankJS.Component.prototype.requires = function(componentNames)
 //
 // - `interfaces`: A comma-deliminated string of interface names, e.g., "Drawable2D, Collidable".
 // - `return`: A reference to itself.
-TankJS.Component.prototype.implements = function(interfaces)
+TankJS.Component.prototype.interfaces = function(interfaces)
 {
   // Get array of interface names
   interfaces = interfaces.replace(/\s/g, "");

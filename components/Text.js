@@ -1,6 +1,6 @@
 TankJS.addComponent("Text")
 
-.implements("Drawable")
+.interfaces("Drawable")
 
 .requires("Pos2D")
 

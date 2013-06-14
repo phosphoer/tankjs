@@ -1,6 +1,6 @@
 TankJS.addComponent("Image")
 
-.implements("Drawable")
+.interfaces("Drawable")
 
 .requires("Pos2D")
 
