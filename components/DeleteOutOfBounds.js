@@ -1,4 +1,4 @@
-TankJS.addComponent("DeleteOutOfBounds")
+TankJS.registerComponent("DeleteOutOfBounds")
 
 .requires("Pos2D")
 

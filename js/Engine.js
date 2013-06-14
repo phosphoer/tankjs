@@ -147,7 +147,7 @@ TankJS.getPrefab = function(name)
 }
 
 // Register a new component type
-TankJS.addComponent = function(componentName)
+TankJS.registerComponent = function(componentName)
 {
   // Warn about components with invalid identifiers
   if (componentName[0] >= 0 && componentName[0] <= 9 || componentName.search(" ") >= 0)

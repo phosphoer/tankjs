@@ -1,4 +1,4 @@
-TankJS.addComponent("ColoredBox")
+TankJS.registerComponent("ColoredBox")
 
 .interfaces("Drawable")
 

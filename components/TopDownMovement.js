@@ -1,4 +1,4 @@
-TankJS.addComponent("TopDownMovement")
+TankJS.registerComponent("TopDownMovement")
 
 .requires("Pos2D")
 

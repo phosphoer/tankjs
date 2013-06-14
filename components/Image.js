@@ -1,4 +1,4 @@
-TankJS.addComponent("Image")
+TankJS.registerComponent("Image")
 
 .interfaces("Drawable")
 

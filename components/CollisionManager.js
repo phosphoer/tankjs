@@ -1,4 +1,4 @@
-TankJS.addComponent("CollisionManager")
+TankJS.registerComponent("CollisionManager")
 
 .initFunction(function()
 {

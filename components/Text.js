@@ -1,4 +1,4 @@
-TankJS.addComponent("Text")
+TankJS.registerComponent("Text")
 
 .interfaces("Drawable")
 

@@ -1,4 +1,4 @@
-TankJS.addComponent("Collider")
+TankJS.registerComponent("Collider")
 
 .interfaces("Collidable")
 

@@ -1,4 +1,4 @@
-TankJS.addComponent("ObjectSpawner")
+TankJS.registerComponent("ObjectSpawner")
 
 .requires("Pos2D")
 

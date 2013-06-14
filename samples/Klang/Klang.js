@@ -74,7 +74,7 @@ function main()
 }
 
 // Custom game logic component to manage general state of game
-TankJS.addComponent("GameLogic")
+TankJS.registerComponent("GameLogic")
 
 .initFunction(function()
 {
@@ -95,7 +95,7 @@ TankJS.addComponent("GameLogic")
 });
 
 // Custom component to implement AI for the other player
-TankJS.addComponent("KlangAI")
+TankJS.registerComponent("KlangAI")
 
 .requires("Pos2D")
 
