@@ -1,4 +1,4 @@
-TankJS.addComponent("InputManager")
+TankJS.registerComponent("InputManager")
 
 .construct(function ()
 {

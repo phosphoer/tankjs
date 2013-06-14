@@ -1,4 +1,4 @@
-TankJS.addComponent("CustomUpdate")
+TankJS.registerComponent("CustomUpdate")
 
 .initialize(function ()
 {

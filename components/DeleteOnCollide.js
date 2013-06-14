@@ -1,4 +1,4 @@
-TankJS.addComponent("DeleteOnCollide")
+TankJS.registerComponent("DeleteOnCollide")
 
 .addFunction("OnCollide", function(obj)
 {

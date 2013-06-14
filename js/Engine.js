@@ -98,16 +98,6 @@
     return obj;
   }
 
-  // ### Remove a gameobject
-  // Schedules the given object to be deleted on the next frame.
-  // Will cause `uninit` to be called on all components of the object before it is deleted.
-  //
-  // `id`: The id of the object. (`GameObject.id`)
-  TankJS.removeObject = function (id)
-  {
-    // Add object to trash
-    TankJS._objectsDeleted.push(TankJS.getObject(id));
-  }
 
   // ### Remove a gameobject by name
   // Schedules the given object to be deleted on the next frame.
@@ -121,9 +111,22 @@
     if (!obj)
       return;
 
-    // Remove the object
-    TankJS.removeObject(obj.id);
+    var c = new TankJS.Component(componentName);
+    TankJS._registeredComponents[componentName] = c;
+    return c;
   }
+
+  // ### Find components with interface
+  // Gets all component instances that implement a particular interface
+  //
+  // - `interfaceName`: Name of the interface that returned components should implement
+  // - `return`: An array of component instances
+  TankJS.getComponentsWithInterface = function (interfaceName)
+  {
+    return TankJS._interfaceComponents[interfaceName];
+  }
+
+
 
   // ### Remove all gameobjects
   // Equivalent to calling `removeObject` on all objects.
@@ -175,8 +178,19 @@
     return TankJS._prefabs[name];
   }
 
+  // Schedules the given object to be deleted on the next frame.
+  // Will cause `uninit` to be called on all components of the object before it is deleted.
+  //
+  // `id`: The id of the object. (`GameObject.id`)
+  TankJS.removeObject = function (id)
+  {
+    // Add object to trash
+    TankJS._objectsDeleted.push(TankJS.getObject(id));
+  }
+
+
   // Register a new component type
-  TankJS.addComponent = function (componentName)
+  TankJS.registerComponent = function (componentName)
   {
     // Warn about components with invalid identifiers
     if (componentName[0] >= 0 && componentName[0] <= 9 || componentName.search(" ") >= 0)
@@ -186,7 +200,7 @@
     }
 
     var c = new TankJS.Component(componentName);
-    TankJS._components[componentName] = c;
+    TankJS._registeredComponents[componentName] = c;
     return c;
   }
 
@@ -371,16 +385,23 @@
   // Map of prefabs with name as key
   TankJS._prefabs = {};
 
+
   // Map of current registered component types
   // Key is the name of the component
   TankJS._components = {};
+
+  // Map of current registered component types
+  // Key is the name of the component
+  TankJS._registeredComponents = {};
 
   // Map of existing component instances sorted by tag names
   // Key is the name of the tag
   TankJS._interfaceComponents = {};
 
+
   // Map of objects listening for a message
   TankJS._events = {};
+
 
   // Current ID for game objects
   TankJS._currentID = 0;

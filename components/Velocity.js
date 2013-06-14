@@ -1,4 +1,4 @@
-TankJS.addComponent("Velocity")
+TankJS.registerComponent("Velocity")
 
 .requires("Pos2D")
 

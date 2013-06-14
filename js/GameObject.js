@@ -25,7 +25,7 @@
       return this;
 
     // Get the component definition object
-    var componentDef = TankJS._components[componentName];
+    var componentDef = TankJS._registeredComponents[componentName];
     if (!componentDef)
     {
       TankJS.error("No component registered with name " + componentName);
@@ -100,7 +100,7 @@
     c.destruct.apply(c);
 
     // Stop tracking this component by its interfaces
-    var componentDef = TankJS._components[componentName];
+    var componentDef = TankJS._registeredComponents[componentName];
     for (var i in componentDef._interfaces)
     {
       // Get the list of components with this interface

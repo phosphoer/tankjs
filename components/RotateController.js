@@ -1,4 +1,4 @@
-TankJS.addComponent("RotateController")
+TankJS.registerComponent("RotateController")
 
 .requires("Pos2D")
 

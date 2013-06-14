@@ -1,6 +1,6 @@
-TankJS.addComponent("ColoredBox")
+TankJS.registerComponent("ColoredBox")
 
-.implements("Drawable")
+.interfaces("Drawable")
 
 .requires("Pos2D")
 

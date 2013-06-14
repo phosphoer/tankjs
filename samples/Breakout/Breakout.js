@@ -137,7 +137,7 @@ function main()
 
 // ### Game logic component
 // Manages general state of the game
-TankJS.addComponent("GameLogic")
+TankJS.registerComponent("GameLogic")
 
 .initialize(function ()
 {
@@ -240,7 +240,7 @@ TankJS.addComponent("GameLogic")
 // Handles paddle input
 // Could be just implemented in the game logic component but I
 // wanted to demonstrate using components for smaller tasks
-TankJS.addComponent("Paddle")
+TankJS.registerComponent("Paddle")
 
 .initialize(function ()
 {
@@ -272,7 +272,7 @@ TankJS.addComponent("Paddle")
 // Handles moving the ball and bouncing off blocks
 // Could be just implemented in the game logic component but I
 // wanted to demonstrate using components for smaller tasks
-TankJS.addComponent("Ball")
+TankJS.registerComponent("Ball")
 
 .initialize(function ()
 {
@@ -375,7 +375,7 @@ TankJS.addComponent("Ball")
 // Handles brick logic
 // Could be just implemented in the game logic component but I
 // wanted to demonstrate using components for smaller tasks
-TankJS.addComponent("Brick")
+TankJS.registerComponent("Brick")
 
 .initialize(function ()
 {

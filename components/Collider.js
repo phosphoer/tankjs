@@ -1,6 +1,6 @@
-TankJS.addComponent("Collider")
+TankJS.registerComponent("Collider")
 
-.implements("Collidable")
+.interfaces("Collidable")
 
 .requires("Pos2D")
 

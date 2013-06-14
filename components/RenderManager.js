@@ -1,4 +1,4 @@
-TankJS.addComponent("RenderManager")
+TankJS.registerComponent("RenderManager")
 
 .initialize(function ()
 {
