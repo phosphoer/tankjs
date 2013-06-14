@@ -157,7 +157,7 @@ TankJS.registerComponent = function(componentName)
   }
 
   var c = new TankJS.Component(componentName);
-  TankJS._components[componentName] = c;
+  TankJS._registeredComponents[componentName] = c;
   return c;
 }
 
@@ -342,11 +342,15 @@ TankJS._prefabs = {};
 
 // Map of current registered component types
 // Key is the name of the component
-TankJS._components = {};
+TankJS._registeredComponents = {};
 
 // Map of existing component instances sorted by tag names
 // Key is the name of the tag
 TankJS._interfaceComponents = {};
+
+// Map of components added to the engine
+// that are global to spaces
+TankJS._components = {};
 
 // Map of objects listening for a message
 TankJS._events = {};
