@@ -260,7 +260,7 @@
 
     // Initialize the component
     c.construct.apply(c);
-    c.init.apply(c);
+    c.initialize.apply(c);
 
     return TankJS;
   }
@@ -277,6 +277,35 @@
     {
       TankJS.addComponent(components[i]);
     }
+  }
+
+  TankJS.removeComponent = function (componentName)
+  {
+    // If we don't have the component then just return
+    var c = TankJS[componentName];
+    if (!c)
+      return;
+
+    // Inform the engine this component was uninitialized
+    TankJS.dispatchEvent("OnComponentUninitialized", c);
+
+    // Uninitialize the component
+    c.destruct.apply(c);
+
+    // Stop tracking this component by its interfaces
+    var componentDef = TankJS._registeredComponents[componentName];
+    for (var i in componentDef._interfaces)
+    {
+      // Get the list of components with this interface
+      var componentList = TankJS._interfaceComponents[componentDef._interfaces[i]];
+
+      if (componentList)
+        delete componentList[this.name + "." + componentDef.name];
+    }
+
+    // Remove component
+    delete TankJS._components[componentName];
+    delete TankJS[componentName];
   }
 
   // ### Find components with interface

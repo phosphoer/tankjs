@@ -1,13 +1,12 @@
 function main()
 {
   // Create the "engine" object with the main components
-  var e = TankJS.createObject().addComponents("InputManager, CollisionManager, RenderManager, GameLogic");
-  TankJS.addObject(e, "Engine");
+  TankJS.addComponents("InputManager, CollisionManager, RenderManager, GameLogic");
 
   // Point the render manager's context to the canvas one
   // Would be nice not to require this somehow?
-  e.RenderManager.context = document.getElementById("screen").getContext("2d");
-  e.InputManager.context = document.getElementById("stage");
+  TankJS.RenderManager.context = document.getElementById("screen").getContext("2d");
+  TankJS.InputManager.context = document.getElementById("stage");
 
   // Add background object
   var obj = TankJS.createObject().addComponents("Image").attr("Image",
@@ -261,7 +260,7 @@ TankJS.registerComponent("Paddle")
 
 .addFunction("OnEnterFrame", function (dt)
 {
-  this.parent.Pos2D.x = TankJS.getNamedObject("Engine").InputManager.mousePos[0];
+  this.parent.Pos2D.x = TankJS.InputManager.mousePos[0];
   if (this.parent.Pos2D.x - 24 < 0)
     this.parent.Pos2D.x = 24
   if (this.parent.Pos2D.x + 24 > 320)
