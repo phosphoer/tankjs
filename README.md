@@ -16,7 +16,7 @@ The goal of TANK is to provide a simple framework that removes some of the tedio
 ###Core Engine
 The core engine is very small, and provides 3 main objects.
 
-- TankJS: The main interface through which all the functionality of the engine is accessed.
+- TANK: The main interface through which all the functionality of the engine is accessed.
 - Entity: A container for components with methods to manipulate them.
 - Component: Used to define a "blueprint" of a component that can be added to an Entity. Components can be given "tags" which are used to define what sort of functionality they provide. For example, the `RenderManager` component looks for components with the `Drawable` tag and draws them.
 
