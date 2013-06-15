@@ -50,16 +50,36 @@
     // Track the object by its id
     TankJS._objects[object.id] = object;
 
-    var n;
+
+    var n, c;
     for (n in object._components)
     {
-      object._components[n].initialize.apply(object._components[n]);
+      var c = object._components[n];
+      var componentDef = TankJS._registeredComponents[n];
+      for (var i in componentDef._interfaces)
+      {
+        // Get the list of components with this interface
+        var componentList = TankJS._interfaceComponents[componentDef._interfaces[i]];
+        if (!componentList)
+        {
+          componentList = {};
+          TankJS._interfaceComponents[componentDef._interfaces[i]] = componentList;
+        }
+
+        componentList[object.name + "." + componentDef.name] = c;
+      }
     }
 
     for (n in object._components)
     {
-      // Inform the engine this component was initialized
-      TankJS.dispatchEvent("OnComponentInitialized", object._components[n]);
+      c = object._components[n];
+      c.initialize.apply(c);
+    }
+
+    for (n in object._components)
+    {
+      c = object._components[n];
+      TankJS.dispatchEvent("OnComponentInitialized", c);
     }
 
     return object;
