@@ -48,20 +48,6 @@
     this[componentName] = c;
     this._components[componentName] = c;
 
-    // Track this component by its interaces
-    for (var i in componentDef._interfaces)
-    {
-      // Get the list of components with this interface
-      var componentList = TankJS._interfaceComponents[componentDef._interfaces[i]];
-      if (!componentList)
-      {
-        componentList = {};
-        TankJS._interfaceComponents[componentDef._interfaces[i]] = componentList;
-      }
-
-      componentList[this.name + "." + componentDef.name] = c;
-    }
-
     // Set some attributes of the component instance
     c.parent = this;
 
