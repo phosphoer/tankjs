@@ -76,7 +76,7 @@
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>(<span class="function"><span class="keyword">function</span> <span class="params">(TankJS, undefined)</span>
+            <div class="content"><div class='highlight'><pre>(<span class="function"><span class="keyword">function</span> <span class="params">(TANK, undefined)</span>
 {</span></pre></div></div>
 
         </li>
@@ -93,7 +93,7 @@
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS.Component = <span class="keyword">function</span>(name)
+            <div class="content"><div class='highlight'><pre>TANK.Component = <span class="keyword">function</span>(name)
 {
   <span class="keyword">this</span>.name = name;
   <span class="keyword">this</span>._functions = {};
@@ -118,7 +118,7 @@
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS.Component.prototype.clone = <span class="keyword">function</span>()
+            <div class="content"><div class='highlight'><pre>TANK.Component.prototype.clone = <span class="keyword">function</span>()
 {
   <span class="keyword">var</span> c = {};</pre></div></div>
 
@@ -211,7 +211,7 @@ and will be automatically added before this one is added.</p>
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS.Component.prototype.requires = <span class="keyword">function</span>(componentNames)
+            <div class="content"><div class='highlight'><pre>TANK.Component.prototype.requires = <span class="keyword">function</span>(componentNames)
 {</pre></div></div>
 
         </li>
@@ -253,7 +253,7 @@ Common tags include <code>Drawable</code>, and <code>Collidable</code></p>
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS.Component.prototype.tags = <span class="keyword">function</span>(tagNames)
+            <div class="content"><div class='highlight'><pre>TANK.Component.prototype.tags = <span class="keyword">function</span>(tagNames)
 {</pre></div></div>
 
         </li>
@@ -294,7 +294,7 @@ The function will be called such that the <code>this</code> variable points to t
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS.Component.prototype.constructFunction = <span class="keyword">function</span>(func)
+            <div class="content"><div class='highlight'><pre>TANK.Component.prototype.constructFunction = <span class="keyword">function</span>(func)
 {
   <span class="keyword">this</span>._functions.construct = func;
   <span class="keyword">return</span> <span class="keyword">this</span>;
@@ -319,7 +319,7 @@ The function will be called such that the <code>this</code> variable points to t
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS.Component.prototype.initialize = <span class="keyword">function</span>(func)
+            <div class="content"><div class='highlight'><pre>TANK.Component.prototype.initialize = <span class="keyword">function</span>(func)
 {
   <span class="keyword">this</span>._functions.init = func;
   <span class="keyword">return</span> <span class="keyword">this</span>;
@@ -344,7 +344,7 @@ The function will be called such that the <code>this</code> variable points to t
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS.Component.prototype.destruct = <span class="keyword">function</span>(func)
+            <div class="content"><div class='highlight'><pre>TANK.Component.prototype.destruct = <span class="keyword">function</span>(func)
 {
   <span class="keyword">this</span>._functions.uninit = func;
   <span class="keyword">return</span> <span class="keyword">this</span>;
@@ -369,13 +369,13 @@ The function will be called such that the <code>this</code> variable points to t
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS.Component.prototype.addFunction = <span class="keyword">function</span>(name, func)
+            <div class="content"><div class='highlight'><pre>TANK.Component.prototype.addFunction = <span class="keyword">function</span>(name, func)
 {
   <span class="keyword">this</span>._functions[name] = func;
   <span class="keyword">return</span> <span class="keyword">this</span>;
 }
 
-} (window.TankJS = window.TankJS || {}));</pre></div></div>
+} (window.TANK = window.TANK || {}));</pre></div></div>
 
         </li>
 

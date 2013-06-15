@@ -1,4 +1,4 @@
-TankJS.registerComponent("RenderManager")
+TANK.registerComponent("RenderManager")
 
 .initialize(function ()
 {
@@ -6,21 +6,21 @@ TankJS.registerComponent("RenderManager")
   this._drawables = {};
   this._drawablesSorted = [];
 
-  var existing = TankJS.getComponentsWithInterface("Drawable");
+  var existing = TANK.getComponentsWithInterface("Drawable");
   for (var i in existing)
     this._drawables[existing[i].name + existing[i].parent.id] = existing[i];
   this.sort();
 
-  TankJS.addEventListener("OnEnterFrame", this);
-  TankJS.addEventListener("OnComponentInitialized", this);
-  TankJS.addEventListener("OnComponentUninitialized", this);
+  TANK.addEventListener("OnEnterFrame", this);
+  TANK.addEventListener("OnComponentInitialized", this);
+  TANK.addEventListener("OnComponentUninitialized", this);
 })
 
 .destruct(function ()
 {
-  TankJS.removeEventListener("OnEnterFrame", this);
-  TankJS.removeEventListener("OnComponentInitialized", this);
-  TankJS.removeEventListener("OnComponentUninitialized", this);
+  TANK.removeEventListener("OnEnterFrame", this);
+  TANK.removeEventListener("OnComponentInitialized", this);
+  TANK.removeEventListener("OnComponentUninitialized", this);
 })
 
 .addFunction("OnComponentInitialized", function (c)

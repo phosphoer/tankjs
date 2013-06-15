@@ -10,127 +10,127 @@
 <body>
   <div id="container">
     <div id="background"></div>
-    
+
       <ul id="jump_to">
         <li>
           <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
           <a class="small" href="javascript:void(0);">+</a>
           <div id="jump_wrapper">
           <div id="jump_page">
-            
-              
+
+
               <a class="source" href="Component.html">
                 Component.js
               </a>
-            
-              
+
+
               <a class="source" href="Engine.html">
                 Engine.js
               </a>
-            
-              
+
+
               <a class="source" href="GameObject.html">
                 GameObject.js
               </a>
-            
-              
+
+
               <a class="source" href="KeyCodes.html">
                 KeyCodes.js
               </a>
-            
-              
+
+
               <a class="source" href="Math.html">
                 Math.js
               </a>
-            
-              
+
+
               <a class="source" href="addProperty.html">
                 addProperty.js
               </a>
-            
-              
+
+
               <a class="source" href="requestAnimFrame.html">
                 requestAnimFrame.js
               </a>
-            
+
           </div>
         </li>
       </ul>
-    
+
     <ul class="sections">
-        
+
           <li id="title">
               <div class="annotation">
                   <h1>KeyCodes.js</h1>
               </div>
           </li>
-        
-        
-        
+
+
+
         <li id="section-1">
             <div class="annotation">
-              
+
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+
             </div>
-            
-            <div class="content"><div class='highlight'><pre>(<span class="function"><span class="keyword">function</span> <span class="params">(TankJS, undefined)</span>
+
+            <div class="content"><div class='highlight'><pre>(<span class="function"><span class="keyword">function</span> <span class="params">(TANK, undefined)</span>
 {</span>
 
-TankJS.LEFT_ARROW = <span class="number">37</span>;
-TankJS.UP_ARROW = <span class="number">38</span>;
-TankJS.RIGHT_ARROW = <span class="number">39</span>;
-TankJS.DOWN_ARROW = <span class="number">40</span>;
-TankJS.SHIFT = <span class="number">16</span>;
-TankJS.BACKSPACE = <span class="number">8</span>;
-TankJS.ESCAPE = <span class="number">27</span>;
-TankJS.SPACE = <span class="number">32</span>;
-TankJS.CONTROL = <span class="number">17</span>;
-TankJS.ALT = <span class="number">18</span>;
-TankJS.SUPER = <span class="number">91</span>;
-TankJS.A = <span class="number">65</span>;
-TankJS.B = <span class="number">66</span>;
-TankJS.C = <span class="number">67</span>;
-TankJS.D = <span class="number">68</span>;
-TankJS.E = <span class="number">69</span>;
-TankJS.F = <span class="number">70</span>;
-TankJS.G = <span class="number">71</span>;
-TankJS.H = <span class="number">72</span>;
-TankJS.I = <span class="number">73</span>;
-TankJS.J = <span class="number">74</span>;
-TankJS.K = <span class="number">75</span>;
-TankJS.L = <span class="number">76</span>;
-TankJS.M = <span class="number">77</span>;
-TankJS.N = <span class="number">78</span>;
-TankJS.O = <span class="number">79</span>;
-TankJS.P = <span class="number">80</span>;
-TankJS.Q = <span class="number">81</span>;
-TankJS.R = <span class="number">82</span>;
-TankJS.S = <span class="number">83</span>;
-TankJS.T = <span class="number">84</span>;
-TankJS.U = <span class="number">85</span>;
-TankJS.V = <span class="number">86</span>;
-TankJS.W = <span class="number">87</span>;
-TankJS.X = <span class="number">88</span>;
-TankJS.Y = <span class="number">89</span>;
-TankJS.Z = <span class="number">90</span>;
-TankJS.NUM1 = <span class="number">49</span>;
-TankJS.NUM2 = <span class="number">50</span>;
-TankJS.NUM3 = <span class="number">51</span>;
-TankJS.NUM4 = <span class="number">52</span>;
-TankJS.NUM5 = <span class="number">53</span>;
-TankJS.NUM6 = <span class="number">54</span>;
-TankJS.NUM7 = <span class="number">55</span>;
-TankJS.NUM8 = <span class="number">56</span>;
-TankJS.NUM9 = <span class="number">57</span>;
-TankJS.NUM0 = <span class="number">48</span>;
+TANK.LEFT_ARROW = <span class="number">37</span>;
+TANK.UP_ARROW = <span class="number">38</span>;
+TANK.RIGHT_ARROW = <span class="number">39</span>;
+TANK.DOWN_ARROW = <span class="number">40</span>;
+TANK.SHIFT = <span class="number">16</span>;
+TANK.BACKSPACE = <span class="number">8</span>;
+TANK.ESCAPE = <span class="number">27</span>;
+TANK.SPACE = <span class="number">32</span>;
+TANK.CONTROL = <span class="number">17</span>;
+TANK.ALT = <span class="number">18</span>;
+TANK.SUPER = <span class="number">91</span>;
+TANK.A = <span class="number">65</span>;
+TANK.B = <span class="number">66</span>;
+TANK.C = <span class="number">67</span>;
+TANK.D = <span class="number">68</span>;
+TANK.E = <span class="number">69</span>;
+TANK.F = <span class="number">70</span>;
+TANK.G = <span class="number">71</span>;
+TANK.H = <span class="number">72</span>;
+TANK.I = <span class="number">73</span>;
+TANK.J = <span class="number">74</span>;
+TANK.K = <span class="number">75</span>;
+TANK.L = <span class="number">76</span>;
+TANK.M = <span class="number">77</span>;
+TANK.N = <span class="number">78</span>;
+TANK.O = <span class="number">79</span>;
+TANK.P = <span class="number">80</span>;
+TANK.Q = <span class="number">81</span>;
+TANK.R = <span class="number">82</span>;
+TANK.S = <span class="number">83</span>;
+TANK.T = <span class="number">84</span>;
+TANK.U = <span class="number">85</span>;
+TANK.V = <span class="number">86</span>;
+TANK.W = <span class="number">87</span>;
+TANK.X = <span class="number">88</span>;
+TANK.Y = <span class="number">89</span>;
+TANK.Z = <span class="number">90</span>;
+TANK.NUM1 = <span class="number">49</span>;
+TANK.NUM2 = <span class="number">50</span>;
+TANK.NUM3 = <span class="number">51</span>;
+TANK.NUM4 = <span class="number">52</span>;
+TANK.NUM5 = <span class="number">53</span>;
+TANK.NUM6 = <span class="number">54</span>;
+TANK.NUM7 = <span class="number">55</span>;
+TANK.NUM8 = <span class="number">56</span>;
+TANK.NUM9 = <span class="number">57</span>;
+TANK.NUM0 = <span class="number">48</span>;
 
-} (window.TankJS = window.TankJS || {}));</pre></div></div>
-            
+} (window.TANK = window.TANK || {}));</pre></div></div>
+
         </li>
-        
+
     </ul>
   </div>
 </body>

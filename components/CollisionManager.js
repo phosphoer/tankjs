@@ -1,23 +1,23 @@
-TankJS.registerComponent("CollisionManager")
+TANK.registerComponent("CollisionManager")
 
 .initialize(function ()
 {
   this._colliders = {};
 
-  var existing = TankJS.getComponentsWithInterface("Collidable");
+  var existing = TANK.getComponentsWithInterface("Collidable");
   for (var i in existing)
     this._colliders[existing[i].parent.id] = existing[i];
 
-  TankJS.addEventListener("OnEnterFrame", this);
-  TankJS.addEventListener("OnComponentInitialized", this);
-  TankJS.addEventListener("OnComponentUninitialized", this);
+  TANK.addEventListener("OnEnterFrame", this);
+  TANK.addEventListener("OnComponentInitialized", this);
+  TANK.addEventListener("OnComponentUninitialized", this);
 })
 
 .destruct(function ()
 {
-  TankJS.removeEventListener("OnEnterFrame", this);
-  TankJS.removeEventListener("OnComponentInitialized", this);
-  TankJS.removeEventListener("OnComponentUninitialized", this);
+  TANK.removeEventListener("OnEnterFrame", this);
+  TANK.removeEventListener("OnComponentInitialized", this);
+  TANK.removeEventListener("OnComponentUninitialized", this);
 })
 
 .addFunction("OnComponentInitialized", function (c)

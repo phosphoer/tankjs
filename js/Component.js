@@ -1,25 +1,23 @@
-(function (TankJS, undefined)
+(function (TANK, undefined)
 {
-  "use strict";
 
   // ### Component object
   // Defines a blueprint for components.
-  TankJS.Component = function (name)
+  TANK.Component = function (name)
   {
     this.name = name;
     this._functions = {};
     this._includes = [];
     this._interfaces = [];
-  };
+  }
 
   // ### Instantiate a component
   // Creates a component object from this blueprint.
   //
   // - `return`: The new component object.
-  TankJS.Component.prototype.clone = function ()
+  TANK.Component.prototype.clone = function ()
   {
-    var c = {},
-      i;
+    var c = {};
 
     // Default functions
     c.construct = function () {};
@@ -28,21 +26,20 @@
 
     // Add interfaces
     c.interfaces = {};
-    for (i in this._interfaces)
-    {
+    for (var i in this._interfaces)
       c.interfaces[this._interfaces[i]] = true;
-    }
 
     // Add functions
-    for (i in this._functions)
+    for (var i in this._functions)
     {
       c[i] = this._functions[i];
     }
 
+    // Set properties
     c.name = this.name;
 
     return c;
-  };
+  }
 
   // ### Require other components
   // Defines a list of components that are required by this one
@@ -50,14 +47,14 @@
   //
   // - `componentNames`: A comma-deliminated string of component names, e.g., "Pos2D, Sprite".
   // - `return`: A reference to itself.
-  TankJS.Component.prototype.requires = function (componentNames)
+  TANK.Component.prototype.requires = function (componentNames)
   {
     // Get array of component names
     componentNames = componentNames.replace(/\s/g, "");
     this._includes = componentNames.split(",");
 
     return this;
-  };
+  }
 
   // ### Interfaces
   // Defines a list of interfaces that this component implements.
@@ -66,13 +63,13 @@
   //
   // - `interfaces`: A comma-deliminated string of interface names, e.g., "Drawable2D, Collidable".
   // - `return`: A reference to itself.
-  TankJS.Component.prototype.interfaces = function (interfaces)
+  TANK.Component.prototype.interfaces = function (interfaces)
   {
     // Get array of interface names
     interfaces = interfaces.replace(/\s/g, "");
     this._interfaces = interfaces.split(",");
     return this;
-  };
+  }
 
   // ### Set constructor function
   // Defines a function to be called after the component has been instantiated.
@@ -81,11 +78,11 @@
   //
   // - `func`: A function to call after instantiation.
   // - `return`: A reference to itself.
-  TankJS.Component.prototype.construct = function (func)
+  TANK.Component.prototype.construct = function (func)
   {
     this._functions.construct = func;
     return this;
-  };
+  }
 
   // ### Set init function
   // Defines a function to be called after the component has been constructed and added to a game object.
@@ -93,11 +90,11 @@
   //
   // - `func`: A function to call upon initialization.
   // - `return`: A reference to itself.
-  TankJS.Component.prototype.initialize = function (func)
+  TANK.Component.prototype.initialize = function (func)
   {
     this._functions.initialize = func;
     return this;
-  };
+  }
 
   // ### Set uninit function
   // Defines a function to be called after the component has been removed from a game object.
@@ -105,11 +102,11 @@
   //
   // - `func`: A function to call upon uninitialization.
   // - `return`: A reference to itself.
-  TankJS.Component.prototype.destruct = function (func)
+  TANK.Component.prototype.destruct = function (func)
   {
     this._functions.destruct = func;
     return this;
-  };
+  }
 
   // ### Set a custom function
   // Defines a custom-named function to be added to the component.
@@ -117,11 +114,11 @@
   //
   // - `func`: A function object.
   // - `return`: A reference to itself.
-  TankJS.Component.prototype.addFunction = function (name, func)
+  TANK.Component.prototype.addFunction = function (name, func)
   {
     this._functions[name] = func;
     return this;
-  };
+  }
 
-}(this.TankJS = this.TankJS ||
+}(window.TANK = window.TANK ||
 {}));

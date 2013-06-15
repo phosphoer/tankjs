@@ -1,4 +1,4 @@
-TankJS.registerComponent("TopDownMovement")
+TANK.registerComponent("TopDownMovement")
 
 .requires("Pos2D")
 
@@ -10,39 +10,39 @@ TankJS.registerComponent("TopDownMovement")
   this.down = false;
   this.movementSpeed = 50;
 
-  TankJS.addEventListener("OnKeyPress", this);
-  TankJS.addEventListener("OnKeyRelease", this);
-  TankJS.addEventListener("OnEnterFrame", this);
+  TANK.addEventListener("OnKeyPress", this);
+  TANK.addEventListener("OnKeyRelease", this);
+  TANK.addEventListener("OnEnterFrame", this);
 })
 
 .destruct(function ()
 {
-  TankJS.removeEventListener("OnKeyPress", this);
-  TankJS.removeEventListener("OnKeyRelease", this);
-  TankJS.removeEventListener("OnEnterFrame", this);
+  TANK.removeEventListener("OnKeyPress", this);
+  TANK.removeEventListener("OnKeyRelease", this);
+  TANK.removeEventListener("OnEnterFrame", this);
 })
 
 .addFunction("OnKeyPress", function (key)
 {
-  if (key == TankJS.W)
+  if (key == TANK.W)
     this.up = true;
-  else if (key == TankJS.A)
+  else if (key == TANK.A)
     this.left = true;
-  else if (key == TankJS.S)
+  else if (key == TANK.S)
     this.down = true;
-  else if (key == TankJS.D)
+  else if (key == TANK.D)
     this.right = true;
 })
 
 .addFunction("OnKeyRelease", function (key)
 {
-  if (key == TankJS.W)
+  if (key == TANK.W)
     this.up = false;
-  else if (key == TankJS.A)
+  else if (key == TANK.A)
     this.left = false;
-  else if (key == TankJS.S)
+  else if (key == TANK.S)
     this.down = false;
-  else if (key == TankJS.D)
+  else if (key == TANK.D)
     this.right = false;
 })
 

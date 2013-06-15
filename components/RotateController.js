@@ -1,4 +1,4 @@
-TankJS.registerComponent("RotateController")
+TANK.registerComponent("RotateController")
 
 .requires("Pos2D")
 
@@ -8,31 +8,31 @@ TankJS.registerComponent("RotateController")
   this.right = false;
   this.rotateSpeed = 2;
 
-  TankJS.addEventListener("OnKeyPress", this);
-  TankJS.addEventListener("OnKeyRelease", this);
-  TankJS.addEventListener("OnEnterFrame", this);
+  TANK.addEventListener("OnKeyPress", this);
+  TANK.addEventListener("OnKeyRelease", this);
+  TANK.addEventListener("OnEnterFrame", this);
 })
 
 .destruct(function ()
 {
-  TankJS.removeEventListener("OnKeyPress", this);
-  TankJS.removeEventListener("OnKeyRelease", this);
-  TankJS.removeEventListener("OnEnterFrame", this);
+  TANK.removeEventListener("OnKeyPress", this);
+  TANK.removeEventListener("OnKeyRelease", this);
+  TANK.removeEventListener("OnEnterFrame", this);
 })
 
 .addFunction("OnKeyPress", function (key)
 {
-  if (key == TankJS.Q)
+  if (key == TANK.Q)
     this.left = true;
-  else if (key == TankJS.E)
+  else if (key == TANK.E)
     this.right = true;
 })
 
 .addFunction("OnKeyRelease", function (key)
 {
-  if (key == TankJS.Q)
+  if (key == TANK.Q)
     this.left = false;
-  else if (key == TankJS.E)
+  else if (key == TANK.E)
     this.right = false;
 })
 

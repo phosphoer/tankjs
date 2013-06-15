@@ -1,4 +1,4 @@
-TankJS.registerComponent("InputManager")
+TANK.registerComponent("InputManager")
 
 .construct(function ()
 {
@@ -65,7 +65,7 @@ TankJS.registerComponent("InputManager")
   else
     addEventListener("mousemove", this.mousemove);
 
-  TankJS.addEventListener("OnEnterFrame", this);
+  TANK.addEventListener("OnEnterFrame", this);
 })
 
 .destruct(function ()
@@ -77,7 +77,7 @@ TankJS.registerComponent("InputManager")
   else
     removeEventListener("mousemove", this.mousemove);
 
-  TankJS.removeEventListener("OnEnterFrame", this);
+  TANK.removeEventListener("OnEnterFrame", this);
 })
 
 .addFunction("OnEnterFrame", function (dt)
@@ -86,20 +86,20 @@ TankJS.registerComponent("InputManager")
   for (var i in this._keyDownEvents)
   {
     e = this._keyDownEvents[i];
-    TankJS.dispatchEvent("OnKeyPress", e.keyCode, this._keysHeld);
+    TANK.dispatchEvent("OnKeyPress", e.keyCode, this._keysHeld);
     this._keysHeld[e.keyCode] = true;
   }
   this._keyDownEvents = [];
 
   for (var i in this._keysHeld)
   {
-    TankJS.dispatchEvent("OnKeyHeld", i);
+    TANK.dispatchEvent("OnKeyHeld", i);
   }
 
   for (var i in this._keyUpEvents)
   {
     e = this._keyUpEvents[i];
-    TankJS.dispatchEvent("OnKeyRelease", e.keyCode, this._keysHeld);
+    TANK.dispatchEvent("OnKeyRelease", e.keyCode, this._keysHeld);
     delete this._keysHeld[e.keyCode];
   }
   this._keyUpEvents = [];
@@ -124,7 +124,7 @@ TankJS.registerComponent("InputManager")
     mouseEvent.y = this.mousePos[1];
     mouseEvent.moveX = this.mouseDelta[0];
     mouseEvent.moveY = this.mouseDelta[1];
-    TankJS.dispatchEvent("OnMouseMove", mouseEvent, this._keysHeld);
+    TANK.dispatchEvent("OnMouseMove", mouseEvent, this._keysHeld);
   }
   this._mouseMoveEvents = [];
 });

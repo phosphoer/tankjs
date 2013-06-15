@@ -1,6 +1,6 @@
-TankJS.registerComponent("DeleteOnCollide")
+TANK.registerComponent("DeleteOnCollide")
 
-.addFunction("OnCollide", function(obj)
+.addFunction("OnCollide", function (obj)
 {
   this.parent.remove();
 });

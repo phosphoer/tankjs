@@ -1,7 +1,7 @@
-(function (TankJS, undefined)
+(function (TANK, undefined)
 {
 
-  TankJS.GameObject = function (id)
+  TANK.GameObject = function (id)
   {
     // Name of the game object
     this.name = null;
@@ -13,22 +13,22 @@
     this._components = {};
   }
 
-  TankJS.GameObject.prototype.remove = function ()
+  TANK.GameObject.prototype.remove = function ()
   {
-    TankJS.removeObject(this.id);
+    TANK.removeObject(this.id);
   }
 
-  TankJS.GameObject.prototype.addComponent = function (componentName)
+  TANK.GameObject.prototype.addComponent = function (componentName)
   {
     // Check if we have this component already
     if (this[componentName])
       return this;
 
     // Get the component definition object
-    var componentDef = TankJS._registeredComponents[componentName];
+    var componentDef = TANK._registeredComponents[componentName];
     if (!componentDef)
     {
-      TankJS.error("No component registered with name " + componentName);
+      TANK.error("No component registered with name " + componentName);
       return this;
     }
 
@@ -57,7 +57,7 @@
     return this;
   }
 
-  TankJS.GameObject.prototype.addComponents = function (componentNames)
+  TANK.GameObject.prototype.addComponents = function (componentNames)
   {
     // Get array of component names
     componentNames = componentNames.replace(/\s/g, "");
@@ -72,7 +72,7 @@
     return this;
   }
 
-  TankJS.GameObject.prototype.removeComponent = function (componentName)
+  TANK.GameObject.prototype.removeComponent = function (componentName)
   {
     // If we don't have the component then just return
     var c = this[componentName];
@@ -80,17 +80,17 @@
       return;
 
     // Inform the engine this component was uninitialized
-    TankJS.dispatchEvent("OnComponentUninitialized", c);
+    TANK.dispatchEvent("OnComponentUninitialized", c);
 
     // Uninitialize the component
     c.destruct.apply(c);
 
     // Stop tracking this component by its interfaces
-    var componentDef = TankJS._registeredComponents[componentName];
+    var componentDef = TANK._registeredComponents[componentName];
     for (var i in componentDef._interfaces)
     {
       // Get the list of components with this interface
-      var componentList = TankJS._interfaceComponents[componentDef._interfaces[i]];
+      var componentList = TANK._interfaceComponents[componentDef._interfaces[i]];
 
       if (componentList)
         delete componentList[this.name + "." + componentDef.name];
@@ -101,7 +101,7 @@
     delete this[componentName];
   }
 
-  TankJS.GameObject.prototype.invoke = function (funcName, args)
+  TANK.GameObject.prototype.invoke = function (funcName, args)
   {
     // Construct arguments
     var message_args = [];
@@ -116,12 +116,12 @@
     }
   }
 
-  TankJS.GameObject.prototype.attr = function (componentName, attrs)
+  TANK.GameObject.prototype.attr = function (componentName, attrs)
   {
     var c = this[componentName]
     if (!c)
     {
-      TankJS.error("Could not find component with name " + componentName);
+      TANK.error("Could not find component with name " + componentName);
       return this;
     }
 
@@ -131,7 +131,7 @@
     return this;
   }
 
-  TankJS.GameObject.prototype.destruct = function ()
+  TANK.GameObject.prototype.destruct = function ()
   {
     // Remove all components
     for (var i in this._components)
@@ -140,5 +140,5 @@
     }
   }
 
-}(window.TankJS = window.TankJS ||
+}(window.TANK = window.TANK ||
 {}));

@@ -73,12 +73,12 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <p>The main TankJS file that provides access to the core functionality of the engine.
+              <p>The main TANK file that provides access to the core functionality of the engine.
 This includes creating and manipulating game objects, registering components, and listening for / dispatching events.</p>
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>(<span class="function"><span class="keyword">function</span> <span class="params">(TankJS, undefined)</span>
+            <div class="content"><div class='highlight'><pre>(<span class="function"><span class="keyword">function</span> <span class="params">(TANK, undefined)</span>
 {</span></pre></div></div>
 
         </li>
@@ -94,7 +94,7 @@ This includes creating and manipulating game objects, registering components, an
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS.errorsEnabled = <span class="literal">true</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>TANK.errorsEnabled = <span class="literal">true</span>;</pre></div></div>
 
         </li>
 
@@ -109,7 +109,7 @@ This includes creating and manipulating game objects, registering components, an
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS.warningsEnabled = <span class="literal">true</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>TANK.warningsEnabled = <span class="literal">true</span>;</pre></div></div>
 
         </li>
 
@@ -124,7 +124,7 @@ This includes creating and manipulating game objects, registering components, an
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS.logsEnabled = <span class="literal">true</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>TANK.logsEnabled = <span class="literal">true</span>;</pre></div></div>
 
         </li>
 
@@ -145,9 +145,9 @@ not unique the existing object by that name will no longer be findable by its na
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS.addObject = <span class="keyword">function</span>(name)
+            <div class="content"><div class='highlight'><pre>TANK.addObject = <span class="keyword">function</span>(name)
 {
-  <span class="keyword">var</span> obj = <span class="keyword">new</span> TankJS.GameObject(<span class="keyword">this</span>._currentID++);</pre></div></div>
+  <span class="keyword">var</span> obj = <span class="keyword">new</span> TANK.GameObject(<span class="keyword">this</span>._currentID++);</pre></div></div>
 
         </li>
 
@@ -165,7 +165,7 @@ not unique the existing object by that name will no longer be findable by its na
             <div class="content"><div class='highlight'><pre>  <span class="keyword">if</span> (name)
   {
     obj.name = name;
-    TankJS._objectsNamed[name] = obj;
+    TANK._objectsNamed[name] = obj;
   }</pre></div></div>
 
         </li>
@@ -181,7 +181,7 @@ not unique the existing object by that name will no longer be findable by its na
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>  TankJS._objects[obj.id] = obj;
+            <div class="content"><div class='highlight'><pre>  TANK._objects[obj.id] = obj;
 
   <span class="keyword">return</span> obj;
 }</pre></div></div>
@@ -206,16 +206,16 @@ not unique the existing object by that name will no longer be findable by its na
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS.addObjectFromPrefab = <span class="keyword">function</span>(prefabName, objName)
+            <div class="content"><div class='highlight'><pre>TANK.addObjectFromPrefab = <span class="keyword">function</span>(prefabName, objName)
 {
-  <span class="keyword">var</span> prefab = TankJS.getPrefab(prefabName);
+  <span class="keyword">var</span> prefab = TANK.getPrefab(prefabName);
   <span class="keyword">if</span> (!prefab)
   {
-    TankJS.log(<span class="string">"Could not find a prefab named "</span> + prefabName);
+    TANK.log(<span class="string">"Could not find a prefab named "</span> + prefabName);
     <span class="keyword">return</span>;
   }
 
-  <span class="keyword">var</span> obj = TankJS.addObject(objName);</pre></div></div>
+  <span class="keyword">var</span> obj = TANK.addObject(objName);</pre></div></div>
 
         </li>
 
@@ -260,7 +260,7 @@ Will cause <code>uninit</code> to be called on all components of the object befo
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS.removeObject = <span class="keyword">function</span>(id)
+            <div class="content"><div class='highlight'><pre>TANK.removeObject = <span class="keyword">function</span>(id)
 {</pre></div></div>
 
         </li>
@@ -276,7 +276,7 @@ Will cause <code>uninit</code> to be called on all components of the object befo
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>  TankJS._objectsDeleted.push(TankJS.getObject(id));
+            <div class="content"><div class='highlight'><pre>  TANK._objectsDeleted.push(TANK.getObject(id));
 }</pre></div></div>
 
         </li>
@@ -295,7 +295,7 @@ Will cause <code>uninit</code> to be called on all components of the object befo
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS.removeNamedObject = <span class="keyword">function</span>(name)
+            <div class="content"><div class='highlight'><pre>TANK.removeNamedObject = <span class="keyword">function</span>(name)
 {</pre></div></div>
 
         </li>
@@ -311,7 +311,7 @@ Will cause <code>uninit</code> to be called on all components of the object befo
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> obj = TankJS._objectsNamed[name];
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> obj = TANK._objectsNamed[name];
   <span class="keyword">if</span> (!obj)
     <span class="keyword">return</span>;</pre></div></div>
 
@@ -328,7 +328,7 @@ Will cause <code>uninit</code> to be called on all components of the object befo
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>  TankJS.removeObject(obj.id);
+            <div class="content"><div class='highlight'><pre>  TANK.removeObject(obj.id);
 }</pre></div></div>
 
         </li>
@@ -345,10 +345,10 @@ Will cause <code>uninit</code> to be called on all components of the object befo
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS.removeAllObjects = <span class="keyword">function</span>()
+            <div class="content"><div class='highlight'><pre>TANK.removeAllObjects = <span class="keyword">function</span>()
 {
-  <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> TankJS._objects)
-    TankJS.removeObject(i);
+  <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> TANK._objects)
+    TANK.removeObject(i);
 }</pre></div></div>
 
         </li>
@@ -368,9 +368,9 @@ Will cause <code>uninit</code> to be called on all components of the object befo
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS.getObject = <span class="keyword">function</span>(id)
+            <div class="content"><div class='highlight'><pre>TANK.getObject = <span class="keyword">function</span>(id)
 {
-  <span class="keyword">return</span> TankJS._objects[id];
+  <span class="keyword">return</span> TANK._objects[id];
 }</pre></div></div>
 
         </li>
@@ -390,9 +390,9 @@ Will cause <code>uninit</code> to be called on all components of the object befo
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS.getNamedObject = <span class="keyword">function</span>(name)
+            <div class="content"><div class='highlight'><pre>TANK.getNamedObject = <span class="keyword">function</span>(name)
 {
-  <span class="keyword">return</span> TankJS._objectsNamed[name];
+  <span class="keyword">return</span> TANK._objectsNamed[name];
 }</pre></div></div>
 
         </li>
@@ -421,9 +421,9 @@ with the following format:</p>
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS.addPrefab = <span class="keyword">function</span>(name, data)
+            <div class="content"><div class='highlight'><pre>TANK.addPrefab = <span class="keyword">function</span>(name, data)
 {
-  TankJS._prefabs[name] = data;
+  TANK._prefabs[name] = data;
 }</pre></div></div>
 
         </li>
@@ -439,9 +439,9 @@ with the following format:</p>
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS.getPrefab = <span class="keyword">function</span>(name)
+            <div class="content"><div class='highlight'><pre>TANK.getPrefab = <span class="keyword">function</span>(name)
 {
-  <span class="keyword">return</span> TankJS._prefabs[name];
+  <span class="keyword">return</span> TANK._prefabs[name];
 }</pre></div></div>
 
         </li>
@@ -457,7 +457,7 @@ with the following format:</p>
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS.registerComponent = <span class="keyword">function</span>(componentName)
+            <div class="content"><div class='highlight'><pre>TANK.registerComponent = <span class="keyword">function</span>(componentName)
 {</pre></div></div>
 
         </li>
@@ -475,12 +475,12 @@ with the following format:</p>
 
             <div class="content"><div class='highlight'><pre>  <span class="keyword">if</span> (componentName[<span class="number">0</span>] &gt;= <span class="number">0</span> &amp;&amp; componentName[<span class="number">0</span>] &lt;= <span class="number">9</span> || componentName.search(<span class="string">" "</span>) &gt;= <span class="number">0</span>)
   {
-    TankJS.error(componentName + <span class="string">" is an invalid identifier and won't be accessible without [] operator"</span>);
+    TANK.error(componentName + <span class="string">" is an invalid identifier and won't be accessible without [] operator"</span>);
     <span class="keyword">return</span>;
   }
 
-  <span class="keyword">var</span> c = <span class="keyword">new</span> TankJS.Component(componentName);
-  TankJS._components[componentName] = c;
+  <span class="keyword">var</span> c = <span class="keyword">new</span> TANK.Component(componentName);
+  TANK._components[componentName] = c;
   <span class="keyword">return</span> c;
 }</pre></div></div>
 
@@ -497,9 +497,9 @@ with the following format:</p>
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS.getComponentsWithTag = <span class="keyword">function</span>(tag)
+            <div class="content"><div class='highlight'><pre>TANK.getComponentsWithTag = <span class="keyword">function</span>(tag)
 {
-  <span class="keyword">return</span> TankJS._taggedComponents[tag];
+  <span class="keyword">return</span> TANK._taggedComponents[tag];
 }</pre></div></div>
 
         </li>
@@ -515,7 +515,7 @@ with the following format:</p>
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS.addEventListener = <span class="keyword">function</span>(eventName, obj)
+            <div class="content"><div class='highlight'><pre>TANK.addEventListener = <span class="keyword">function</span>(eventName, obj)
 {</pre></div></div>
 
         </li>
@@ -531,11 +531,11 @@ with the following format:</p>
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> listeners = TankJS._events[eventName];
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> listeners = TANK._events[eventName];
   <span class="keyword">if</span> (!listeners)
   {
     listeners = [];
-    TankJS._events[eventName] = listeners;
+    TANK._events[eventName] = listeners;
   }</pre></div></div>
 
         </li>
@@ -569,7 +569,7 @@ with the following format:</p>
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS.removeEventListener = <span class="keyword">function</span>(eventName, obj)
+            <div class="content"><div class='highlight'><pre>TANK.removeEventListener = <span class="keyword">function</span>(eventName, obj)
 {</pre></div></div>
 
         </li>
@@ -585,7 +585,7 @@ with the following format:</p>
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> listeners = TankJS._events[eventName];
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> listeners = TANK._events[eventName];
   <span class="keyword">if</span> (!listeners)
     <span class="keyword">return</span> <span class="keyword">this</span>;</pre></div></div>
 
@@ -627,7 +627,7 @@ with the following format:</p>
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS.dispatchEvent = <span class="keyword">function</span>(eventName, args)
+            <div class="content"><div class='highlight'><pre>TANK.dispatchEvent = <span class="keyword">function</span>(eventName, args)
 {</pre></div></div>
 
         </li>
@@ -643,7 +643,7 @@ with the following format:</p>
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> listeners = TankJS._events[eventName];
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> listeners = TANK._events[eventName];
   <span class="keyword">if</span> (!listeners)
     <span class="keyword">return</span>;</pre></div></div>
 
@@ -685,36 +685,36 @@ with the following format:</p>
     <span class="keyword">if</span> (func)
       func.apply(thisObj, message_args);
     <span class="keyword">else</span>
-      TankJS.log(thisObj + <span class="string">" is listening for "</span> + eventName + <span class="string">" but does not implement a method of the same name"</span>);
+      TANK.log(thisObj + <span class="string">" is listening for "</span> + eventName + <span class="string">" but does not implement a method of the same name"</span>);
   }
 
   <span class="keyword">return</span> <span class="keyword">this</span>;
 }
 
-TankJS.start = <span class="keyword">function</span>()
+TANK.start = <span class="keyword">function</span>()
 {
-  TankJS._lastTime = <span class="keyword">new</span> Date();
-  TankJS._running = <span class="literal">true</span>;
+  TANK._lastTime = <span class="keyword">new</span> Date();
+  TANK._running = <span class="literal">true</span>;
   update();
   <span class="keyword">return</span> <span class="keyword">this</span>;
 }
 
-TankJS.stop = <span class="keyword">function</span>()
+TANK.stop = <span class="keyword">function</span>()
 {
-  TankJS._running = <span class="literal">false</span>;
+  TANK._running = <span class="literal">false</span>;
   <span class="keyword">return</span> <span class="keyword">this</span>;
 }
 
-TankJS.reset = <span class="keyword">function</span>()
+TANK.reset = <span class="keyword">function</span>()
 {
-  TankJS._resetting = <span class="literal">true</span>;
-  TankJS.removeAllObjects();
+  TANK._resetting = <span class="literal">true</span>;
+  TANK.removeAllObjects();
   <span class="keyword">return</span> <span class="keyword">this</span>;
 }
 
-TankJS.log = <span class="keyword">function</span>(text)
+TANK.log = <span class="keyword">function</span>(text)
 {
-  <span class="keyword">if</span> (!TankJS.logsEnabled)
+  <span class="keyword">if</span> (!TANK.logsEnabled)
     <span class="keyword">return</span>;
 
   <span class="keyword">if</span> (arguments.callee.caller.name)
@@ -723,9 +723,9 @@ TankJS.log = <span class="keyword">function</span>(text)
     console.log(<span class="string">"(anonymous function): "</span> + text);
 }
 
-TankJS.warn = <span class="keyword">function</span>(text)
+TANK.warn = <span class="keyword">function</span>(text)
 {
-  <span class="keyword">if</span> (!TankJS.warningsEnabled)
+  <span class="keyword">if</span> (!TANK.warningsEnabled)
     <span class="keyword">return</span>;
 
   <span class="keyword">if</span> (arguments.callee.caller.name)
@@ -734,9 +734,9 @@ TankJS.warn = <span class="keyword">function</span>(text)
     console.warn(<span class="string">"(anonymous function): "</span> + text);
 }
 
-TankJS.error = <span class="keyword">function</span>(text)
+TANK.error = <span class="keyword">function</span>(text)
 {
-  <span class="keyword">if</span> (!TankJS.errorsEnabled)
+  <span class="keyword">if</span> (!TANK.errorsEnabled)
     <span class="keyword">return</span>;
 
   <span class="keyword">if</span> (arguments.callee.caller.name)
@@ -762,7 +762,7 @@ TankJS.error = <span class="keyword">function</span>(text)
             </div>
 
             <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> new_time = <span class="keyword">new</span> Date();
-  <span class="keyword">var</span> dt = (new_time - TankJS._lastTime) / <span class="number">1000.0</span>;
+  <span class="keyword">var</span> dt = (new_time - TANK._lastTime) / <span class="number">1000.0</span>;
   <span class="keyword">if</span> (dt &gt; <span class="number">0.05</span>)
     dt = <span class="number">0.05</span>;</pre></div></div>
 
@@ -779,14 +779,14 @@ TankJS.error = <span class="keyword">function</span>(text)
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>  <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> TankJS._objectsDeleted)
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> TANK._objectsDeleted)
   {
-    <span class="keyword">var</span> obj = TankJS._objectsDeleted[i];
+    <span class="keyword">var</span> obj = TANK._objectsDeleted[i];
     obj.uninit();
-    <span class="keyword">delete</span> TankJS._objects[obj.id];
-    <span class="keyword">delete</span> TankJS._objectsNamed[obj.name];
+    <span class="keyword">delete</span> TANK._objects[obj.id];
+    <span class="keyword">delete</span> TANK._objectsNamed[obj.name];
   }
-  TankJS._objectsDeleted = [];</pre></div></div>
+  TANK._objectsDeleted = [];</pre></div></div>
 
         </li>
 
@@ -802,10 +802,10 @@ we&#39;ve cleared up the deleted objects</p>
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>  <span class="keyword">if</span> (TankJS._resetting)
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">if</span> (TANK._resetting)
   {
-    TankJS._resetting = <span class="literal">false</span>;
-    TankJS._running = <span class="literal">false</span>;
+    TANK._resetting = <span class="literal">false</span>;
+    TANK._running = <span class="literal">false</span>;
     main();
     <span class="keyword">return</span>;
   }</pre></div></div>
@@ -823,7 +823,7 @@ we&#39;ve cleared up the deleted objects</p>
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>  TankJS.dispatchEvent(<span class="string">"OnEnterFrame"</span>, dt);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  TANK.dispatchEvent(<span class="string">"OnEnterFrame"</span>, dt);</pre></div></div>
 
         </li>
 
@@ -838,7 +838,7 @@ we&#39;ve cleared up the deleted objects</p>
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>  <span class="keyword">if</span> (TankJS._running)
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">if</span> (TANK._running)
     requestAnimFrame(update);
 }</pre></div></div>
 
@@ -856,7 +856,7 @@ Key is the id of the object</p>
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS._objects = {};</pre></div></div>
+            <div class="content"><div class='highlight'><pre>TANK._objects = {};</pre></div></div>
 
         </li>
 
@@ -871,7 +871,7 @@ Key is the id of the object</p>
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS._objectsNamed = {};</pre></div></div>
+            <div class="content"><div class='highlight'><pre>TANK._objectsNamed = {};</pre></div></div>
 
         </li>
 
@@ -886,7 +886,7 @@ Key is the id of the object</p>
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS._objectsDeleted = [];</pre></div></div>
+            <div class="content"><div class='highlight'><pre>TANK._objectsDeleted = [];</pre></div></div>
 
         </li>
 
@@ -901,7 +901,7 @@ Key is the id of the object</p>
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS._prefabs = {};</pre></div></div>
+            <div class="content"><div class='highlight'><pre>TANK._prefabs = {};</pre></div></div>
 
         </li>
 
@@ -917,7 +917,7 @@ Key is the name of the component</p>
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS._components = {};</pre></div></div>
+            <div class="content"><div class='highlight'><pre>TANK._components = {};</pre></div></div>
 
         </li>
 
@@ -933,7 +933,7 @@ Key is the name of the tag</p>
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS._taggedComponents = {};</pre></div></div>
+            <div class="content"><div class='highlight'><pre>TANK._taggedComponents = {};</pre></div></div>
 
         </li>
 
@@ -948,7 +948,7 @@ Key is the name of the tag</p>
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS._events = {};</pre></div></div>
+            <div class="content"><div class='highlight'><pre>TANK._events = {};</pre></div></div>
 
         </li>
 
@@ -963,7 +963,7 @@ Key is the name of the tag</p>
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS._currentID = <span class="number">0</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>TANK._currentID = <span class="number">0</span>;</pre></div></div>
 
         </li>
 
@@ -978,7 +978,7 @@ Key is the name of the tag</p>
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS._lastTime = <span class="keyword">new</span> Date();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>TANK._lastTime = <span class="keyword">new</span> Date();</pre></div></div>
 
         </li>
 
@@ -993,7 +993,7 @@ Key is the name of the tag</p>
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS._running = <span class="literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>TANK._running = <span class="literal">false</span>;</pre></div></div>
 
         </li>
 
@@ -1008,9 +1008,9 @@ Key is the name of the tag</p>
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TankJS._resetting = <span class="literal">false</span>;
+            <div class="content"><div class='highlight'><pre>TANK._resetting = <span class="literal">false</span>;
 
-} (window.TankJS = window.TankJS || {}));</pre></div></div>
+} (window.TANK = window.TANK || {}));</pre></div></div>
 
         </li>
 

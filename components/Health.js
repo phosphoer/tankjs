@@ -1,4 +1,4 @@
-TankJS.registerComponent("Health")
+TANK.registerComponent("Health")
 
 .construct(function ()
 {

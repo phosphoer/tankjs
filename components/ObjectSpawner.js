@@ -1,4 +1,4 @@
-TankJS.registerComponent("ObjectSpawner")
+TANK.registerComponent("ObjectSpawner")
 
 .requires("Pos2D")
 
@@ -11,14 +11,14 @@ TankJS.registerComponent("ObjectSpawner")
   this.triggerKey = null;
 
   this._spawnTimer = 0;
-  TankJS.addEventListener("OnKeyPress", this);
-  TankJS.addEventListener("OnEnterFrame", this);
+  TANK.addEventListener("OnKeyPress", this);
+  TANK.addEventListener("OnEnterFrame", this);
 })
 
 .destruct(function ()
 {
-  TankJS.removeEventListener("OnKeyPress", this);
-  TankJS.removeEventListener("OnEnterFrame", this);
+  TANK.removeEventListener("OnKeyPress", this);
+  TANK.removeEventListener("OnEnterFrame", this);
 })
 
 .addFunction("OnKeyPress", function (key)
@@ -42,7 +42,7 @@ TankJS.registerComponent("ObjectSpawner")
   if (this._spawnTimer >= this.spawnDelay)
   {
     var t = this.parent.Pos2D;
-    var obj = TankJS.createObjectFromPrefab(this.objectPrefab);
+    var obj = TANK.createObjectFromPrefab(this.objectPrefab);
     obj.attr("Pos2D",
     {
       x: t.x + Math.cos(t.rotation) * this.spawnDistance,
@@ -54,6 +54,6 @@ TankJS.registerComponent("ObjectSpawner")
       y: Math.sin(t.rotation) * this.spawnVelocity
     });
     this._spawnTimer = 0;
-    TankJS.addObject(obj);
+    TANK.addObject(obj);
   }
 });

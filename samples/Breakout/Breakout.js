@@ -1,23 +1,23 @@
 function main()
 {
   // Create the "engine" object with the main components
-  TankJS.addComponents("InputManager, CollisionManager, RenderManager, GameLogic");
+  TANK.addComponents("InputManager, CollisionManager, RenderManager, GameLogic");
 
   // Point the render manager's context to the canvas one
   // Would be nice not to require this somehow?
-  TankJS.RenderManager.context = document.getElementById("screen").getContext("2d");
-  TankJS.InputManager.context = document.getElementById("stage");
+  TANK.RenderManager.context = document.getElementById("screen").getContext("2d");
+  TANK.InputManager.context = document.getElementById("stage");
 
   // Add background object
-  var obj = TankJS.createObject().addComponents("Image").attr("Image",
+  var obj = TANK.createObject().addComponents("Image").attr("Image",
   {
     imagePath: "res/bg_prerendered.png",
     centered: false
   });
-  TankJS.addObject(obj);
+  TANK.addObject(obj);
 
   // Add paddle
-  var player = TankJS.createObject().addComponents("Image, Paddle, Collider");
+  var player = TANK.createObject().addComponents("Image, Paddle, Collider");
   player.Image.imagePath = "res/tiles.png";
   player.Image.subRectOrigin = [0, 64];
   player.Image.subRectCorner = [48, 80];
@@ -27,10 +27,10 @@ function main()
   player.Collider.isStatic = true;
   player.Pos2D.x = 160;
   player.Pos2D.y = 376;
-  TankJS.addObject(player, "Player");
+  TANK.addObject(player, "Player");
 
   // Define a ball prefab so it is easy to quickly spawn them
-  TankJS.addPrefab("Ball",
+  TANK.addPrefab("Ball",
   {
     "Image":
     {
@@ -51,7 +51,7 @@ function main()
   });
 
   // Define a red brick prefab
-  TankJS.addPrefab("RedBrick",
+  TANK.addPrefab("RedBrick",
   {
     "Image":
     {
@@ -71,7 +71,7 @@ function main()
   });
 
   // Define a blue brick prefab
-  TankJS.addPrefab("BlueBrick",
+  TANK.addPrefab("BlueBrick",
   {
     "Image":
     {
@@ -91,7 +91,7 @@ function main()
   });
 
   // Define a green brick prefab
-  TankJS.addPrefab("GreenBrick",
+  TANK.addPrefab("GreenBrick",
   {
     "Image":
     {
@@ -111,7 +111,7 @@ function main()
   });
 
   // Define an orange brick prefab
-  TankJS.addPrefab("OrangeBrick",
+  TANK.addPrefab("OrangeBrick",
   {
     "Image":
     {
@@ -131,12 +131,12 @@ function main()
   });
 
   // Begin running the engine
-  TankJS.start();
+  TANK.start();
 }
 
 // ### Game logic component
 // Manages general state of the game
-TankJS.registerComponent("GameLogic")
+TANK.registerComponent("GameLogic")
 
 .initialize(function ()
 {
@@ -150,20 +150,20 @@ TankJS.registerComponent("GameLogic")
   // Keep track of player lives
   this.lives = 3;
 
-  TankJS.addEventListener("OnEnterFrame", this);
-  TankJS.addEventListener("OnBallAdded", this);
-  TankJS.addEventListener("OnBallRemoved", this);
-  TankJS.addEventListener("OnBrickAdded", this);
-  TankJS.addEventListener("OnBrickRemoved", this);
+  TANK.addEventListener("OnEnterFrame", this);
+  TANK.addEventListener("OnBallAdded", this);
+  TANK.addEventListener("OnBallRemoved", this);
+  TANK.addEventListener("OnBrickAdded", this);
+  TANK.addEventListener("OnBrickRemoved", this);
 })
 
 .destruct(function ()
 {
-  TankJS.removeEventListener("OnEnterFrame", this);
-  TankJS.removeEventListener("OnBallAdded", this);
-  TankJS.removeEventListener("OnBallRemoved", this);
-  TankJS.removeEventListener("OnBrickAdded", this);
-  TankJS.removeEventListener("OnBrickRemoved", this);
+  TANK.removeEventListener("OnEnterFrame", this);
+  TANK.removeEventListener("OnBallAdded", this);
+  TANK.removeEventListener("OnBallRemoved", this);
+  TANK.removeEventListener("OnBrickAdded", this);
+  TANK.removeEventListener("OnBrickRemoved", this);
 })
 
 .addFunction("OnBallAdded", function ()
@@ -193,15 +193,15 @@ TankJS.registerComponent("GameLogic")
   {
     --this.lives;
     if (this.lives === 0)
-      TankJS.reset();
+      TANK.reset();
     else
     {
       // Create a new ball
-      var ball = TankJS.createObjectFromPrefab("Ball");
+      var ball = TANK.createObjectFromPrefab("Ball");
       ball.Pos2D.x = 50;
       ball.Pos2D.y = 200;
-      TankJS.addObject(ball);
-      TankJS.dispatchEvent("OnLevelStart");
+      TANK.addObject(ball);
+      TANK.dispatchEvent("OnLevelStart");
     }
   }
 
@@ -210,7 +210,7 @@ TankJS.registerComponent("GameLogic")
   {
     ++this.lives;
     ++this.level;
-    TankJS.dispatchEvent("OnLevelComplete");
+    TANK.dispatchEvent("OnLevelComplete");
 
     if (this.level === Breakout.levels.length)
     {}
@@ -225,10 +225,10 @@ TankJS.registerComponent("GameLogic")
           if (!brickType)
             continue;
 
-          var brick = TankJS.createObjectFromPrefab(brickType + "Brick");
+          var brick = TANK.createObjectFromPrefab(brickType + "Brick");
           brick.Pos2D.x = 64 + col * brick.Image.width;
           brick.Pos2D.y = 64 + row * brick.Image.height;
-          TankJS.addObject(brick);
+          TANK.addObject(brick);
         }
       }
     }
@@ -239,18 +239,18 @@ TankJS.registerComponent("GameLogic")
 // Handles paddle input
 // Could be just implemented in the game logic component but I
 // wanted to demonstrate using components for smaller tasks
-TankJS.registerComponent("Paddle")
+TANK.registerComponent("Paddle")
 
 .initialize(function ()
 {
-  TankJS.addEventListener("OnEnterFrame", this);
-  TankJS.addEventListener("OnMouseMove", this);
+  TANK.addEventListener("OnEnterFrame", this);
+  TANK.addEventListener("OnMouseMove", this);
 })
 
 .destruct(function ()
 {
-  TankJS.removeEventListener("OnEnterFrame", this);
-  TankJS.removeEventListener("OnMouseMove", this);
+  TANK.removeEventListener("OnEnterFrame", this);
+  TANK.removeEventListener("OnMouseMove", this);
 })
 
 .addFunction("OnMouseMove", function (e)
@@ -260,7 +260,7 @@ TankJS.registerComponent("Paddle")
 
 .addFunction("OnEnterFrame", function (dt)
 {
-  this.parent.Pos2D.x = TankJS.InputManager.mousePos[0];
+  this.parent.Pos2D.x = TANK.InputManager.mousePos[0];
   if (this.parent.Pos2D.x - 24 < 0)
     this.parent.Pos2D.x = 24
   if (this.parent.Pos2D.x + 24 > 320)
@@ -271,26 +271,26 @@ TankJS.registerComponent("Paddle")
 // Handles moving the ball and bouncing off blocks
 // Could be just implemented in the game logic component but I
 // wanted to demonstrate using components for smaller tasks
-TankJS.registerComponent("Ball")
+TANK.registerComponent("Ball")
 
 .initialize(function ()
 {
   // Send out an event that a ball was created
-  TankJS.dispatchEvent("OnBallAdded", this.parent);
+  TANK.dispatchEvent("OnBallAdded", this.parent);
 
-  TankJS.addEventListener("OnEnterFrame", this);
-  TankJS.addEventListener("OnLevelComplete", this);
-  TankJS.addEventListener("OnLevelStart", this);
+  TANK.addEventListener("OnEnterFrame", this);
+  TANK.addEventListener("OnLevelComplete", this);
+  TANK.addEventListener("OnLevelStart", this);
 })
 
 .destruct(function ()
 {
   // Send out an event that a ball was destroyed
-  TankJS.dispatchEvent("OnBallRemoved", this.parent);
+  TANK.dispatchEvent("OnBallRemoved", this.parent);
 
-  TankJS.removeEventListener("OnEnterFrame", this);
-  TankJS.removeEventListener("OnLevelComplete", this);
-  TankJS.removeEventListener("OnLevelStart", this);
+  TANK.removeEventListener("OnEnterFrame", this);
+  TANK.removeEventListener("OnLevelComplete", this);
+  TANK.removeEventListener("OnLevelStart", this);
 })
 
 .addFunction("OnCollide", function (other)
@@ -374,16 +374,16 @@ TankJS.registerComponent("Ball")
 // Handles brick logic
 // Could be just implemented in the game logic component but I
 // wanted to demonstrate using components for smaller tasks
-TankJS.registerComponent("Brick")
+TANK.registerComponent("Brick")
 
 .initialize(function ()
 {
-  TankJS.dispatchEvent("OnBrickAdded", this);
+  TANK.dispatchEvent("OnBrickAdded", this);
 })
 
 .destruct(function ()
 {
-  TankJS.dispatchEvent("OnBrickRemoved", this);
+  TANK.dispatchEvent("OnBrickRemoved", this);
 })
 
 .addFunction("OnEnterFrame", function (dt) {});

@@ -1,4 +1,4 @@
-TankJS.registerComponent("InvokeOnCollide")
+TANK.registerComponent("InvokeOnCollide")
 
 .construct(function ()
 {

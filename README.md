@@ -24,7 +24,7 @@ For example, TankJS comes with a `Canvas` component which provides an HTML5 canv
 
 One of the simplest components in TankJS is the `Pos2D` component, which allows a GameObject to have an x and y position, and rotation.
 
-    TankJS.registerComponent("Pos2D")
+    TANK.registerComponent("Pos2D")
     .initFunction(function()
     {
       this.x = 0;
