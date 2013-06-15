@@ -136,26 +136,6 @@
     return c;
   }
 
-  // ### Find components with interface
-  // Gets all component instances that implement a particular interface
-  //
-  // - `interfaceName`: Name of the interface that returned components should implement
-  // - `return`: An array of component instances
-  TankJS.getComponentsWithInterface = function (interfaceName)
-  {
-    return TankJS._interfaceComponents[interfaceName];
-  }
-
-
-
-  // ### Remove all gameobjects
-  // Equivalent to calling `removeObject` on all objects.
-  TankJS.removeAllObjects = function ()
-  {
-    for (var i in TankJS._objects)
-      TankJS.removeObject(i);
-  }
-
   // ### Get a gameobject by id
   //
   // - `id`: The id of the game object to get
@@ -198,6 +178,7 @@
     return TankJS._prefabs[name];
   }
 
+  // ### Remove an object
   // Schedules the given object to be deleted on the next frame.
   // Will cause `uninit` to be called on all components of the object before it is deleted.
   //
@@ -208,6 +189,13 @@
     TankJS._objectsDeleted.push(TankJS.getObject(id));
   }
 
+  // ### Remove all objects
+  // Equivalent to calling `removeObject` on all objects.
+  TankJS.removeAllObjects = function ()
+  {
+    for (var i in TankJS._objects)
+      TankJS.removeObject(i);
+  }
 
   // Register a new component type
   TankJS.registerComponent = function (componentName)
@@ -222,6 +210,76 @@
     var c = new TankJS.Component(componentName);
     TankJS._registeredComponents[componentName] = c;
     return c;
+  }
+
+  // Add a component to the engine
+  TankJS.addComponent = function (componentName)
+  {
+    // Check if we have this component already
+    if (TankJS[componentName])
+      return;
+
+    // Get the component definition object
+    var componentDef = TankJS._registeredComponents[componentName];
+    if (!componentDef)
+    {
+      TankJS.error("No component registered with name " + componentName);
+      return;
+    }
+
+    // Temporarily add a fake component just to mark this one as added
+    // for the upcoming recursive calls
+    TankJS[componentName] = "Placeholder";
+    TankJS._components[componentName] = "Placeholder";
+
+    // Add all the included components
+    for (var i in componentDef._includes)
+    {
+      TankJS.addComponent(componentDef._includes[i]);
+    }
+
+    // Clone the component into our list of components
+    var c = componentDef.clone();
+    TankJS[componentName] = c;
+    TankJS._components[componentName] = c;
+
+    // Track this component by its interaces
+    for (var i in componentDef._interfaces)
+    {
+      // Get the list of components with this interface
+      var componentList = TankJS._interfaceComponents[componentDef._interfaces[i]];
+      if (!componentList)
+      {
+        componentList = {};
+        TankJS._interfaceComponents[componentDef._interfaces[i]] = componentList;
+      }
+
+      componentList["TankJS" + "." + componentDef.name] = c;
+    }
+
+    // Set some attributes of the component instance
+    // The parent is null because it is a global component
+    c.parent = null;
+
+    // Initialize the component
+    c.construct.apply(c);
+    c.init.apply(c);
+
+    return TankJS;
+  }
+
+  // Add a list of components to the engine
+  TankJS.addComponents = function (componentNames)
+  {
+    // Get array of component names
+    componentNames = componentNames.replace(/\s/g, "");
+    var components = componentNames.split(",");
+
+    // Add components to object
+    for (var i in components)
+    {
+      TankJS.addComponent(components[i]);
+    }
   }
 
   // ### Find components with interface
@@ -247,8 +305,6 @@
 
     // Add listener to the map
     listeners.push(obj);
-
-    return this;
   }
 
   // Unregister a function as an event handler
@@ -257,7 +313,7 @@
     // Get array of listeners
     var listeners = TankJS._events[eventName];
     if (!listeners)
-      return this;
+      return;
 
     // Delete the listener from the map
     for (var i in listeners)
@@ -268,8 +324,6 @@
         break;
       }
     }
-
-    return this;
   }
 
   // Send out an event with arguments
@@ -296,22 +350,18 @@
       else
         TankJS.log(thisObj + " is listening for " + eventName + " but does not implement a method of the same name");
     }
-
-    return this;
   }
 
   TankJS.start = function ()
   {
     TankJS._lastTime = new Date();
     TankJS._running = true;
-    update();
-    return this;
+    update()
   }
 
   TankJS.stop = function ()
   {
-    TankJS._running = false;
-    return this;
+    TankJS._running = false
   }
 
   TankJS.reset = function ()
@@ -405,8 +455,7 @@
   // Map of prefabs with name as key
   TankJS._prefabs = {};
 
-
-  // Map of current registered component types
+  // Map of current engine components
   // Key is the name of the component
   TankJS._components = {};
 
