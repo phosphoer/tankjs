@@ -118,24 +118,6 @@
     return obj;
   }
 
-
-  // ### Remove a gameobject by name
-  // Schedules the given object to be deleted on the next frame.
-  // Will cause `uninit` to be called on all components of the object before it is deleted.
-  //
-  // `name`: The unique name of the object. (`GameObject.name`)
-  TankJS.removeNamedObject = function (name)
-  {
-    // Don't bother if it doesn't exist
-    var obj = TankJS._objectsNamed[name];
-    if (!obj)
-      return;
-
-    var c = new TankJS.Component(componentName);
-    TankJS._registeredComponents[componentName] = c;
-    return c;
-  }
-
   // ### Get a gameobject by id
   //
   // - `id`: The id of the game object to get
@@ -187,6 +169,21 @@
   {
     // Add object to trash
     TankJS._objectsDeleted.push(TankJS.getObject(id));
+  }
+
+  // ### Remove a gameobject by name
+  // Schedules the given object to be deleted on the next frame.
+  // Will cause `uninit` to be called on all components of the object before it is deleted.
+  //
+  // `name`: The unique name of the object. (`GameObject.name`)
+  TankJS.removeNamedObject = function (name)
+  {
+    // Don't bother if it doesn't exist
+    var obj = TankJS._objectsNamed[name];
+    if (!obj)
+      return;
+
+    TankJS._objectsDeleted.push(obj);
   }
 
   // ### Remove all objects
@@ -417,10 +414,10 @@
     {
       var obj = TankJS._objectsDeleted[i];
       obj.destruct();
-      obj.name = "Deleted";
-      obj.id = -1;
       delete TankJS._objects[obj.id];
       delete TankJS._objectsNamed[obj.name];
+      obj.id = -1;
+      obj.name = "Deleted";
     }
     TankJS._objectsDeleted = [];
 
