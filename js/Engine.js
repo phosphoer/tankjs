@@ -349,7 +349,7 @@
     return TANK._interfaceComponents[interfaceName];
   }
 
-  // Reigster a function as an event handler
+  // ### Register a event handler
   TANK.addEventListener = function (eventName, obj)
   {
     // Get array of listeners
@@ -364,7 +364,7 @@
     listeners.push(obj);
   }
 
-  // Unregister a function as an event handler
+  // ### Unregister an event handler
   TANK.removeEventListener = function (eventName, obj)
   {
     // Get array of listeners
@@ -383,7 +383,7 @@
     }
   }
 
-  // Send out an event with arguments
+  // ### Send out an event
   TANK.dispatchEvent = function (eventName, args)
   {
     // Get array of listeners
