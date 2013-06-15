@@ -13,24 +13,34 @@
   // ### Enable/Disable logging messages
   TANK.logsEnabled = true;
 
-  TANK.createEntity = function ()
+  // ### Create an Entity
+  // Creates a new `Entity` and returns it.
+  //
+  // - `componentNames`: (optional) A list of components to add to the entity.
+  // - `return`: A new `Entity`.
+  TANK.createEntity = function (componentNames)
   {
     var object = new TANK.Entity(-1);
+
+    if (componentNames)
+      object.addComponents(componentNames);
+
     return object;
   }
 
-  // ### Create a Entity
-  // Creates a new `Entity` and begins tracking it.
+  // ### Add an entity to the world.
+  // Adds the given entity to the world, which will initialize all of its
+  // components.
   //
-  // - `name`: (optional) A unique name to track the game object by. If the name is
-  // not unique the existing object by that name will no longer be findable by its name.
-  // - `return`: A new `Entity`.
+  // - `object`: The entity to add the world.
+  // - `name`: (optional) A unique name to track the entity by.
+  // - `return`: The initialized entity.
   TANK.addEntity = function (object, name)
   {
     if (object.id != -1)
     {
       TANK.error("Attempting to add a Entity twice");
-      return;
+      return object;
     }
 
     object.id = this._currentID++;
@@ -44,6 +54,11 @@
     if (name)
     {
       object.name = name;
+      if (TANK._objectsNamed[name])
+      {
+        TANK.error("An Entity named " + name + " already exists");
+        return object;
+      }
       TANK._objectsNamed[name] = object;
     }
 
@@ -86,11 +101,9 @@
   }
 
   // ### Create Entity from Prefab
-  // Creates a new `Entity` using a given prefab and begins tracking it.
+  // Creates a new `Entity` using a given prefab.
   //
   // - `prefabName`: Name of the prefab to clone.
-  // - `objName`: (optional) A unique name to track the game object by. If the name is
-  // not unique the existing object by that name will no longer be findable by its name.
   // - `return`: A new `Entity`.
   TANK.createEntityFromPrefab = function (prefabName)
   {
@@ -118,18 +131,18 @@
     return obj;
   }
 
-  // ### Get a gameobject by id
+  // ### Get an entity by id
   //
-  // - `id`: The id of the game object to get
+  // - `id`: The id of the entity to get
   // - `return`: The requested `Entity` or `undefined`
   TANK.getEntity = function (id)
   {
     return TANK._objects[id];
   }
 
-  // ### Get a gameobject by name
+  // ### Get an entity by name
   //
-  // - `name`: The name of the game object to get
+  // - `name`: The name of the entity to get
   // - `return`: The requested `Entity` or `undefined`
   TANK.getNamedEntity = function (name)
   {
@@ -137,7 +150,7 @@
   }
 
   // ### Register an object prefab
-  // Use this to define a gameobject with a set of components that
+  // Use this to define an entity with a set of components that
   // can be instantiated later, like a blueprint.
   //
   // - `name`: The name of the prefab to store it under.
@@ -154,7 +167,10 @@
     TANK._prefabs[name] = data;
   }
 
-  // Get a prefab data
+  // ### Get a prefab object
+  //
+  // - `name`: The name of the prefab to find.
+  // - `return`: A prefab JSON object.
   TANK.getPrefab = function (name)
   {
     return TANK._prefabs[name];
@@ -162,7 +178,7 @@
 
   // ### Remove an object
   // Schedules the given object to be deleted on the next frame.
-  // Will cause `uninit` to be called on all components of the object before it is deleted.
+  // Will cause `destruct` to be called on all components of the object before it is deleted.
   //
   // `id`: The id of the object. (`Entity.id`)
   TANK.removeEntity = function (id)
@@ -171,9 +187,9 @@
     TANK._objectsDeleted.push(TANK.getEntity(id));
   }
 
-  // ### Remove a gameobject by name
+  // ### Remove an entity by name
   // Schedules the given object to be deleted on the next frame.
-  // Will cause `uninit` to be called on all components of the object before it is deleted.
+  // Will cause `destruct` to be called on all components of the object before it is deleted.
   //
   // `name`: The unique name of the object. (`Entity.name`)
   TANK.removeNamedEntity = function (name)
@@ -194,7 +210,12 @@
       TANK.removeEntity(i);
   }
 
-  // Register a new component type
+  // ### Register a new component type
+  // Creates a new `Component` instance which defines a blueprint
+  // for a type of component.
+  //
+  // - `componentName`: The name of the component type to register.
+  // - `return`: A new instance of type `Component`.
   TANK.registerComponent = function (componentName)
   {
     // Warn about components with invalid identifiers
@@ -209,7 +230,12 @@
     return c;
   }
 
-  // Add a component to the engine
+  // ### Add a component to the engine
+  // Components added to the engine are "global" and not
+  // affected by spaces. These are commonly used to add systems
+  // that contain global state, such as a graphics context.
+  //
+  // - `componentName`: The name of the component to add to the engine.
   TANK.addComponent = function (componentName)
   {
     // Check if we have this component already
@@ -265,7 +291,9 @@
     return TANK;
   }
 
-  // Add a list of components to the engine
+  // ### Add multiple components to the engine
+  //
+  // - `componentNames`: A comma separated list of names in a string.
   TANK.addComponents = function (componentNames)
   {
     // Get array of component names
@@ -279,6 +307,9 @@
     }
   }
 
+  // ### Remove a component from the engine
+  //
+  // - `componentName`: The name of the component to remove.
   TANK.removeComponent = function (componentName)
   {
     // If we don't have the component then just return
@@ -308,11 +339,11 @@
     delete TANK[componentName];
   }
 
-  // ### Find components with interface
-  // Gets all component instances that implement a particular interface
+  // ### Find components with a given interface
+  // Gets all component instances that implement a particular interface.
   //
-  // - `interfaceName`: Name of the interface that returned components should implement
-  // - `return`: An array of component instances
+  // - `interfaceName`: Name of the interface that returned components should implement.
+  // - `return`: An array of component instances.
   TANK.getComponentsWithInterface = function (interfaceName)
   {
     return TANK._interfaceComponents[interfaceName];
@@ -378,6 +409,7 @@
     }
   }
 
+  // ### Start the engine main loop
   TANK.start = function ()
   {
     TANK._lastTime = new Date();
@@ -385,18 +417,24 @@
     update()
   }
 
+  // ### Stop the engine
   TANK.stop = function ()
   {
     TANK._running = false
   }
 
+  // ### Reset the engine
+  // This deletes all game objects and resets the state of the engine.
+  // Things like prefabs and component definitions are preserved.
   TANK.reset = function ()
   {
     TANK._resetting = true;
     TANK.removeAllEntities();
-    return this;
   }
 
+  // ### Log a message to console
+  //
+  // `text` - Text to display.
   TANK.log = function (text)
   {
     if (!TANK.logsEnabled)
@@ -408,6 +446,10 @@
       console.log("(anonymous function): " + text);
   }
 
+
+  // ### Log a warning message to console
+  //
+  // `text` - Text to display.
   TANK.warn = function (text)
   {
     if (!TANK.warningsEnabled)
@@ -419,6 +461,9 @@
       console.warn("(anonymous function): " + text);
   }
 
+  // ### Log an error message to console
+  //
+  // `text` - Text to display.
   TANK.error = function (text)
   {
     if (!TANK.errorsEnabled)

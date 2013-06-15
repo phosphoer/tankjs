@@ -74,7 +74,6 @@
   // ### Set constructor function
   // Defines a function to be called after the component has been instantiated.
   // This is commonly where you would define member fields with default values.
-  // The function will be called such that the `this` variable points to the component instance.
   //
   // - `func`: A function to call after instantiation.
   // - `return`: A reference to itself.
@@ -85,8 +84,7 @@
   }
 
   // ### Set init function
-  // Defines a function to be called after the component has been constructed and added to a game object.
-  // The function will be called such that the `this` variable points to the component instance.
+  // Defines a function to be called after the component has been constructed and added to an entity.
   //
   // - `func`: A function to call upon initialization.
   // - `return`: A reference to itself.
@@ -97,8 +95,8 @@
   }
 
   // ### Set uninit function
-  // Defines a function to be called after the component has been removed from a game object.
-  // The function will be called such that the `this` variable points to the component instance.
+  // Defines a function to be called after the component has been removed from an entity.
+
   //
   // - `func`: A function to call upon uninitialization.
   // - `return`: A reference to itself.
@@ -110,7 +108,6 @@
 
   // ### Set a custom function
   // Defines a custom-named function to be added to the component.
-  // The function will be called such that the `this` variable points to the component instance.
   //
   // - `func`: A function object.
   // - `return`: A reference to itself.

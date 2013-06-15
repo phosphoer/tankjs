@@ -10,81 +10,81 @@
 <body>
   <div id="container">
     <div id="background"></div>
-
+    
       <ul id="jump_to">
         <li>
           <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
           <a class="small" href="javascript:void(0);">+</a>
           <div id="jump_wrapper">
           <div id="jump_page">
-
-
+            
+              
               <a class="source" href="Component.html">
                 Component.js
               </a>
-
-
+            
+              
               <a class="source" href="Engine.html">
                 Engine.js
               </a>
-
-
+            
+              
               <a class="source" href="Entity.html">
                 Entity.js
               </a>
-
-
+            
+              
               <a class="source" href="KeyCodes.html">
                 KeyCodes.js
               </a>
-
-
+            
+              
               <a class="source" href="Math.html">
                 Math.js
               </a>
-
-
+            
+              
               <a class="source" href="addProperty.html">
                 addProperty.js
               </a>
-
-
+            
+              
               <a class="source" href="requestAnimFrame.html">
                 requestAnimFrame.js
               </a>
-
+            
           </div>
         </li>
       </ul>
-
+    
     <ul class="sections">
-
+        
           <li id="title">
               <div class="annotation">
                   <h1>Component.js</h1>
               </div>
           </li>
-
-
-
+        
+        
+        
         <li id="section-1">
             <div class="annotation">
-
+              
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-
+              
             </div>
-
+            
             <div class="content"><div class='highlight'><pre>(<span class="function"><span class="keyword">function</span> <span class="params">(TANK, undefined)</span>
 {</span></pre></div></div>
-
+            
         </li>
-
-
+        
+        
         <li id="section-2">
             <div class="annotation">
-
+              
               <div class="pilwrap for-h3">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
@@ -92,21 +92,21 @@
 <p>Defines a blueprint for components.</p>
 
             </div>
-
-            <div class="content"><div class='highlight'><pre>TANK.Component = <span class="keyword">function</span>(name)
-{
-  <span class="keyword">this</span>.name = name;
-  <span class="keyword">this</span>._functions = {};
-  <span class="keyword">this</span>._includes = [];
-  <span class="keyword">this</span>._tags = [];
-}</pre></div></div>
-
+            
+            <div class="content"><div class='highlight'><pre>  TANK.Component = <span class="function"><span class="keyword">function</span> <span class="params">(name)</span>
+  {</span>
+    <span class="keyword">this</span>.name = name;
+    <span class="keyword">this</span>._functions = {};
+    <span class="keyword">this</span>._includes = [];
+    <span class="keyword">this</span>._interfaces = [];
+  }</pre></div></div>
+            
         </li>
-
-
+        
+        
         <li id="section-3">
             <div class="annotation">
-
+              
               <div class="pilwrap for-h3">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
@@ -117,87 +117,87 @@
 </ul>
 
             </div>
-
-            <div class="content"><div class='highlight'><pre>TANK.Component.prototype.clone = <span class="keyword">function</span>()
-{
-  <span class="keyword">var</span> c = {};</pre></div></div>
-
+            
+            <div class="content"><div class='highlight'><pre>  TANK.Component.prototype.clone = <span class="function"><span class="keyword">function</span> <span class="params">()</span>
+  {</span>
+    <span class="keyword">var</span> c = {};</pre></div></div>
+            
         </li>
-
-
+        
+        
         <li id="section-4">
             <div class="annotation">
-
+              
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
               <p>Default functions</p>
 
             </div>
-
-            <div class="content"><div class='highlight'><pre>  c.construct = <span class="keyword">function</span>() {};
-  c.init = <span class="keyword">function</span>() {};
-  c.uninit = <span class="keyword">function</span>() {};</pre></div></div>
-
+            
+            <div class="content"><div class='highlight'><pre>    c.construct = <span class="function"><span class="keyword">function</span> <span class="params">()</span> {</span>};
+    c.initialize = <span class="function"><span class="keyword">function</span> <span class="params">()</span> {</span>};
+    c.destruct = <span class="function"><span class="keyword">function</span> <span class="params">()</span> {</span>};</pre></div></div>
+            
         </li>
-
-
+        
+        
         <li id="section-5">
             <div class="annotation">
-
+              
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>Add tags</p>
+              <p>Add interfaces</p>
 
             </div>
-
-            <div class="content"><div class='highlight'><pre>  c.tags = {};
-  <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> <span class="keyword">this</span>._tags)
-    c.tags[<span class="keyword">this</span>._tags[i]] = <span class="literal">true</span>;</pre></div></div>
-
+            
+            <div class="content"><div class='highlight'><pre>    c.interfaces = {};
+    <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> <span class="keyword">this</span>._interfaces)
+      c.interfaces[<span class="keyword">this</span>._interfaces[i]] = <span class="literal">true</span>;</pre></div></div>
+            
         </li>
-
-
+        
+        
         <li id="section-6">
             <div class="annotation">
-
+              
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>Add functions</p>
 
             </div>
-
-            <div class="content"><div class='highlight'><pre>  <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> <span class="keyword">this</span>._functions)
-  {
-    c[i] = <span class="keyword">this</span>._functions[i];
-  }</pre></div></div>
-
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> <span class="keyword">this</span>._functions)
+    {
+      c[i] = <span class="keyword">this</span>._functions[i];
+    }</pre></div></div>
+            
         </li>
-
-
+        
+        
         <li id="section-7">
             <div class="annotation">
-
+              
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>Set properties</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    c.name = <span class="keyword">this</span>.name;
 
-            <div class="content"><div class='highlight'><pre>  c.name = <span class="keyword">this</span>.name;
-
-  <span class="keyword">return</span> c;
-}</pre></div></div>
-
+    <span class="keyword">return</span> c;
+  }</pre></div></div>
+            
         </li>
-
-
+        
+        
         <li id="section-8">
             <div class="annotation">
-
+              
               <div class="pilwrap for-h3">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
@@ -210,175 +210,172 @@ and will be automatically added before this one is added.</p>
 </ul>
 
             </div>
-
-            <div class="content"><div class='highlight'><pre>TANK.Component.prototype.requires = <span class="keyword">function</span>(componentNames)
-{</pre></div></div>
-
+            
+            <div class="content"><div class='highlight'><pre>  TANK.Component.prototype.requires = <span class="function"><span class="keyword">function</span> <span class="params">(componentNames)</span>
+  {</span></pre></div></div>
+            
         </li>
-
-
+        
+        
         <li id="section-9">
             <div class="annotation">
-
+              
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <p>Get array of component names</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    componentNames = componentNames.replace(<span class="regexp">/\s/g</span>, <span class="string">""</span>);
+    <span class="keyword">this</span>._includes = componentNames.split(<span class="string">","</span>);
 
-            <div class="content"><div class='highlight'><pre>  componentNames = componentNames.replace(<span class="regexp">/\s/g</span>, <span class="string">""</span>);
-  <span class="keyword">this</span>._includes = componentNames.split(<span class="string">","</span>);
-
-  <span class="keyword">return</span> <span class="keyword">this</span>;
-}</pre></div></div>
-
+    <span class="keyword">return</span> <span class="keyword">this</span>;
+  }</pre></div></div>
+            
         </li>
-
-
+        
+        
         <li id="section-10">
             <div class="annotation">
-
+              
               <div class="pilwrap for-h3">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <h3>Tag the component</h3>
-<p>Defines a list of tags that apply to this component
-Useful for specifying functionality that the component implements.
-Common tags include <code>Drawable</code>, and <code>Collidable</code></p>
+              <h3>Interfaces</h3>
+<p>Defines a list of interfaces that this component implements.
+Manager components often look for components that implement a particular interface.
+Common interfaces include <code>Drawable2D</code>, and <code>Collidable</code></p>
 <ul>
-<li><code>tagNames</code>: A comma-deliminated string of tag names, e.g., &quot;Drawable, Collidable&quot;.</li>
+<li><code>interfaces</code>: A comma-deliminated string of interface names, e.g., &quot;Drawable2D, Collidable&quot;.</li>
 <li><code>return</code>: A reference to itself.</li>
 </ul>
 
             </div>
-
-            <div class="content"><div class='highlight'><pre>TANK.Component.prototype.tags = <span class="keyword">function</span>(tagNames)
-{</pre></div></div>
-
+            
+            <div class="content"><div class='highlight'><pre>  TANK.Component.prototype.interfaces = <span class="function"><span class="keyword">function</span> <span class="params">(interfaces)</span>
+  {</span></pre></div></div>
+            
         </li>
-
-
+        
+        
         <li id="section-11">
             <div class="annotation">
-
+              
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>Get array of tag anmes</p>
+              <p>Get array of interface names</p>
 
             </div>
-
-            <div class="content"><div class='highlight'><pre>  tagNames = tagNames.replace(<span class="regexp">/\s/g</span>, <span class="string">""</span>);
-  <span class="keyword">this</span>._tags = tagNames.split(<span class="string">","</span>);
-  <span class="keyword">return</span> <span class="keyword">this</span>;
-}</pre></div></div>
-
+            
+            <div class="content"><div class='highlight'><pre>    interfaces = interfaces.replace(<span class="regexp">/\s/g</span>, <span class="string">""</span>);
+    <span class="keyword">this</span>._interfaces = interfaces.split(<span class="string">","</span>);
+    <span class="keyword">return</span> <span class="keyword">this</span>;
+  }</pre></div></div>
+            
         </li>
-
-
+        
+        
         <li id="section-12">
             <div class="annotation">
-
+              
               <div class="pilwrap for-h3">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <h3>Set constructor function</h3>
 <p>Defines a function to be called after the component has been instantiated.
-This is commonly where you would define member fields with default values.
-The function will be called such that the <code>this</code> variable points to the component instance.</p>
+This is commonly where you would define member fields with default values.</p>
 <ul>
 <li><code>func</code>: A function to call after instantiation.</li>
 <li><code>return</code>: A reference to itself.</li>
 </ul>
 
             </div>
-
-            <div class="content"><div class='highlight'><pre>TANK.Component.prototype.constructFunction = <span class="keyword">function</span>(func)
-{
-  <span class="keyword">this</span>._functions.construct = func;
-  <span class="keyword">return</span> <span class="keyword">this</span>;
-}</pre></div></div>
-
+            
+            <div class="content"><div class='highlight'><pre>  TANK.Component.prototype.construct = <span class="function"><span class="keyword">function</span> <span class="params">(func)</span>
+  {</span>
+    <span class="keyword">this</span>._functions.construct = func;
+    <span class="keyword">return</span> <span class="keyword">this</span>;
+  }</pre></div></div>
+            
         </li>
-
-
+        
+        
         <li id="section-13">
             <div class="annotation">
-
+              
               <div class="pilwrap for-h3">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <h3>Set init function</h3>
-<p>Defines a function to be called after the component has been constructed and added to a game object.
-The function will be called such that the <code>this</code> variable points to the component instance.</p>
+<p>Defines a function to be called after the component has been constructed and added to an entity.</p>
 <ul>
 <li><code>func</code>: A function to call upon initialization.</li>
 <li><code>return</code>: A reference to itself.</li>
 </ul>
 
             </div>
-
-            <div class="content"><div class='highlight'><pre>TANK.Component.prototype.initialize = <span class="keyword">function</span>(func)
-{
-  <span class="keyword">this</span>._functions.init = func;
-  <span class="keyword">return</span> <span class="keyword">this</span>;
-}</pre></div></div>
-
+            
+            <div class="content"><div class='highlight'><pre>  TANK.Component.prototype.initialize = <span class="function"><span class="keyword">function</span> <span class="params">(func)</span>
+  {</span>
+    <span class="keyword">this</span>._functions.initialize = func;
+    <span class="keyword">return</span> <span class="keyword">this</span>;
+  }</pre></div></div>
+            
         </li>
-
-
+        
+        
         <li id="section-14">
             <div class="annotation">
-
+              
               <div class="pilwrap for-h3">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <h3>Set uninit function</h3>
-<p>Defines a function to be called after the component has been removed from a game object.
-The function will be called such that the <code>this</code> variable points to the component instance.</p>
+<p>Defines a function to be called after the component has been removed from an entity.</p>
 <ul>
 <li><code>func</code>: A function to call upon uninitialization.</li>
 <li><code>return</code>: A reference to itself.</li>
 </ul>
 
             </div>
-
-            <div class="content"><div class='highlight'><pre>TANK.Component.prototype.destruct = <span class="keyword">function</span>(func)
-{
-  <span class="keyword">this</span>._functions.uninit = func;
-  <span class="keyword">return</span> <span class="keyword">this</span>;
-}</pre></div></div>
-
+            
+            <div class="content"><div class='highlight'><pre>  TANK.Component.prototype.destruct = <span class="function"><span class="keyword">function</span> <span class="params">(func)</span>
+  {</span>
+    <span class="keyword">this</span>._functions.destruct = func;
+    <span class="keyword">return</span> <span class="keyword">this</span>;
+  }</pre></div></div>
+            
         </li>
-
-
+        
+        
         <li id="section-15">
             <div class="annotation">
-
+              
               <div class="pilwrap for-h3">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <h3>Set a custom function</h3>
-<p>Defines a custom-named function to be added to the component.
-The function will be called such that the <code>this</code> variable points to the component instance.</p>
+<p>Defines a custom-named function to be added to the component.</p>
 <ul>
 <li><code>func</code>: A function object.</li>
 <li><code>return</code>: A reference to itself.</li>
 </ul>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>  TANK.Component.prototype.addFunction = <span class="function"><span class="keyword">function</span> <span class="params">(name, func)</span>
+  {</span>
+    <span class="keyword">this</span>._functions[name] = func;
+    <span class="keyword">return</span> <span class="keyword">this</span>;
+  }
 
-            <div class="content"><div class='highlight'><pre>TANK.Component.prototype.addFunction = <span class="keyword">function</span>(name, func)
-{
-  <span class="keyword">this</span>._functions[name] = func;
-  <span class="keyword">return</span> <span class="keyword">this</span>;
-}
-
-} (window.TANK = window.TANK || {}));</pre></div></div>
-
+}(<span class="keyword">this</span>.TANK = <span class="keyword">this</span>.TANK ||
+{}));</pre></div></div>
+            
         </li>
-
+        
     </ul>
   </div>
 </body>

@@ -3,10 +3,10 @@
 
   TANK.Entity = function (id)
   {
-    // Name of the game object
+    // Name of the entity
     this.name = null;
 
-    // ID of the game object
+    // ID of the entity
     this.id = id;
 
     // Map of components by name
