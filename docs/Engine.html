@@ -260,7 +260,7 @@ Will cause <code>uninit</code> to be called on all components of the object befo
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TANK.removeObject = <span class="keyword">function</span>(id)
+            <div class="content"><div class='highlight'><pre>TANK.removeEntity = <span class="keyword">function</span>(id)
 {</pre></div></div>
 
         </li>
@@ -276,7 +276,7 @@ Will cause <code>uninit</code> to be called on all components of the object befo
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>  TANK._objectsDeleted.push(TANK.getObject(id));
+            <div class="content"><div class='highlight'><pre>  TANK._objectsDeleted.push(TANK.getEntity(id));
 }</pre></div></div>
 
         </li>
@@ -295,7 +295,7 @@ Will cause <code>uninit</code> to be called on all components of the object befo
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TANK.removeNamedObject = <span class="keyword">function</span>(name)
+            <div class="content"><div class='highlight'><pre>TANK.removeNamedEntity = <span class="keyword">function</span>(name)
 {</pre></div></div>
 
         </li>
@@ -328,7 +328,7 @@ Will cause <code>uninit</code> to be called on all components of the object befo
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>  TANK.removeObject(obj.id);
+            <div class="content"><div class='highlight'><pre>  TANK.removeEntity(obj.id);
 }</pre></div></div>
 
         </li>
@@ -341,14 +341,14 @@ Will cause <code>uninit</code> to be called on all components of the object befo
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <h3>Remove all gameobjects</h3>
-<p>Equivalent to calling <code>removeObject</code> on all objects.</p>
+<p>Equivalent to calling <code>removeEntity</code> on all objects.</p>
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TANK.removeAllObjects = <span class="keyword">function</span>()
+            <div class="content"><div class='highlight'><pre>TANK.removeAllEntities = <span class="keyword">function</span>()
 {
   <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> TANK._objects)
-    TANK.removeObject(i);
+    TANK.removeEntity(i);
 }</pre></div></div>
 
         </li>
@@ -368,7 +368,7 @@ Will cause <code>uninit</code> to be called on all components of the object befo
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TANK.getObject = <span class="keyword">function</span>(id)
+            <div class="content"><div class='highlight'><pre>TANK.getEntity = <span class="keyword">function</span>(id)
 {
   <span class="keyword">return</span> TANK._objects[id];
 }</pre></div></div>
@@ -390,7 +390,7 @@ Will cause <code>uninit</code> to be called on all components of the object befo
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TANK.getNamedObject = <span class="keyword">function</span>(name)
+            <div class="content"><div class='highlight'><pre>TANK.getNamedEntity = <span class="keyword">function</span>(name)
 {
   <span class="keyword">return</span> TANK._objectsNamed[name];
 }</pre></div></div>
@@ -708,7 +708,7 @@ TANK.stop = <span class="keyword">function</span>()
 TANK.reset = <span class="keyword">function</span>()
 {
   TANK._resetting = <span class="literal">true</span>;
-  TANK.removeAllObjects();
+  TANK.removeAllEntities();
   <span class="keyword">return</span> <span class="keyword">this</span>;
 }
 

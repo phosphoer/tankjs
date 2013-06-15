@@ -42,7 +42,7 @@ TANK.registerComponent("ObjectSpawner")
   if (this._spawnTimer >= this.spawnDelay)
   {
     var t = this.parent.Pos2D;
-    var obj = TANK.createObjectFromPrefab(this.objectPrefab);
+    var obj = TANK.createEntityFromPrefab(this.objectPrefab);
     obj.attr("Pos2D",
     {
       x: t.x + Math.cos(t.rotation) * this.spawnDistance,

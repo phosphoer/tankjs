@@ -15,7 +15,7 @@
 
   TANK.Entity.prototype.remove = function ()
   {
-    TANK.removeObject(this.id);
+    TANK.removeEntity(this.id);
   }
 
   TANK.Entity.prototype.addComponent = function (componentName)

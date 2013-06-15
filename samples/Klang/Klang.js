@@ -263,7 +263,7 @@ TANK.registerComponent("GameLogic")
 
 .addFunction("OnEnterFrame", function (dt)
 {
-  if (!TANK.getNamedObject("Player") || !TANK.getNamedObject("AI"))
+  if (!TANK.getNamedEntity("Player") || !TANK.getNamedEntity("AI"))
   {
     TANK.reset();
   }
@@ -297,7 +297,7 @@ TANK.registerComponent("KlangAI")
 {
   this._rotateTimer -= dt;
 
-  var player = TANK.getNamedObject("Player");
+  var player = TANK.getNamedEntity("Player");
   if (!player)
     return;
 

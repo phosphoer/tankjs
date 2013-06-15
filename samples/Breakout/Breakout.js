@@ -197,7 +197,7 @@ TANK.registerComponent("GameLogic")
     else
     {
       // Create a new ball
-      var ball = TANK.createObjectFromPrefab("Ball");
+      var ball = TANK.createEntityFromPrefab("Ball");
       ball.Pos2D.x = 50;
       ball.Pos2D.y = 200;
       TANK.addEntity(ball);
@@ -225,7 +225,7 @@ TANK.registerComponent("GameLogic")
           if (!brickType)
             continue;
 
-          var brick = TANK.createObjectFromPrefab(brickType + "Brick");
+          var brick = TANK.createEntityFromPrefab(brickType + "Brick");
           brick.Pos2D.x = 64 + col * brick.Image.width;
           brick.Pos2D.y = 64 + row * brick.Image.height;
           TANK.addEntity(brick);

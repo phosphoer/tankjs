@@ -92,7 +92,7 @@
   // - `objName`: (optional) A unique name to track the game object by. If the name is
   // not unique the existing object by that name will no longer be findable by its name.
   // - `return`: A new `Entity`.
-  TANK.createObjectFromPrefab = function (prefabName)
+  TANK.createEntityFromPrefab = function (prefabName)
   {
     var prefab = TANK.getPrefab(prefabName);
     if (!prefab)
@@ -122,7 +122,7 @@
   //
   // - `id`: The id of the game object to get
   // - `return`: The requested `Entity` or `undefined`
-  TANK.getObject = function (id)
+  TANK.getEntity = function (id)
   {
     return TANK._objects[id];
   }
@@ -131,7 +131,7 @@
   //
   // - `name`: The name of the game object to get
   // - `return`: The requested `Entity` or `undefined`
-  TANK.getNamedObject = function (name)
+  TANK.getNamedEntity = function (name)
   {
     return TANK._objectsNamed[name];
   }
@@ -165,10 +165,10 @@
   // Will cause `uninit` to be called on all components of the object before it is deleted.
   //
   // `id`: The id of the object. (`Entity.id`)
-  TANK.removeObject = function (id)
+  TANK.removeEntity = function (id)
   {
     // Add object to trash
-    TANK._objectsDeleted.push(TANK.getObject(id));
+    TANK._objectsDeleted.push(TANK.getEntity(id));
   }
 
   // ### Remove a gameobject by name
@@ -176,7 +176,7 @@
   // Will cause `uninit` to be called on all components of the object before it is deleted.
   //
   // `name`: The unique name of the object. (`Entity.name`)
-  TANK.removeNamedObject = function (name)
+  TANK.removeNamedEntity = function (name)
   {
     // Don't bother if it doesn't exist
     var obj = TANK._objectsNamed[name];
@@ -187,11 +187,11 @@
   }
 
   // ### Remove all objects
-  // Equivalent to calling `removeObject` on all objects.
-  TANK.removeAllObjects = function ()
+  // Equivalent to calling `removeEntity` on all objects.
+  TANK.removeAllEntities = function ()
   {
     for (var i in TANK._objects)
-      TANK.removeObject(i);
+      TANK.removeEntity(i);
   }
 
   // Register a new component type
@@ -393,7 +393,7 @@
   TANK.reset = function ()
   {
     TANK._resetting = true;
-    TANK.removeAllObjects();
+    TANK.removeAllEntities();
     return this;
   }
 
