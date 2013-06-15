@@ -464,10 +464,8 @@
   // Key is the name of the tag
   TankJS._interfaceComponents = {};
 
-
   // Map of objects listening for a message
   TankJS._events = {};
-
 
   // Current ID for game objects
   TankJS._currentID = 0;
