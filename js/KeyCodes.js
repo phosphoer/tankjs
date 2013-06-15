@@ -49,5 +49,5 @@
   TANK.NUM9 = 57;
   TANK.NUM0 = 48;
 
-}(window.TANK = window.TANK ||
+}(this.TANK = this.TANK ||
 {}));

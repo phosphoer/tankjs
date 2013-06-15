@@ -508,5 +508,5 @@
   // Whether or not the engine is in the resetting state
   TANK._resetting = false;
 
-}(window.TANK = window.TANK ||
+}(this.TANK = this.TANK ||
 {}));

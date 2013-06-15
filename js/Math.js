@@ -32,5 +32,5 @@
   }(TANK.Math = TANK.Math ||
   {}, Math));
 
-}(window.TANK = window.TANK ||
+}(this.TANK = this.TANK ||
 {}));

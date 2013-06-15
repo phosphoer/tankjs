@@ -120,5 +120,5 @@
     return this;
   }
 
-}(window.TANK = window.TANK ||
+}(this.TANK = this.TANK ||
 {}));

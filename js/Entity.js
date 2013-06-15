@@ -140,5 +140,5 @@
     }
   }
 
-}(window.TANK = window.TANK ||
+}(this.TANK = this.TANK ||
 {}));
