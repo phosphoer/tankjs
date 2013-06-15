@@ -8,7 +8,7 @@ TANK is a lightweight Javascript engine framework focused on the following ideas
 - No dependencies
 - Made for programmers
 
-TANK is still in early development, but it is already usable! To get started, pull the repository and take a look at the `samples/` directory. More documentation will be written as TANK matures. TANK is similar to [Crafty](http://craftyjs.com/) but strives to be more flexible, and is more of a *framework* than an engine.
+TANK is still in early development, but it is already usable! To get started, pull the repository and take a look at the `samples/` directory. More documentation will be written as the framework matures. TANK is similar to [Crafty](http://craftyjs.com/) but strives to be more flexible, and is more of a *framework* than an engine.
 
 #Features
 The goal of TANK is to provide a simple framework that removes some of the tedious tasks of making small games. The framework doesn't provide any game functionality like graphics or physics, but instead provides an architecture on top of which such features can be easily built. Additionally, some components have already been written which can render to an HTML5 canvas / do collision resolution, and are available as a separate download.
