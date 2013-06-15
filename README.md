@@ -1,5 +1,5 @@
-#TANK
-TANK Engine is ze best engine for programmers.
+![logo](http://i.imgur.com/fktNU1A.png)
+*TANK Engine is ze best engine for programmers.*
 
 TANK is a lightweight Javascript engine framework focused on the following ideas:
 
@@ -36,3 +36,5 @@ One of the simplest components available is the `Pos2D` component, which allows 
         });
 
 This snippet registers a `Component` type named `Pos2D`. In the `construct` function it defines an x, y, and rotation field for the component. For more examples, look in the `samples/` directory.
+
+
