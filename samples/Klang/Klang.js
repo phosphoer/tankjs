@@ -35,16 +35,16 @@ function main()
   });
 
   // Create background object
-  var bg = TANK.createObject().addComponents("ColoredBox");
+  var bg = TANK.createEntity().addComponents("ColoredBox");
   bg.ColoredBox.width = 640;
   bg.ColoredBox.height = 480;
   bg.ColoredBox.color = "#fff";
   bg.ColoredBox.zdepth = -1;
   bg.ColoredBox.centered = false;
-  TANK.addObject(bg);
+  TANK.addEntity(bg);
 
   // Create a player object
-  var player = TANK.createObject()
+  var player = TANK.createEntity()
     .addComponents("Text, Image, TopDownMovement, RotateController, ObjectSpawner, Collider, Health, CustomUpdate")
     .attr("Pos2D",
   {
@@ -79,10 +79,10 @@ function main()
       this.Text.text = this.Health.value;
     }
   });
-  TANK.addObject(player, "Player");
+  TANK.addEntity(player, "Player");
 
   // Create AI object
-  var ai = TANK.createObject()
+  var ai = TANK.createEntity()
     .addComponents("Text, Image, KlangAI, ObjectSpawner, Collider, Health, CustomUpdate")
     .attr("Pos2D",
   {
@@ -116,11 +116,11 @@ function main()
       this.Text.text = this.Health.value;
     }
   });
-  TANK.addObject(ai, "AI");
+  TANK.addEntity(ai, "AI");
 
   // Create walls around edges
   var obj;
-  obj = TANK.createObject().addComponents("ColoredBox, Collider").attr("Pos2D",
+  obj = TANK.createEntity().addComponents("ColoredBox, Collider").attr("Pos2D",
   {
     x: 640 / 2,
     y: -25
@@ -129,9 +129,9 @@ function main()
     isStatic: true,
     width: 640
   });
-  TANK.addObject(obj);
+  TANK.addEntity(obj);
 
-  obj = TANK.createObject().addComponents("ColoredBox, Collider").attr("Pos2D",
+  obj = TANK.createEntity().addComponents("ColoredBox, Collider").attr("Pos2D",
   {
     x: 640 / 2,
     y: 480 + 25
@@ -140,9 +140,9 @@ function main()
     isStatic: true,
     width: 640
   });
-  TANK.addObject(obj);
+  TANK.addEntity(obj);
 
-  obj = TANK.createObject().addComponents("ColoredBox, Collider").attr("Pos2D",
+  obj = TANK.createEntity().addComponents("ColoredBox, Collider").attr("Pos2D",
   {
     x: -25,
     y: 480 / 2
@@ -151,9 +151,9 @@ function main()
     isStatic: true,
     height: 480
   });
-  TANK.addObject(obj);
+  TANK.addEntity(obj);
 
-  obj = TANK.createObject().addComponents("ColoredBox, Collider").attr("Pos2D",
+  obj = TANK.createEntity().addComponents("ColoredBox, Collider").attr("Pos2D",
   {
     x: 640 + 25,
     y: 480 / 2
@@ -162,10 +162,10 @@ function main()
     isStatic: true,
     height: 480
   });
-  TANK.addObject(obj);
+  TANK.addEntity(obj);
 
 
-  obj = TANK.createObject().addComponents("ColoredBox, Collider").attr("Pos2D",
+  obj = TANK.createEntity().addComponents("ColoredBox, Collider").attr("Pos2D",
   {
     x: 100,
     y: 150
@@ -173,9 +173,9 @@ function main()
   {
     isStatic: true
   });
-  TANK.addObject(obj);
+  TANK.addEntity(obj);
 
-  obj = TANK.createObject().addComponents("ColoredBox, Collider").attr("Pos2D",
+  obj = TANK.createEntity().addComponents("ColoredBox, Collider").attr("Pos2D",
   {
     x: 150,
     y: 150
@@ -183,9 +183,9 @@ function main()
   {
     isStatic: true
   });
-  TANK.addObject(obj);
+  TANK.addEntity(obj);
 
-  obj = TANK.createObject().addComponents("ColoredBox, Collider").attr("Pos2D",
+  obj = TANK.createEntity().addComponents("ColoredBox, Collider").attr("Pos2D",
   {
     x: 200,
     y: 150
@@ -193,9 +193,9 @@ function main()
   {
     isStatic: true
   });
-  TANK.addObject(obj);
+  TANK.addEntity(obj);
 
-  obj = TANK.createObject().addComponents("ColoredBox, Collider").attr("Pos2D",
+  obj = TANK.createEntity().addComponents("ColoredBox, Collider").attr("Pos2D",
   {
     x: 200,
     y: 100
@@ -203,9 +203,9 @@ function main()
   {
     isStatic: true
   });
-  TANK.addObject(obj);
+  TANK.addEntity(obj);
 
-  obj = TANK.createObject().addComponents("ColoredBox, Collider").attr("Pos2D",
+  obj = TANK.createEntity().addComponents("ColoredBox, Collider").attr("Pos2D",
   {
     x: 400,
     y: 350
@@ -213,9 +213,9 @@ function main()
   {
     isStatic: true
   });
-  TANK.addObject(obj);
+  TANK.addEntity(obj);
 
-  obj = TANK.createObject().addComponents("ColoredBox, Collider").attr("Pos2D",
+  obj = TANK.createEntity().addComponents("ColoredBox, Collider").attr("Pos2D",
   {
     x: 450,
     y: 350
@@ -223,9 +223,9 @@ function main()
   {
     isStatic: true
   });
-  TANK.addObject(obj);
+  TANK.addEntity(obj);
 
-  obj = TANK.createObject().addComponents("ColoredBox, Collider").attr("Pos2D",
+  obj = TANK.createEntity().addComponents("ColoredBox, Collider").attr("Pos2D",
   {
     x: 500,
     y: 350
@@ -233,9 +233,9 @@ function main()
   {
     isStatic: true
   });
-  TANK.addObject(obj);
+  TANK.addEntity(obj);
 
-  obj = TANK.createObject().addComponents("ColoredBox, Collider").attr("Pos2D",
+  obj = TANK.createEntity().addComponents("ColoredBox, Collider").attr("Pos2D",
   {
     x: 500,
     y: 400
@@ -243,7 +243,7 @@ function main()
   {
     isStatic: true
   });
-  TANK.addObject(obj);
+  TANK.addEntity(obj);
 
   TANK.start();
 }

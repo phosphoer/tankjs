@@ -14,15 +14,15 @@ The goal of TankJS is to provide  a simple framework that removes some of the te
 The core engine is very small, and provides 3 main objects.
 
 - TankJS: The main interface through which all the functionality of the engine is accessed.
-- GameObject: A container for components with methods to manipulate them.
-- Component: Used to define a "blueprint" of a component that can be added to a GameObject. Components can be given "tags" which are used to define what sort of functionality they provide. For example, the `RenderManager` component looks for components with the `Drawable` tag and draws them.
+- Entity: A container for components with methods to manipulate them.
+- Component: Used to define a "blueprint" of a component that can be added to an Entity. Components can be given "tags" which are used to define what sort of functionality they provide. For example, the `RenderManager` component looks for components with the `Drawable` tag and draws them.
 
 ###Components
 Most of the engine functionality is achieved through extra components that are either custom-made or come with the engine. The set of components that you choose to include determines the graphics, physics, and other capabilities of your game.
 
 For example, TankJS comes with a `Canvas` component which provides an HTML5 canvas to perform drawing on, an `Image` component which draws an image on a given canvas, and a `RenderManager` component which takes care of drawing `Image` components for you.
 
-One of the simplest components in TankJS is the `Pos2D` component, which allows a GameObject to have an x and y position, and rotation.
+One of the simplest components in TankJS is the `Pos2D` component, which allows an Entity to have an x and y position, and rotation.
 
     TANK.registerComponent("Pos2D")
     .initFunction(function()

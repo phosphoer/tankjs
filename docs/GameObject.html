@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>GameObject.js</title>
+  <title>Entity.js</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="docco.css" />
@@ -29,8 +29,8 @@
               </a>
 
 
-              <a class="source" href="GameObject.html">
-                GameObject.js
+              <a class="source" href="Entity.html">
+                Entity.js
               </a>
 
 
@@ -61,7 +61,7 @@
 
           <li id="title">
               <div class="annotation">
-                  <h1>GameObject.js</h1>
+                  <h1>Entity.js</h1>
               </div>
           </li>
 
@@ -79,7 +79,7 @@
             <div class="content"><div class='highlight'><pre>(<span class="function"><span class="keyword">function</span> <span class="params">(TANK, undefined)</span>
 {</span>
 
-TANK.GameObject = <span class="keyword">function</span>(id)
+TANK.Entity = <span class="keyword">function</span>(id)
 {</pre></div></div>
 
         </li>
@@ -95,7 +95,7 @@ TANK.GameObject = <span class="keyword">function</span>(id)
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>  <span class="keyword">this</span>.name = <span class="string">"GameObject "</span> + id;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">this</span>.name = <span class="string">"Entity "</span> + id;</pre></div></div>
 
         </li>
 
@@ -143,12 +143,12 @@ TANK.GameObject = <span class="keyword">function</span>(id)
             <div class="content"><div class='highlight'><pre>  <span class="keyword">this</span>._taggedComponents = {};
 }
 
-TANK.GameObject.prototype.remove = <span class="keyword">function</span>()
+TANK.Entity.prototype.remove = <span class="keyword">function</span>()
 {
   TANK.removeObject(<span class="keyword">this</span>.id);
 }
 
-TANK.GameObject.prototype.addComponent = <span class="keyword">function</span>(componentName)
+TANK.Entity.prototype.addComponent = <span class="keyword">function</span>(componentName)
 {</pre></div></div>
 
         </li>
@@ -333,7 +333,7 @@ for the upcoming recursive calls</p>
   <span class="keyword">return</span> <span class="keyword">this</span>;
 }
 
-TANK.GameObject.prototype.addComponents = <span class="keyword">function</span>(componentNames)
+TANK.Entity.prototype.addComponents = <span class="keyword">function</span>(componentNames)
 {</pre></div></div>
 
         </li>
@@ -373,7 +373,7 @@ TANK.GameObject.prototype.addComponents = <span class="keyword">function</span>(
   <span class="keyword">return</span> <span class="keyword">this</span>;
 }
 
-TANK.GameObject.prototype.removeComponent = <span class="keyword">function</span>(componentName)
+TANK.Entity.prototype.removeComponent = <span class="keyword">function</span>(componentName)
 {</pre></div></div>
 
         </li>
@@ -478,12 +478,12 @@ TANK.GameObject.prototype.removeComponent = <span class="keyword">function</span
             <div class="content"><div class='highlight'><pre>  <span class="keyword">delete</span> <span class="keyword">this</span>._components[componentName];
 }
 
-TANK.GameObject.prototype.getComponentsWithTag = <span class="keyword">function</span>(tagName)
+TANK.Entity.prototype.getComponentsWithTag = <span class="keyword">function</span>(tagName)
 {
   <span class="keyword">return</span> <span class="keyword">this</span>._taggedComponents[tagName];
 }
 
-TANK.GameObject.prototype.invoke = <span class="keyword">function</span>(funcName, args)
+TANK.Entity.prototype.invoke = <span class="keyword">function</span>(funcName, args)
 {</pre></div></div>
 
         </li>
@@ -523,7 +523,7 @@ TANK.GameObject.prototype.invoke = <span class="keyword">function</span>(funcNam
   }
 }
 
-TANK.GameObject.prototype.attr = <span class="keyword">function</span>(componentName, attrs)
+TANK.Entity.prototype.attr = <span class="keyword">function</span>(componentName, attrs)
 {
   <span class="keyword">var</span> c = <span class="keyword">this</span>[componentName]
   <span class="keyword">if</span> (!c)
@@ -538,7 +538,7 @@ TANK.GameObject.prototype.attr = <span class="keyword">function</span>(component
   <span class="keyword">return</span> <span class="keyword">this</span>;
 }
 
-TANK.GameObject.prototype.uninit = <span class="keyword">function</span>()
+TANK.Entity.prototype.uninit = <span class="keyword">function</span>()
 {</pre></div></div>
 
         </li>

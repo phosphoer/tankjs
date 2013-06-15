@@ -1,7 +1,7 @@
 (function (TANK, undefined)
 {
 
-  TANK.GameObject = function (id)
+  TANK.Entity = function (id)
   {
     // Name of the game object
     this.name = null;
@@ -13,12 +13,12 @@
     this._components = {};
   }
 
-  TANK.GameObject.prototype.remove = function ()
+  TANK.Entity.prototype.remove = function ()
   {
     TANK.removeObject(this.id);
   }
 
-  TANK.GameObject.prototype.addComponent = function (componentName)
+  TANK.Entity.prototype.addComponent = function (componentName)
   {
     // Check if we have this component already
     if (this[componentName])
@@ -57,7 +57,7 @@
     return this;
   }
 
-  TANK.GameObject.prototype.addComponents = function (componentNames)
+  TANK.Entity.prototype.addComponents = function (componentNames)
   {
     // Get array of component names
     componentNames = componentNames.replace(/\s/g, "");
@@ -72,7 +72,7 @@
     return this;
   }
 
-  TANK.GameObject.prototype.removeComponent = function (componentName)
+  TANK.Entity.prototype.removeComponent = function (componentName)
   {
     // If we don't have the component then just return
     var c = this[componentName];
@@ -101,7 +101,7 @@
     delete this[componentName];
   }
 
-  TANK.GameObject.prototype.invoke = function (funcName, args)
+  TANK.Entity.prototype.invoke = function (funcName, args)
   {
     // Construct arguments
     var message_args = [];
@@ -116,7 +116,7 @@
     }
   }
 
-  TANK.GameObject.prototype.attr = function (componentName, attrs)
+  TANK.Entity.prototype.attr = function (componentName, attrs)
   {
     var c = this[componentName]
     if (!c)
@@ -131,7 +131,7 @@
     return this;
   }
 
-  TANK.GameObject.prototype.destruct = function ()
+  TANK.Entity.prototype.destruct = function ()
   {
     // Remove all components
     for (var i in this._components)

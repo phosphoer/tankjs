@@ -29,8 +29,8 @@
               </a>
 
 
-              <a class="source" href="GameObject.html">
-                GameObject.js
+              <a class="source" href="Entity.html">
+                Entity.js
               </a>
 
 
@@ -135,19 +135,19 @@ This includes creating and manipulating game objects, registering components, an
               <div class="pilwrap for-h3">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <h3>Create a GameObject</h3>
-<p>Creates a new <code>GameObject</code> and begins tracking it.</p>
+              <h3>Create a Entity</h3>
+<p>Creates a new <code>Entity</code> and begins tracking it.</p>
 <ul>
 <li><code>name</code>: (optional) A unique name to track the game object by. If the name is
 not unique the existing object by that name will no longer be findable by its name.</li>
-<li><code>return</code>: A new <code>GameObject</code>.</li>
+<li><code>return</code>: A new <code>Entity</code>.</li>
 </ul>
 
             </div>
 
-            <div class="content"><div class='highlight'><pre>TANK.addObject = <span class="keyword">function</span>(name)
+            <div class="content"><div class='highlight'><pre>TANK.addEntity = <span class="keyword">function</span>(name)
 {
-  <span class="keyword">var</span> obj = <span class="keyword">new</span> TANK.GameObject(<span class="keyword">this</span>._currentID++);</pre></div></div>
+  <span class="keyword">var</span> obj = <span class="keyword">new</span> TANK.Entity(<span class="keyword">this</span>._currentID++);</pre></div></div>
 
         </li>
 
@@ -195,13 +195,13 @@ not unique the existing object by that name will no longer be findable by its na
               <div class="pilwrap for-h3">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <h3>Create GameObject from Prefab</h3>
-<p>Creates a new <code>GameObject</code> using a given prefab and begins tracking it.</p>
+              <h3>Create Entity from Prefab</h3>
+<p>Creates a new <code>Entity</code> using a given prefab and begins tracking it.</p>
 <ul>
 <li><code>prefabName</code>: Name of the prefab to clone.</li>
 <li><code>objName</code>: (optional) A unique name to track the game object by. If the name is
 not unique the existing object by that name will no longer be findable by its name.</li>
-<li><code>return</code>: A new <code>GameObject</code>.</li>
+<li><code>return</code>: A new <code>Entity</code>.</li>
 </ul>
 
             </div>
@@ -215,7 +215,7 @@ not unique the existing object by that name will no longer be findable by its na
     <span class="keyword">return</span>;
   }
 
-  <span class="keyword">var</span> obj = TANK.addObject(objName);</pre></div></div>
+  <span class="keyword">var</span> obj = TANK.addEntity(objName);</pre></div></div>
 
         </li>
 
@@ -256,7 +256,7 @@ not unique the existing object by that name will no longer be findable by its na
               <h3>Remove a gameobject</h3>
 <p>Schedules the given object to be deleted on the next frame.
 Will cause <code>uninit</code> to be called on all components of the object before it is deleted.</p>
-<p><code>id</code>: The id of the object. (<code>GameObject.id</code>)</p>
+<p><code>id</code>: The id of the object. (<code>Entity.id</code>)</p>
 
             </div>
 
@@ -291,7 +291,7 @@ Will cause <code>uninit</code> to be called on all components of the object befo
               <h3>Remove a gameobject by name</h3>
 <p>Schedules the given object to be deleted on the next frame.
 Will cause <code>uninit</code> to be called on all components of the object before it is deleted.</p>
-<p><code>name</code>: The unique name of the object. (<code>GameObject.name</code>)</p>
+<p><code>name</code>: The unique name of the object. (<code>Entity.name</code>)</p>
 
             </div>
 
@@ -363,7 +363,7 @@ Will cause <code>uninit</code> to be called on all components of the object befo
               <h3>Get a gameobject by id</h3>
 <ul>
 <li><code>id</code>: The id of the game object to get</li>
-<li><code>return</code>: The requested <code>GameObject</code> or <code>undefined</code></li>
+<li><code>return</code>: The requested <code>Entity</code> or <code>undefined</code></li>
 </ul>
 
             </div>
@@ -385,7 +385,7 @@ Will cause <code>uninit</code> to be called on all components of the object befo
               <h3>Get a gameobject by name</h3>
 <ul>
 <li><code>name</code>: The name of the game object to get</li>
-<li><code>return</code>: The requested <code>GameObject</code> or <code>undefined</code></li>
+<li><code>return</code>: The requested <code>Entity</code> or <code>undefined</code></li>
 </ul>
 
             </div>

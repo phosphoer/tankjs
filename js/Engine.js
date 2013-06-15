@@ -13,23 +13,23 @@
   // ### Enable/Disable logging messages
   TANK.logsEnabled = true;
 
-  TANK.createObject = function ()
+  TANK.createEntity = function ()
   {
-    var object = new TANK.GameObject(-1);
+    var object = new TANK.Entity(-1);
     return object;
   }
 
-  // ### Create a GameObject
-  // Creates a new `GameObject` and begins tracking it.
+  // ### Create a Entity
+  // Creates a new `Entity` and begins tracking it.
   //
   // - `name`: (optional) A unique name to track the game object by. If the name is
   // not unique the existing object by that name will no longer be findable by its name.
-  // - `return`: A new `GameObject`.
-  TANK.addObject = function (object, name)
+  // - `return`: A new `Entity`.
+  TANK.addEntity = function (object, name)
   {
     if (object.id != -1)
     {
-      TANK.error("Attempting to add a GameObject twice");
+      TANK.error("Attempting to add a Entity twice");
       return;
     }
 
@@ -37,7 +37,7 @@
 
     if (object.name === null)
     {
-      object.name = "GameObject " + object.id;
+      object.name = "Entity " + object.id;
     }
 
     // If a name was specified, track it by the name
@@ -85,13 +85,13 @@
     return object;
   }
 
-  // ### Create GameObject from Prefab
-  // Creates a new `GameObject` using a given prefab and begins tracking it.
+  // ### Create Entity from Prefab
+  // Creates a new `Entity` using a given prefab and begins tracking it.
   //
   // - `prefabName`: Name of the prefab to clone.
   // - `objName`: (optional) A unique name to track the game object by. If the name is
   // not unique the existing object by that name will no longer be findable by its name.
-  // - `return`: A new `GameObject`.
+  // - `return`: A new `Entity`.
   TANK.createObjectFromPrefab = function (prefabName)
   {
     var prefab = TANK.getPrefab(prefabName);
@@ -101,7 +101,7 @@
       return;
     }
 
-    var obj = TANK.createObject();
+    var obj = TANK.createEntity();
 
     // Add all the defined prefab components and set the relevant fields
     for (var i in prefab)
@@ -121,7 +121,7 @@
   // ### Get a gameobject by id
   //
   // - `id`: The id of the game object to get
-  // - `return`: The requested `GameObject` or `undefined`
+  // - `return`: The requested `Entity` or `undefined`
   TANK.getObject = function (id)
   {
     return TANK._objects[id];
@@ -130,7 +130,7 @@
   // ### Get a gameobject by name
   //
   // - `name`: The name of the game object to get
-  // - `return`: The requested `GameObject` or `undefined`
+  // - `return`: The requested `Entity` or `undefined`
   TANK.getNamedObject = function (name)
   {
     return TANK._objectsNamed[name];
@@ -164,7 +164,7 @@
   // Schedules the given object to be deleted on the next frame.
   // Will cause `uninit` to be called on all components of the object before it is deleted.
   //
-  // `id`: The id of the object. (`GameObject.id`)
+  // `id`: The id of the object. (`Entity.id`)
   TANK.removeObject = function (id)
   {
     // Add object to trash
@@ -175,7 +175,7 @@
   // Schedules the given object to be deleted on the next frame.
   // Will cause `uninit` to be called on all components of the object before it is deleted.
   //
-  // `name`: The unique name of the object. (`GameObject.name`)
+  // `name`: The unique name of the object. (`Entity.name`)
   TANK.removeNamedObject = function (name)
   {
     // Don't bother if it doesn't exist

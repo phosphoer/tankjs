@@ -54,6 +54,6 @@ TANK.registerComponent("ObjectSpawner")
       y: Math.sin(t.rotation) * this.spawnVelocity
     });
     this._spawnTimer = 0;
-    TANK.addObject(obj);
+    TANK.addEntity(obj);
   }
 });

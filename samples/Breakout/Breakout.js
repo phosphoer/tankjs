@@ -9,15 +9,15 @@ function main()
   TANK.InputManager.context = document.getElementById("stage");
 
   // Add background object
-  var obj = TANK.createObject().addComponents("Image").attr("Image",
+  var obj = TANK.createEntity().addComponents("Image").attr("Image",
   {
     imagePath: "res/bg_prerendered.png",
     centered: false
   });
-  TANK.addObject(obj);
+  TANK.addEntity(obj);
 
   // Add paddle
-  var player = TANK.createObject().addComponents("Image, Paddle, Collider");
+  var player = TANK.createEntity().addComponents("Image, Paddle, Collider");
   player.Image.imagePath = "res/tiles.png";
   player.Image.subRectOrigin = [0, 64];
   player.Image.subRectCorner = [48, 80];
@@ -27,7 +27,7 @@ function main()
   player.Collider.isStatic = true;
   player.Pos2D.x = 160;
   player.Pos2D.y = 376;
-  TANK.addObject(player, "Player");
+  TANK.addEntity(player, "Player");
 
   // Define a ball prefab so it is easy to quickly spawn them
   TANK.addPrefab("Ball",
@@ -200,7 +200,7 @@ TANK.registerComponent("GameLogic")
       var ball = TANK.createObjectFromPrefab("Ball");
       ball.Pos2D.x = 50;
       ball.Pos2D.y = 200;
-      TANK.addObject(ball);
+      TANK.addEntity(ball);
       TANK.dispatchEvent("OnLevelStart");
     }
   }
@@ -228,7 +228,7 @@ TANK.registerComponent("GameLogic")
           var brick = TANK.createObjectFromPrefab(brickType + "Brick");
           brick.Pos2D.x = 64 + col * brick.Image.width;
           brick.Pos2D.y = 64 + row * brick.Image.height;
-          TANK.addObject(brick);
+          TANK.addEntity(brick);
         }
       }
     }
