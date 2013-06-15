@@ -7,9 +7,9 @@
   TankJS.Component = function (name)
   {
     this.name = name;
-    this.functions = {};
-    this.includes = [];
-    this.interfaces = [];
+    this._functions = {};
+    this._includes = [];
+    this._interfaces = [];
   };
 
   // ### Instantiate a component
@@ -21,27 +21,22 @@
     var c = {},
       i;
 
-    var empty = function () {};
-
     // Default functions
-    c.construct = empty;
-    c.initialize = empty;
-    c.destruct = empty;
+    c.construct = function () {};
+    c.initialize = function () {};
+    c.destruct = function () {};
 
     // Add interfaces
     c.interfaces = {};
-    for (i = 0; i < this.interfaces.length; ++i)
+    for (i in this._interfaces)
     {
-      c.interfaces[this.interfaces[i]] = true;
+      c.interfaces[this._interfaces[i]] = true;
     }
 
     // Add functions
-    for (i in this.functions)
+    for (i in this._functions)
     {
-      if (this.functions.hasOwnProperty(i))
-      {
-        c[i] = this.functions[i];
-      }
+      c[i] = this._functions[i];
     }
 
     c.name = this.name;
@@ -59,7 +54,7 @@
   {
     // Get array of component names
     componentNames = componentNames.replace(/\s/g, "");
-    this.includes = componentNames.split(",");
+    this._includes = componentNames.split(",");
 
     return this;
   };
@@ -75,7 +70,7 @@
   {
     // Get array of interface names
     interfaces = interfaces.replace(/\s/g, "");
-    this.interfaces = interfaces.split(",");
+    this._interfaces = interfaces.split(",");
     return this;
   };
 
@@ -88,7 +83,7 @@
   // - `return`: A reference to itself.
   TankJS.Component.prototype.construct = function (func)
   {
-    this.functions.construct = func;
+    this._functions.construct = func;
     return this;
   };
 
@@ -100,7 +95,7 @@
   // - `return`: A reference to itself.
   TankJS.Component.prototype.initialize = function (func)
   {
-    this.functions.initialize = func;
+    this._functions.initialize = func;
     return this;
   };
 
@@ -112,7 +107,7 @@
   // - `return`: A reference to itself.
   TankJS.Component.prototype.destruct = function (func)
   {
-    this.functions.destruct = func;
+    this._functions.destruct = func;
     return this;
   };
 
@@ -124,7 +119,7 @@
   // - `return`: A reference to itself.
   TankJS.Component.prototype.addFunction = function (name, func)
   {
-    this.functions[name] = func;
+    this._functions[name] = func;
     return this;
   };
 
