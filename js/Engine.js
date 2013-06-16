@@ -14,19 +14,18 @@
   TANK.logsEnabled = true;
 
   // ### Create an Entity
-  // Creates a new `Entity` and returns it.
+  // Creates a new `Entity` and returns it. The parameters to the function are passed
+  // directly to `Entity.addComponents`.
   //
-  // - `componentNames`: (optional) A list of components to add to the entity.
   // - `return`: A new `Entity`.
-  TANK.createEntity = function (componentNames)
+  TANK.createEntity = function ()
   {
     var object = new TANK.Entity(-1);
 
-    if (componentNames)
-      object.addComponents(componentNames);
+    object.addComponents.apply(object, arguments);
 
     return object;
-  }
+  };
 
   // ### Add an entity to the world.
   // Adds the given entity to the world, which will initialize all of its
