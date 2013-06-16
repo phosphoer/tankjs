@@ -24,6 +24,6 @@ TANK.registerComponent("Health")
   {
     this.value = 0;
     if (this.deleteAtZero)
-      this.parent.remove();
+      TANK.removeEntity(this.parent);
   }
 });

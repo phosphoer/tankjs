@@ -131,7 +131,7 @@
     }
 
     object._initialized = true;
-    
+
     return object;
   };
 
@@ -141,9 +141,9 @@
   // - `return`: The requested `Entity` or `undefined`
   TANK.getEntity = function (idOrName)
   {
-    if (idOrName.split)
+    if (typeof idOrName === "string")
       return TANK._objectsNamed[idOrName];
-    return TANK._objects[id];
+    return TANK._objects[idOrName];
   };
 
   // ### Register an object prefab
@@ -182,9 +182,13 @@
   {
     if (typeof arg === "string")
     {
-      TANK._objectsDeleted.push(TANK.getNamedEntity(arg));
+      var entity = TANK._objectsNamed[arg];
+      if (entity)
+      {
+        TANK._objectsDeleted.push(entity);
+      }
     }
-    else if (typeof arg === "number")
+    else if (typeof arg == "number")
     {
       TANK._objectsDeleted.push(TANK.getEntity(arg));
     }
@@ -198,27 +202,12 @@
     }
   };
 
-  // ### Remove an entity by name
-  // Schedules the given object to be deleted on the next frame.
-  // Will cause `destruct` to be called on all components of the object before it is deleted.
-  //
-  // `name`: The unique name of the object. (`Entity.name`)
-  TANK.removeNamedEntity = function (name)
-  {
-    // Don't bother if it doesn't exist
-    var obj = TANK._objectsNamed[name];
-    if (!obj)
-      return;
-
-    TANK._objectsDeleted.push(obj);
-  };
-
   // ### Remove all objects
   // Equivalent to calling `removeEntity` on all objects.
   TANK.removeAllEntities = function ()
   {
     for (var i in TANK._objects)
-      TANK.removeEntity(i);
+      TANK.removeEntity(parseInt(i));
   };
 
   // ### Register a new component type
