@@ -4,20 +4,20 @@ TANK.registerComponent("Velocity")
 
 .construct(function ()
 {
-  this.x = 0;
-  this.y = 0;
+    this.x = 0;
+    this.y = 0;
 
-  TANK.addEventListener("OnEnterFrame", this);
+    this.addEventListener("OnEnterFrame", this.OnEnterFrame);
 })
 
 .destruct(function ()
 {
-  TANK.removeEventListener("OnEnterFrame", this);
+    this.removeEventListener("OnEnterFrame", this.OnEnterFrame);
 })
 
 .addFunction("OnEnterFrame", function (dt)
 {
-  var t = this.parent.Pos2D;
-  t.x += this.x * dt;
-  t.y += this.y * dt;
+    var t = this.parent.Pos2D;
+    t.x += this.x * dt;
+    t.y += this.y * dt;
 });

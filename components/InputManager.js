@@ -65,7 +65,7 @@ TANK.registerComponent("InputManager")
   else
     addEventListener("mousemove", this.mousemove);
 
-  TANK.addEventListener("OnEnterFrame", this);
+  this.addEventListener("OnEnterFrame", onEnterFrame);
 })
 
 .destruct(function ()
@@ -78,9 +78,9 @@ TANK.registerComponent("InputManager")
     removeEventListener("mousemove", this.mousemove);
 
   TANK.removeEventListener("OnEnterFrame", this);
-})
+});
 
-.addFunction("OnEnterFrame", function (dt)
+var onEnterFrame = function (dt)
 {
   var e;
   for (var i in this._keyDownEvents)
@@ -127,4 +127,4 @@ TANK.registerComponent("InputManager")
     TANK.dispatchEvent("OnMouseMove", mouseEvent, this._keysHeld);
   }
   this._mouseMoveEvents = [];
-});
+};

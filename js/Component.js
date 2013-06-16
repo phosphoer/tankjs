@@ -38,6 +38,11 @@
     // Set properties
     c.name = this.name;
 
+    c.addEventListener = this.addEventListener;
+    c.removeEventListener = this.removeEventListener;
+
+    c._listeners = [];
+
     return c;
   }
 
@@ -115,6 +120,58 @@
   {
     this._functions[name] = func;
     return this;
+  }
+
+  TANK.Component.prototype.addEventListener = function (event, callback)
+  {
+    var listeners = TANK._events[event];
+    if (!listeners)
+    {
+      listeners = [];
+      TANK._events[event] = listeners;
+    }
+
+    this._listeners.push(
+    {
+      evt: event,
+      self: this,
+      func: callback
+    });
+
+    listeners.push(
+    {
+      self: this,
+      func: callback
+    });
+  };
+
+  TANK.Component.prototype.removeEventListener = function (event, callback)
+  {
+    var listeners = TANK._events[event];
+    if (!listeners)
+    {
+      return;
+    }
+
+    // Delete the listener from the map
+    for (var i in this._listeners)
+    {
+      i
+      if (this._listeners[i].evt === event && this._listeners[i].func === callback)
+      {
+        this._listeners.splice(i, 1);
+        break;
+      }
+    }
+
+    for (var i in listeners)
+    {
+      if (listeners[i].self === this && listeners[i].func === callback)
+      {
+        listeners.splice(i, 1);
+        break;
+      }
+    }
   }
 
 }(this.TANK = this.TANK ||

@@ -9,7 +9,7 @@ function main()
   TANK.InputManager.context = document.getElementById("stage");
 
   // Add background object
-  var obj = TANK.createEntity().addComponents("Image").attr("Image",
+  var obj = TANK.createEntity("Image").attr("Image",
   {
     imagePath: "res/bg_prerendered.png",
     centered: false
@@ -17,7 +17,7 @@ function main()
   TANK.addEntity(obj);
 
   // Add paddle
-  var player = TANK.createEntity().addComponents("Image, Paddle, Collider");
+  var player = TANK.createEntity("Image, Paddle, Collider");
   player.Image.imagePath = "res/tiles.png";
   player.Image.subRectOrigin = [0, 64];
   player.Image.subRectCorner = [48, 80];
@@ -150,20 +150,20 @@ TANK.registerComponent("GameLogic")
   // Keep track of player lives
   this.lives = 3;
 
-  TANK.addEventListener("OnEnterFrame", this);
-  TANK.addEventListener("OnBallAdded", this);
-  TANK.addEventListener("OnBallRemoved", this);
-  TANK.addEventListener("OnBrickAdded", this);
-  TANK.addEventListener("OnBrickRemoved", this);
+  this.addEventListener("OnEnterFrame", this.OnEnterFrame);
+  this.addEventListener("OnBallAdded", this.OnBallAdded);
+  this.addEventListener("OnBallRemoved", this.OnBallRemoved);
+  this.addEventListener("OnBrickAdded", this.OnBrickAdded);
+  this.addEventListener("OnBrickRemoved", this.OnBrickRemoved);
 })
 
 .destruct(function ()
 {
-  TANK.removeEventListener("OnEnterFrame", this);
-  TANK.removeEventListener("OnBallAdded", this);
-  TANK.removeEventListener("OnBallRemoved", this);
-  TANK.removeEventListener("OnBrickAdded", this);
-  TANK.removeEventListener("OnBrickRemoved", this);
+  this.removeEventListener("OnEnterFrame", this.OnEnterFrame);
+  this.removeEventListener("OnBallAdded", this.OnBallAdded);
+  this.removeEventListener("OnBallRemoved", this.OnBallRemoved);
+  this.removeEventListener("OnBrickAdded", this.OnBrickAdded);
+  this.removeEventListener("OnBrickRemoved", this.OnBrickRemoved);
 })
 
 .addFunction("OnBallAdded", function ()
@@ -243,14 +243,14 @@ TANK.registerComponent("Paddle")
 
 .initialize(function ()
 {
-  TANK.addEventListener("OnEnterFrame", this);
-  TANK.addEventListener("OnMouseMove", this);
+  this.addEventListener("OnEnterFrame", this.OnEnterFrame);
+  this.addEventListener("OnMouseMove", this.OnMouseMove);
 })
 
 .destruct(function ()
 {
-  TANK.removeEventListener("OnEnterFrame", this);
-  TANK.removeEventListener("OnMouseMove", this);
+  this.removeEventListener("OnEnterFrame", this.OnEnterFrame);
+  this.removeEventListener("OnMouseMove", this.OnMouseMove);
 })
 
 .addFunction("OnMouseMove", function (e)
@@ -278,19 +278,15 @@ TANK.registerComponent("Ball")
   // Send out an event that a ball was created
   TANK.dispatchEvent("OnBallAdded", this.parent);
 
-  TANK.addEventListener("OnEnterFrame", this);
-  TANK.addEventListener("OnLevelComplete", this);
-  TANK.addEventListener("OnLevelStart", this);
+  this.addEventListener("OnEnterFrame", this.OnEnterFrame);
+  this.addEventListener("OnLevelComplete", this.OnLevelComplete);
+  this.addEventListener("OnLevelStart", this.OnLevelStart);
 })
 
 .destruct(function ()
 {
   // Send out an event that a ball was destroyed
   TANK.dispatchEvent("OnBallRemoved", this.parent);
-
-  TANK.removeEventListener("OnEnterFrame", this);
-  TANK.removeEventListener("OnLevelComplete", this);
-  TANK.removeEventListener("OnLevelStart", this);
 })
 
 .addFunction("OnCollide", function (other)

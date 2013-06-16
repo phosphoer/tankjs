@@ -94,6 +94,21 @@
     // Uninitialize the component
     c.destruct();
 
+    // Remove all remaining event listeners
+    for (var i = 0; i < c._listeners.length; ++i)
+    {
+      var obj = c._listeners[i];
+      var listeners = TANK._events[obj.evt];
+      for (var j = 0; listeners && j < listeners.length; ++j)
+      {
+        if (listeners[j].self === obj.self && listeners[j].func === obj.func)
+        {
+          listeners.splice(j, 1);
+          break;
+        }
+      }
+    }
+
     // Stop tracking this component by its interfaces
     var componentDef = TANK._registeredComponents[componentName];
     var i;

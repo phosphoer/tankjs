@@ -323,6 +323,23 @@
     // Uninitialize the component
     c.destruct.apply(c);
 
+
+    // Remove all remaining event listeners
+    for (var i = 0; i < c._listeners.length; ++i)
+    {
+      var obj = c._listeners[i];
+      var listeners = TANK._events[obj.event];
+      for (var j = 0; listeners && j < listeners.length; ++j)
+      {
+        if (listeners[j].self === obj.self && listeners[j].func === obj.func)
+        {
+          listeners.splice(j, 1);
+          break;
+        }
+      }
+    }
+
+
     // Stop tracking this component by its interfaces
     var componentDef = TANK._registeredComponents[componentName];
     for (var i in componentDef._interfaces)
@@ -349,40 +366,6 @@
     return TANK._interfaceComponents[interfaceName];
   }
 
-  // ### Register a event handler
-  TANK.addEventListener = function (eventName, obj)
-  {
-    // Get array of listeners
-    var listeners = TANK._events[eventName];
-    if (!listeners)
-    {
-      listeners = [];
-      TANK._events[eventName] = listeners;
-    }
-
-    // Add listener to the map
-    listeners.push(obj);
-  }
-
-  // ### Unregister an event handler
-  TANK.removeEventListener = function (eventName, obj)
-  {
-    // Get array of listeners
-    var listeners = TANK._events[eventName];
-    if (!listeners)
-      return;
-
-    // Delete the listener from the map
-    for (var i in listeners)
-    {
-      if (listeners[i] === obj)
-      {
-        listeners.splice(i, 1);
-        break;
-      }
-    }
-  }
-
   // ### Send out an event
   TANK.dispatchEvent = function (eventName, args)
   {
@@ -400,8 +383,8 @@
     var func, thisObj;
     for (var i in listeners)
     {
-      func = listeners[i][eventName];
-      thisObj = listeners[i];
+      func = listeners[i].func;
+      thisObj = listeners[i].self;
       if (func)
         func.apply(thisObj, message_args);
       else
@@ -477,6 +460,8 @@
 
   function update()
   {
+
+
     // Get dt
     var new_time = new Date();
     var dt = (new_time - TANK._lastTime) / 1000.0;
