@@ -147,6 +147,7 @@ TANK.registerComponent("GameLogic")
   // Keep track of current level
   this.level = -1;
 
+
   // Keep track of player lives
   this.lives = 3;
 
@@ -159,6 +160,7 @@ TANK.registerComponent("GameLogic")
 
 .destruct(function ()
 {
+
   this.removeEventListener("OnEnterFrame", this.OnEnterFrame);
   this.removeEventListener("OnBallAdded", this.OnBallAdded);
   this.removeEventListener("OnBallRemoved", this.OnBallRemoved);
@@ -208,6 +210,8 @@ TANK.registerComponent("GameLogic")
   // If no bricks exist, build the next level
   if (this.numBricks === 0)
   {
+
+
     ++this.lives;
     ++this.level;
     TANK.dispatchEvent("OnLevelComplete");

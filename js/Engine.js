@@ -1,8 +1,9 @@
 // The main TANK file that provides access to the core functionality of the engine.
 // This includes creating and manipulating game objects, registering components, and listening for / dispatching events.
 
-(function (TANK, undefined)
+(function (TANK)
 {
+  "use strict";
 
   // ### Enable/Disable error messages
   TANK.errorsEnabled = true;
@@ -36,7 +37,7 @@
   // - `return`: The initialized entity.
   TANK.addEntity = function (object, name)
   {
-    if (object.id != -1)
+    if (object.id !== -1)
     {
       TANK.error("Attempting to add a Entity twice");
       return object;
@@ -65,12 +66,12 @@
     TANK._objects[object.id] = object;
 
 
-    var n, c;
+    var n, c, componentDef, i;
     for (n in object._components)
     {
-      var c = object._components[n];
-      var componentDef = TANK._registeredComponents[n];
-      for (var i in componentDef._interfaces)
+      c = object._components[n];
+      componentDef = TANK._registeredComponents[n];
+      for (i = 0; i < componentDef._interfaces.length; ++i)
       {
         // Get the list of components with this interface
         var componentList = TANK._interfaceComponents[componentDef._interfaces[i]];
@@ -97,7 +98,7 @@
     }
 
     return object;
-  }
+  };
 
   // ### Create Entity from Prefab
   // Creates a new `Entity` using a given prefab.
@@ -128,7 +129,7 @@
     }
 
     return obj;
-  }
+  };
 
   // ### Get an entity by id
   //
@@ -137,7 +138,7 @@
   TANK.getEntity = function (id)
   {
     return TANK._objects[id];
-  }
+  };
 
   // ### Get an entity by name
   //
@@ -146,7 +147,7 @@
   TANK.getNamedEntity = function (name)
   {
     return TANK._objectsNamed[name];
-  }
+  };
 
   // ### Register an object prefab
   // Use this to define an entity with a set of components that
@@ -164,7 +165,7 @@
   TANK.addPrefab = function (name, data)
   {
     TANK._prefabs[name] = data;
-  }
+  };
 
   // ### Get a prefab object
   //
@@ -173,7 +174,7 @@
   TANK.getPrefab = function (name)
   {
     return TANK._prefabs[name];
-  }
+  };
 
   // ### Remove an object
   // Schedules the given object to be deleted on the next frame.
@@ -184,7 +185,7 @@
   {
     // Add object to trash
     TANK._objectsDeleted.push(TANK.getEntity(id));
-  }
+  };
 
   // ### Remove an entity by name
   // Schedules the given object to be deleted on the next frame.
@@ -199,7 +200,7 @@
       return;
 
     TANK._objectsDeleted.push(obj);
-  }
+  };
 
   // ### Remove all objects
   // Equivalent to calling `removeEntity` on all objects.
@@ -207,7 +208,7 @@
   {
     for (var i in TANK._objects)
       TANK.removeEntity(i);
-  }
+  };
 
   // ### Register a new component type
   // Creates a new `Component` instance which defines a blueprint
@@ -227,7 +228,7 @@
     var c = new TANK.Component(componentName);
     TANK._registeredComponents[componentName] = c;
     return c;
-  }
+  };
 
   // ### Add a component to the engine
   // Components added to the engine are "global" and not
@@ -288,7 +289,7 @@
     c.initialize.apply(c);
 
     return TANK;
-  }
+  };
 
   // ### Add multiple components to the engine
   // Components can be given as a string of comma seperated values,
@@ -310,7 +311,7 @@
     }
 
     return this;
-  }
+  };
 
   // ### Remove a component from the engine
   //
@@ -359,7 +360,7 @@
     // Remove component
     delete TANK._components[componentName];
     delete TANK[componentName];
-  }
+  };
 
   // ### Find components with a given interface
   // Gets all component instances that implement a particular interface.
@@ -369,7 +370,7 @@
   TANK.getComponentsWithInterface = function (interfaceName)
   {
     return TANK._interfaceComponents[interfaceName];
-  }
+  };
 
   // ### Send out an event
   TANK.dispatchEvent = function (eventName, args)
@@ -395,7 +396,7 @@
       else
         TANK.log(thisObj + " is listening for " + eventName + " but does not implement a method of the same name");
     }
-  }
+  };
 
   // ### Start the engine main loop
   TANK.start = function ()
@@ -403,13 +404,13 @@
     TANK._lastTime = new Date();
     TANK._running = true;
     update()
-  }
+  };
 
   // ### Stop the engine
   TANK.stop = function ()
   {
     TANK._running = false
-  }
+  };
 
   // ### Reset the engine
   // This deletes all game objects and resets the state of the engine.
@@ -418,7 +419,7 @@
   {
     TANK._resetting = true;
     TANK.removeAllEntities();
-  }
+  };
 
   // ### Log a message to console
   //
@@ -428,11 +429,8 @@
     if (!TANK.logsEnabled)
       return;
 
-    if (arguments.callee.caller.name)
-      console.log(arguments.callee.caller.name + ": " + text);
-    else
-      console.log("(anonymous function): " + text);
-  }
+    console.log(text);
+  };
 
 
   // ### Log a warning message to console
@@ -443,11 +441,8 @@
     if (!TANK.warningsEnabled)
       return;
 
-    if (arguments.callee.caller.name)
-      console.warn(arguments.callee.caller.name + ": " + text);
-    else
-      console.warn("(anonymous function): " + text);
-  }
+    console.warn(text);
+  };
 
   // ### Log an error message to console
   //
@@ -457,16 +452,11 @@
     if (!TANK.errorsEnabled)
       return;
 
-    if (arguments.callee.caller.name)
-      console.error(arguments.callee.caller.name + ": " + text);
-    else
-      console.error("(anonymous function): " + text);
-  }
+    console.error(text);
+  };
 
   function update()
   {
-
-
     // Get dt
     var new_time = new Date();
     var dt = (new_time - TANK._lastTime) / 1000.0;
@@ -489,6 +479,14 @@
     // we've cleared up the deleted objects
     if (TANK._resetting)
     {
+      // Remove all engine components
+      for (var i in TANK._components)
+      {
+        TANK._components[i].destruct();
+        delete TANK[TANK._components[i].name];
+      }
+      TANK._components = {};
+
       TANK._resetting = false;
       TANK._running = false;
       main();
@@ -501,7 +499,7 @@
     // Queue next frame
     if (TANK._running)
       requestAnimFrame(update);
-  }
+  };
 
   // Map of objects tracked by the core
   // Key is the id of the object
