@@ -139,9 +139,45 @@
   // - `return`: The requested `Entity` or `undefined`
   TANK.getEntity = function (idOrName)
   {
-    if (idOrName.split)
+    if (typeof idOrName === "string")
       return TANK._objectsNamed[idOrName];
-    return TANK._objects[id];
+    else if (typeof idOrName === "number")
+      return TANK._objects[idOrName];
+
+    TANK.error("Attemping to get an Entity with neither a string name nor an id number: " + idOrName);
+  };
+
+  // ### Remove an object
+  // Schedules the given object to be deleted on the next frame.
+  // Will cause `destruct` to be called on all components of the object before it is deleted.
+  //
+  // `id`: The id of the object. (`Entity.id`)
+  TANK.removeEntity = function (arg)
+  {
+    if (typeof arg === "string")
+    {
+      TANK._objectsDeleted.push(TANK.getEntity(arg));
+    }
+    else if (typeof arg === "number")
+    {
+      TANK._objectsDeleted.push(TANK.getEntity(arg));
+    }
+    else if (arg instanceof TANK.Entity)
+    {
+      TANK._objectsDeleted.push(arg);
+    }
+    else
+    {
+      TANK.error("Attemping to remove an Entity with neither a string name, id number, or Entity reference: " + arg);
+    }
+  };
+
+  // ### Remove all objects
+  // Equivalent to calling `removeEntity` on each objects.
+  TANK.removeAllEntities = function ()
+  {
+    for (var i in TANK._objects)
+      TANK.removeEntity(i);
   };
 
   // ### Register an object prefab
@@ -171,59 +207,11 @@
     return TANK._prefabs[name];
   };
 
-  // ### Remove an object
-  // Schedules the given object to be deleted on the next frame.
-  // Will cause `destruct` to be called on all components of the object before it is deleted.
-  //
-  // `id`: The id of the object. (`Entity.id`)
-  TANK.removeEntity = function (arg)
-  {
-    if (typeof arg === "string")
-    {
-      TANK._objectsDeleted.push(TANK.getNamedEntity(arg));
-    }
-    else if (typeof arg === "number")
-    {
-      TANK._objectsDeleted.push(TANK.getEntity(arg));
-    }
-    else if (arg instanceof TANK.Entity)
-    {
-      TANK._objectsDeleted.push(arg);
-    }
-    else
-    {
-      TANK.error("Attempting to remove " + arg + " which is not an entity.");
-    }
-  };
-
-  // ### Remove an entity by name
-  // Schedules the given object to be deleted on the next frame.
-  // Will cause `destruct` to be called on all components of the object before it is deleted.
-  //
-  // `name`: The unique name of the object. (`Entity.name`)
-  TANK.removeNamedEntity = function (name)
-  {
-    // Don't bother if it doesn't exist
-    var obj = TANK._objectsNamed[name];
-    if (!obj)
-      return;
-
-    TANK._objectsDeleted.push(obj);
-  };
-
-  // ### Remove all objects
-  // Equivalent to calling `removeEntity` on all objects.
-  TANK.removeAllEntities = function ()
-  {
-    for (var i in TANK._objects)
-      TANK.removeEntity(i);
-  };
-
   // ### Register a new component type
   // Creates a new `Component` instance which defines a blueprint
   // for a type of component.
   //
-  // - `componentName`: The name of the component type to register.
+  // - `componentName`: The name of the component type to register. This must be a valid identifier.
   // - `return`: A new instance of type `Component`.
   TANK.registerComponent = function (componentName)
   {
@@ -251,51 +239,17 @@
     if (TANK[componentName])
       return;
 
-    // Get the component definition object
-    var componentDef = TANK._registeredComponents[componentName];
-    if (!componentDef)
-    {
-      TANK.error("No component registered with name " + componentName);
-      return;
-    }
+    // Create engine entity if it doensn't exist
+    if (!TANK._engineEntity)
+      TANK._engineEntity = TANK.createEntity();
 
-    // Temporarily add a fake component just to mark this one as added
-    // for the upcoming recursive calls
-    TANK[componentName] = "Placeholder";
-    TANK._components[componentName] = "Placeholder";
+    TANK._engineEntity.addComponent(componentName);
+    TANK[componentName] = TANK._engineEntity[componentName];
 
-    // Add all the included components
-    for (var i in componentDef._includes)
-    {
-      TANK.addComponent(componentDef._includes[i]);
-    }
-
-    // Clone the component into our list of components
-    var c = componentDef.clone();
-    TANK[componentName] = c;
-    TANK._components[componentName] = c;
-
-    // Track this component by its interaces
-    for (var i in componentDef._interfaces)
-    {
-      // Get the list of components with this interface
-      var componentList = TANK._interfaceComponents[componentDef._interfaces[i]];
-      if (!componentList)
-      {
-        componentList = {};
-        TANK._interfaceComponents[componentDef._interfaces[i]] = componentList;
-      }
-
-      componentList["TANK" + "." + componentDef.name] = c;
-    }
-
-    // Set some attributes of the component instance
-    // The parent is null because it is a global component
-    c.parent = null;
-
-    // Initialize the component
-    c.construct.apply(c);
-    c.initialize.apply(c);
+    // Only run initialize if the engine is already running
+    // because all components are initialized on `TANK.start()`
+    if (TANK._running)
+      TANK[componentName].initialize.apply(c);
 
     return TANK;
   };
@@ -332,43 +286,11 @@
     if (!c)
       return;
 
-    // Inform the engine this component was uninitialized
-    TANK.dispatchEvent("OnComponentUninitialized", c);
-
-    // Uninitialize the component
-    c.destruct.apply(c);
-
-
-    // Remove all remaining event listeners
-    for (var i = 0; i < c._listeners.length; ++i)
+    if (TANK._engineEntity)
     {
-      var obj = c._listeners[i];
-      var listeners = TANK._events[obj.event];
-      for (var j = 0; listeners && j < listeners.length; ++j)
-      {
-        if (listeners[j].self === obj.self && listeners[j].func === obj.func)
-        {
-          listeners.splice(j, 1);
-          break;
-        }
-      }
+      TANK._engineEntity.removeComponent(componentName);
+      delete TANK[componentName];
     }
-
-
-    // Stop tracking this component by its interfaces
-    var componentDef = TANK._registeredComponents[componentName];
-    for (var i in componentDef._interfaces)
-    {
-      // Get the list of components with this interface
-      var componentList = TANK._interfaceComponents[componentDef._interfaces[i]];
-
-      if (componentList)
-        delete componentList[this.name + "." + componentDef.name];
-    }
-
-    // Remove component
-    delete TANK._components[componentName];
-    delete TANK[componentName];
   };
 
   // ### Find components with a given interface
@@ -412,6 +334,10 @@
   {
     TANK._lastTime = new Date();
     TANK._running = true;
+
+    // Initialize all engine components
+    TANK._engineEntity.invoke("initialize");
+
     update()
   };
 
@@ -489,12 +415,9 @@
     if (TANK._resetting)
     {
       // Remove all engine components
-      for (var i in TANK._components)
-      {
-        TANK._components[i].destruct();
-        delete TANK[TANK._components[i].name];
-      }
-      TANK._components = {};
+      for (var i in TANK._engineEntity._components)
+        delete TANK[i];
+      TANK._engineEntity.destruct();
 
       TANK._resetting = false;
       TANK._running = false;
@@ -523,9 +446,8 @@
   // Map of prefabs with name as key
   TANK._prefabs = {};
 
-  // Map of current engine components
-  // Key is the name of the component
-  TANK._components = {};
+  // "Proxy" entity that stores engine components
+  TANK._engineEntity = null;
 
   // Map of current registered component types
   // Key is the name of the component

@@ -1,11 +1,14 @@
 TANK.registerComponent("RenderManager")
 
-.initialize(function ()
+.construct(function ()
 {
   this.context = null;
   this._drawables = {};
   this._drawablesSorted = [];
+})
 
+.initialize(function ()
+{
   var existing = TANK.getComponentsWithInterface("Drawable");
   for (var i in existing)
     this._drawables[existing[i].name + existing[i].parent.id] = existing[i];

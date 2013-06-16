@@ -136,7 +136,7 @@ function main()
 // Manages general state of the game
 TANK.registerComponent("GameLogic")
 
-.initialize(function ()
+.construct(function ()
 {
   // Keep track of how many balls and bricks exist
   this.numBalls = 0;
@@ -145,10 +145,12 @@ TANK.registerComponent("GameLogic")
   // Keep track of current level
   this.level = -1;
 
-
   // Keep track of player lives
   this.lives = 3;
+})
 
+.initialize(function ()
+{
   this.addEventListener("OnEnterFrame", this.OnEnterFrame);
   this.addEventListener("OnBallAdded", this.OnBallAdded);
   this.addEventListener("OnBallRemoved", this.OnBallRemoved);
