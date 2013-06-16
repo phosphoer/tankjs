@@ -1,5 +1,6 @@
-(function (TANK, undefined)
+(function (TANK)
 {
+  "use strict";
 
   // ### Component object
   // Defines a blueprint for components.
@@ -9,7 +10,7 @@
     this._functions = {};
     this._includes = [];
     this._interfaces = [];
-  }
+  };
 
   // ### Instantiate a component
   // Creates a component object from this blueprint.
@@ -26,13 +27,19 @@
 
     // Add interfaces
     c.interfaces = {};
-    for (var i in this._interfaces)
+    var i;
+    for (i = 0; i < this._interfaces.length; ++i)
+    {
       c.interfaces[this._interfaces[i]] = true;
+    }
 
     // Add functions
-    for (var i in this._functions)
+    for (i in this._functions)
     {
-      c[i] = this._functions[i];
+      if (this._functions.hasOwnProperty(i))
+      {
+        c[i] = this._functions[i];
+      }
     }
 
     // Set properties
@@ -44,7 +51,7 @@
     c._listeners = [];
 
     return c;
-  }
+  };
 
   // ### Require other components
   // Defines a list of components that are required by this one
@@ -59,7 +66,7 @@
     this._includes = componentNames.split(",");
 
     return this;
-  }
+  };
 
   // ### Interfaces
   // Defines a list of interfaces that this component implements.
@@ -74,7 +81,7 @@
     interfaces = interfaces.replace(/\s/g, "");
     this._interfaces = interfaces.split(",");
     return this;
-  }
+  };
 
   // ### Set constructor function
   // Defines a function to be called after the component has been instantiated.
@@ -86,7 +93,7 @@
   {
     this._functions.construct = func;
     return this;
-  }
+  };
 
   // ### Set init function
   // Defines a function to be called after the component has been constructed and added to an entity.
@@ -97,7 +104,7 @@
   {
     this._functions.initialize = func;
     return this;
-  }
+  };
 
   // ### Set uninit function
   // Defines a function to be called after the component has been removed from an entity.
@@ -109,7 +116,7 @@
   {
     this._functions.destruct = func;
     return this;
-  }
+  };
 
   // ### Set a custom function
   // Defines a custom-named function to be added to the component.
@@ -120,7 +127,7 @@
   {
     this._functions[name] = func;
     return this;
-  }
+  };
 
   TANK.Component.prototype.addEventListener = function (event, callback)
   {
@@ -147,16 +154,16 @@
 
   TANK.Component.prototype.removeEventListener = function (event, callback)
   {
-    var listeners = TANK._events[event];
+    var listeners = TANK._events[event],
+      i;
     if (!listeners)
     {
       return;
     }
 
     // Delete the listener from the map
-    for (var i in this._listeners)
+    for (i = 0; i < this._listeners.length; ++i)
     {
-      i
       if (this._listeners[i].evt === event && this._listeners[i].func === callback)
       {
         this._listeners.splice(i, 1);
@@ -164,7 +171,7 @@
       }
     }
 
-    for (var i in listeners)
+    for (i = 0; i < listeners.length; ++i)
     {
       if (listeners[i].self === this && listeners[i].func === callback)
       {
@@ -172,7 +179,7 @@
         break;
       }
     }
-  }
+  };
 
 }(this.TANK = this.TANK ||
 {}));

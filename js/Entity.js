@@ -1,4 +1,4 @@
-(function (TANK, undefined)
+(function (TANK)
 {
   "use strict";
 
