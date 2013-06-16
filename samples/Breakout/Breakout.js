@@ -9,12 +9,10 @@ function main()
   TANK.InputManager.context = document.getElementById("stage");
 
   // Add background object
-  var obj = TANK.createEntity("Image").attr("Image",
-  {
-    imagePath: "res/bg_prerendered.png",
-    centered: false
-  });
-  TANK.addEntity(obj);
+  var background = TANK.createEntity("Image");
+  background.Image.imagePath = "res/bg_prerendered.png";
+  background.Image.centered = false;
+  TANK.addEntity(background);
 
   // Add paddle
   var player = TANK.createEntity("Image, Paddle, Collider");
@@ -158,16 +156,6 @@ TANK.registerComponent("GameLogic")
   this.addEventListener("OnBrickRemoved", this.OnBrickRemoved);
 })
 
-.destruct(function ()
-{
-
-  this.removeEventListener("OnEnterFrame", this.OnEnterFrame);
-  this.removeEventListener("OnBallAdded", this.OnBallAdded);
-  this.removeEventListener("OnBallRemoved", this.OnBallRemoved);
-  this.removeEventListener("OnBrickAdded", this.OnBrickAdded);
-  this.removeEventListener("OnBrickRemoved", this.OnBrickRemoved);
-})
-
 .addFunction("OnBallAdded", function ()
 {
   ++this.numBalls;
@@ -249,12 +237,6 @@ TANK.registerComponent("Paddle")
 {
   this.addEventListener("OnEnterFrame", this.OnEnterFrame);
   this.addEventListener("OnMouseMove", this.OnMouseMove);
-})
-
-.destruct(function ()
-{
-  this.removeEventListener("OnEnterFrame", this.OnEnterFrame);
-  this.removeEventListener("OnMouseMove", this.OnMouseMove);
 })
 
 .addFunction("OnMouseMove", function (e)

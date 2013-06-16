@@ -137,29 +137,8 @@
     }
   };
 
-  TANK.Entity.prototype.attr = function (componentName, attrs)
-  {
-    var c = this[componentName];
-    if (!c)
-    {
-      TANK.error("Could not find component with name " + componentName);
-      return this;
-    }
-
-    var i;
-    for (i in attrs)
-    {
-      if (attrs.hasOwnProperty(i))
-      {
-        c[i] = attrs[i];
-      }
-    }
-
-    return this;
-  };
   TANK.Entity.prototype.destruct = function ()
   {
-    // Remove all components
     var i;
     for (i in this._components)
     {
