@@ -16,7 +16,7 @@
 
   // ### Create an Entity
   // Creates a new `Entity` and returns it. The parameters to the function are passed
-  // directly to `Entity.addComponents`.
+  // directly to `Entity.addComponents` after construction.
   //
   // - `return`: A new `Entity`.
   TANK.createEntity = function ()
@@ -26,6 +26,37 @@
     object.addComponents.apply(object, arguments);
 
     return object;
+  };
+
+  // ### Create Entity from prefab
+  // Creates a new `Entity` using a given prefab.
+  //
+  // - `prefabName`: Name of the prefab to clone.
+  // - `return`: A new `Entity`.
+  TANK.createEntityFromPrefab = function (prefabName)
+  {
+    var prefab = TANK.getPrefab(prefabName);
+    if (!prefab)
+    {
+      TANK.log("Could not find a prefab named " + prefabName);
+      return;
+    }
+
+    var obj = TANK.createEntity();
+
+    // Add all the defined prefab components and set the relevant fields
+    for (var i in prefab)
+    {
+      var cData = prefab[i];
+      obj.addComponent(i);
+      var c = obj[i];
+      for (var j in cData)
+      {
+        c[j] = cData[j];
+      }
+    }
+
+    return obj;
   };
 
   // ### Add an entity to the world.
@@ -66,6 +97,7 @@
     TANK._objects[object.id] = object;
 
 
+    // Track the components by their interfaces
     var n, c, componentDef, i;
     for (n in object._components)
     {
@@ -85,6 +117,7 @@
       }
     }
 
+    // Initialize each component
     for (n in object._components)
     {
       c = object._components[n];
@@ -102,53 +135,15 @@
     return object;
   };
 
-  // ### Create Entity from Prefab
-  // Creates a new `Entity` using a given prefab.
+  // ### Get an entity
   //
-  // - `prefabName`: Name of the prefab to clone.
-  // - `return`: A new `Entity`.
-  TANK.createEntityFromPrefab = function (prefabName)
-  {
-    var prefab = TANK.getPrefab(prefabName);
-    if (!prefab)
-    {
-      TANK.log("Could not find a prefab named " + prefabName);
-      return;
-    }
-
-    var obj = TANK.createEntity();
-
-    // Add all the defined prefab components and set the relevant fields
-    for (var i in prefab)
-    {
-      var cData = prefab[i];
-      obj.addComponent(i);
-      var c = obj[i];
-      for (var j in cData)
-      {
-        c[j] = cData[j];
-      }
-    }
-
-    return obj;
-  };
-
-  // ### Get an entity by id
-  //
-  // - `id`: The id of the entity to get
+  // - `idOrName`: Either the id of the entity, or its unique name
   // - `return`: The requested `Entity` or `undefined`
-  TANK.getEntity = function (id)
+  TANK.getEntity = function (idOrName)
   {
+    if (idOrName.split)
+      return TANK._objectsNamed[idOrName];
     return TANK._objects[id];
-  };
-
-  // ### Get an entity by name
-  //
-  // - `name`: The name of the entity to get
-  // - `return`: The requested `Entity` or `undefined`
-  TANK.getNamedEntity = function (name)
-  {
-    return TANK._objectsNamed[name];
   };
 
   // ### Register an object prefab
