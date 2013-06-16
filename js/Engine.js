@@ -181,10 +181,24 @@
   // Will cause `destruct` to be called on all components of the object before it is deleted.
   //
   // `id`: The id of the object. (`Entity.id`)
-  TANK.removeEntity = function (id)
+  TANK.removeEntity = function (arg)
   {
-    // Add object to trash
-    TANK._objectsDeleted.push(TANK.getEntity(id));
+    if (typeof arg === "string")
+    {
+      TANK._objectsDeleted.push(TANK.getNamedEntity(arg));
+    }
+    else if (typeof arg === "number")
+    {
+      TANK._objectsDeleted.push(TANK.getEntity(arg));
+    }
+    else if (arg instanceof TANK.Entity)
+    {
+      TANK._objectsDeleted.push(arg);
+    }
+    else
+    {
+      TANK.error("Attempting to remove " + arg + " which is not an entity.");
+    }
   };
 
   // ### Remove an entity by name

@@ -4,24 +4,13 @@
 
   TANK.Entity = function (id)
   {
-    // Name of the entity
     this.name = null;
-
-    // ID of the entity
     this.id = id;
-
-    // Map of components by name
     this._components = {};
-  };
-
-  TANK.Entity.prototype.remove = function ()
-  {
-    TANK.removeEntity(this.id);
   };
 
   TANK.Entity.prototype.addComponent = function (componentName)
   {
-    // Check if we have this component already
     if (this[componentName])
     {
       return this;
@@ -168,7 +157,6 @@
 
     return this;
   };
-
   TANK.Entity.prototype.destruct = function ()
   {
     // Remove all components

@@ -329,13 +329,13 @@ TANK.registerComponent("Ball")
       this.parent.Velocity.y *= -1;
     }
 
-    other.remove();
+    TANK.removeEntity(other);
   }
 })
 
 .addFunction("OnLevelComplete", function ()
 {
-  this.parent.remove();
+  TANK.removeEntity(this.parent);
 })
 
 .addFunction("OnLevelStart", function ()
@@ -366,7 +366,7 @@ TANK.registerComponent("Ball")
   // Remove ball if it goes off screen
   if (this.parent.Pos2D.y > 416)
   {
-    this.parent.remove();
+    TANK.removeEntity(this.parent);
   }
 });
 
