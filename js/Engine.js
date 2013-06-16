@@ -292,19 +292,25 @@
   }
 
   // ### Add multiple components to the engine
-  //
-  // - `componentNames`: A comma separated list of names in a string.
-  TANK.addComponents = function (componentNames)
+  // Components can be given as a string of comma seperated values,
+  // a list of strings, or some combination of the above
+  // e.g., `TANK.addComponents("Pos2D, Velocity", "Image", "Collider");`
+  TANK.addComponents = function ()
   {
-    // Get array of component names
-    componentNames = componentNames.replace(/\s/g, "");
-    var components = componentNames.split(",");
-
-    // Add components to object
-    for (var i in components)
+    var i, j, arg;
+    for (i = 0; i < arguments.length; ++i)
     {
-      TANK.addComponent(components[i]);
+      arg = arguments[i];
+      arg = arg.replace(/\s/g, "");
+      var components = arg.split(",");
+
+      for (j = 0; j < components.length; ++j)
+      {
+        TANK.addComponent(components[j]);
+      }
     }
+
+    return this;
   }
 
   // ### Remove a component from the engine
