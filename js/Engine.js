@@ -97,6 +97,8 @@
       TANK.dispatchEvent("OnComponentInitialized", c);
     }
 
+    object._initialized = true;
+    
     return object;
   };
 

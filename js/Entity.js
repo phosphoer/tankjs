@@ -7,6 +7,7 @@
     this.name = null;
     this.id = id;
     this._components = {};
+    this._initialized = false;
   };
 
   TANK.Entity.prototype.addComponent = function (componentName)
@@ -37,13 +38,21 @@
     }
 
     // Clone the component into our list of components
-    var c = componentDef.clone();
-    this[componentName] = c;
-    this._components[componentName] = c;
+    var component = componentDef.clone();
+    this[componentName] = component;
+    this._components[componentName] = component;
 
-    c.parent = this;
+    component.parent = this;
 
-    c.construct();
+    component.construct();
+
+    // For dynamically added components the entity will have 
+    // already been added to the engine, so we need to make
+    // sure to initialize them immediately
+    if (this._initialized)
+    {
+      component.initialize();
+    }
 
     return this;
   };
@@ -84,11 +93,12 @@
     c.destruct();
 
     // Remove all remaining event listeners
-    for (var i = 0; i < c._listeners.length; ++i)
+    var i, j, obj, listeners;
+    for (i = 0; i < c._listeners.length; ++i)
     {
-      var obj = c._listeners[i];
-      var listeners = TANK._events[obj.evt];
-      for (var j = 0; listeners && j < listeners.length; ++j)
+      obj = c._listeners[i];
+      listeners = TANK._events[obj.evt];
+      for (j = 0; listeners && j < listeners.length; ++j)
       {
         if (listeners[j].self === obj.self && listeners[j].func === obj.func)
         {
@@ -100,7 +110,6 @@
 
     // Stop tracking this component by its interfaces
     var componentDef = TANK._registeredComponents[componentName];
-    var i;
     for (i = 0; i < componentDef._interfaces.length; ++i)
     {
       // Get the list of components with this interface
