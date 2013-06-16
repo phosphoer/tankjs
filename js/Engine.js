@@ -21,11 +21,8 @@
   // - `return`: A new `Entity`.
   TANK.createEntity = function ()
   {
-    var object = new TANK.Entity(-1);
-
-    object.addComponents.apply(object, arguments);
-
-    return object;
+    var entity = new TANK.Entity(-1);
+    return entity.addComponents.apply(entity, arguments);
   };
 
   // ### Create Entity from prefab
@@ -38,25 +35,34 @@
     var prefab = TANK.getPrefab(prefabName);
     if (!prefab)
     {
-      TANK.log("Could not find a prefab named " + prefabName);
+      TANK.warning("Could not find a prefab named " + prefabName);
       return;
     }
 
-    var obj = TANK.createEntity();
-
-    // Add all the defined prefab components and set the relevant fields
-    for (var i in prefab)
+    var entity = TANK.createEntity();
+    var component;
+    var componentData;
+    var componentName, propertyName;
+    for (componentName in prefab)
     {
-      var cData = prefab[i];
-      obj.addComponent(i);
-      var c = obj[i];
-      for (var j in cData)
+      if (prefab.hasOwnProperty(componentName))
       {
-        c[j] = cData[j];
+        entity.addComponent(componentName);
+
+        // Copy over fields from prefab into new component
+        component = entity[componentName];
+        componentData = prefab[componentName];
+        for (propertyName in componentData)
+        {
+          if (componentData.hasOwnProperty(propertyName))
+          {
+            component[propertyName] = componentData[propertyName];
+          }
+        }
       }
     }
 
-    return obj;
+    return entity;
   };
 
   // ### Add an entity to the world.
@@ -121,7 +127,7 @@
     for (n in object._components)
     {
       c = object._components[n];
-      c.initialize.apply(c);
+      c.initialize();
     }
 
     for (n in object._components)
@@ -142,9 +148,14 @@
   TANK.getEntity = function (idOrName)
   {
     if (typeof idOrName === "string")
+    {
       return TANK._objectsNamed[idOrName];
-    else if (typeof idOrName === "number")
+    }
+
+    if (typeof idOrName === "number")
+    {
       return TANK._objects[idOrName];
+    }
 
     TANK.error("Attemping to get an Entity with neither a string name nor an id number: " + idOrName);
   };
@@ -200,8 +211,14 @@
   // Equivalent to calling `removeEntity` on each objects.
   TANK.removeAllEntities = function ()
   {
-    for (var i in TANK._objects)
-      TANK.removeEntity(parseInt(i));
+    var i;
+    for (i in TANK._objects)
+    {
+      if (TANK._objects.hasOwnProperty(i))
+      {
+        TANK.removeEntity(parseInt(i, 10));
+      }
+    }
   };
 
   // ### Register an object prefab
@@ -261,11 +278,15 @@
   {
     // Check if we have this component already
     if (TANK[componentName])
+    {
       return;
+    }
 
-    // Create engine entity if it doensn't exist
+    // Create engine entity if it doesn't exist
     if (!TANK._engineEntity)
+    {
       TANK._engineEntity = TANK.createEntity();
+    }
 
     TANK._engineEntity.addComponent(componentName);
     TANK[componentName] = TANK._engineEntity[componentName];
@@ -273,7 +294,9 @@
     // Only run initialize if the engine is already running
     // because all components are initialized on `TANK.start()`
     if (TANK._running)
-      TANK[componentName].initialize.apply(c);
+    {
+      TANK[componentName].initialize();
+    }
 
     return TANK;
   };
@@ -308,7 +331,9 @@
     // If we don't have the component then just return
     var c = TANK[componentName];
     if (!c)
+    {
       return;
+    }
 
     if (TANK._engineEntity)
     {
