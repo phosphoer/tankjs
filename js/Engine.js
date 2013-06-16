@@ -16,7 +16,7 @@
 
   // ### Create an Entity
   // Creates a new `Entity` and returns it. The parameters to the function are passed
-  // directly to `Entity.addComponents`.
+  // directly to `Entity.addComponents` after construction.
   //
   // - `return`: A new `Entity`.
   TANK.createEntity = function ()
@@ -66,6 +66,7 @@
     TANK._objects[object.id] = object;
 
 
+    // Track the components by their interfaces
     var n, c, componentDef, i;
     for (n in object._components)
     {
@@ -85,6 +86,7 @@
       }
     }
 
+    // Initialize each component
     for (n in object._components)
     {
       c = object._components[n];
@@ -131,22 +133,15 @@
     return obj;
   };
 
-  // ### Get an entity by id
+  // ### Get an entity
   //
-  // - `id`: The id of the entity to get
+  // - `idOrName`: Either the id of the entity, or its unique name
   // - `return`: The requested `Entity` or `undefined`
-  TANK.getEntity = function (id)
+  TANK.getEntity = function (idOrName)
   {
+    if (idOrName.split)
+      return TANK._objectsNamed[idOrName];
     return TANK._objects[id];
-  };
-
-  // ### Get an entity by name
-  //
-  // - `name`: The name of the entity to get
-  // - `return`: The requested `Entity` or `undefined`
-  TANK.getNamedEntity = function (name)
-  {
-    return TANK._objectsNamed[name];
   };
 
   // ### Register an object prefab
