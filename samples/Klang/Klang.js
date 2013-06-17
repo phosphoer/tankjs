@@ -44,205 +44,119 @@ function main()
   TANK.addEntity(bg);
 
   // Create a player object
-  var player = TANK.createEntity()
-    .addComponents("Text, Image, TopDownMovement, RotateController, ObjectSpawner, Collider, Health, CustomUpdate")
-    .attr("Pos2D",
+  var player = TANK.createEntity("Text, Image, TopDownMovement, RotateController, ObjectSpawner, Collider, Health, CustomUpdate");
+  player.Pos2D.x = 150;
+  player.Pos2D.y = 100;
+  player.Image.imagePath = "res/BlueBall.png";
+  player.Health.max = 20;
+  player.Health.value = 20;
+  player.Text.color = "#000";
+  player.Text.zdepth = 1;
+  player.Text.offsetX = -5;
+  player.Text.offsetY = 4;
+  player.ObjectSpawner.objectPrefab = "Bullet";
+  player.ObjectSpawner.triggerKey = TANK.SPACE;
+  player.CustomUpdate.func = function (dt)
   {
-    x: 150,
-    y: 100
-  })
-    .attr("Image",
-  {
-    imagePath: "res/BlueBall.png"
-  })
-    .attr("Health",
-  {
-    max: 20,
-    value: 20
-  })
-    .attr("Text",
-  {
-    color: "#000",
-    zdepth: 1,
-    offsetX: -5,
-    offsetY: 4
-  })
-    .attr("ObjectSpawner",
-  {
-    objectPrefab: "Bullet",
-    triggerKey: TANK.SPACE
-  })
-    .attr("CustomUpdate",
-  {
-    func: function (dt)
-    {
-      this.Text.text = this.Health.value;
-    }
-  });
+    this.Text.text = this.Health.value;
+  }
   TANK.addEntity(player, "Player");
 
   // Create AI object
-  var ai = TANK.createEntity()
-    .addComponents("Text, Image, KlangAI, ObjectSpawner, Collider, Health, CustomUpdate")
-    .attr("Pos2D",
+  var ai = TANK.createEntity("Text, Image, KlangAI, ObjectSpawner, Collider, Health, CustomUpdate");
+  ai.Pos2D.x = 450;
+  ai.Pos2D.y = 400;
+  ai.Image.imagePath = "res/RedBall.png";
+  ai.Health.max = 20;
+  ai.Health.value = 20;
+  ai.Text.color = "#000";
+  ai.Text.zdepth = 1;
+  ai.Text.offsetX = -5;
+  ai.Text.offsetY = 4;
+  ai.ObjectSpawner.objectPrefab = "Bullet";
+  ai.CustomUpdate.func = function (dt)
   {
-    x: 450,
-    y: 400
-  })
-    .attr("Image",
-  {
-    imagePath: "res/RedBall.png"
-  })
-    .attr("Health",
-  {
-    max: 20,
-    value: 20
-  })
-    .attr("Text",
-  {
-    color: "#000",
-    zdepth: 1,
-    offsetX: -5,
-    offsetY: 4
-  })
-    .attr("ObjectSpawner",
-  {
-    objectPrefab: "Bullet"
-  })
-    .attr("CustomUpdate",
-  {
-    func: function (dt)
-    {
-      this.Text.text = this.Health.value;
-    }
-  });
+    this.Text.text = this.Health.value;
+  }
   TANK.addEntity(ai, "AI");
 
   // Create walls around edges
   var obj;
-  obj = TANK.createEntity().addComponents("ColoredBox, Collider").attr("Pos2D",
-  {
-    x: 640 / 2,
-    y: -25
-  }).attr("Collider",
-  {
-    isStatic: true,
-    width: 640
-  });
+  obj = TANK.createEntity().addComponents("ColoredBox, Collider");
+  obj.Pos2D.x = 640 / 2;
+  obj.Pos2D.y = -25;
+  obj.Collider.isStatic = true;
+  obj.Collider.width = 640;
   TANK.addEntity(obj);
 
-  obj = TANK.createEntity().addComponents("ColoredBox, Collider").attr("Pos2D",
-  {
-    x: 640 / 2,
-    y: 480 + 25
-  }).attr("Collider",
-  {
-    isStatic: true,
-    width: 640
-  });
+  obj = TANK.createEntity().addComponents("ColoredBox, Collider");
+  obj.Pos2D.x = 640 / 2;
+  obj.Pos2D.y = 480 + 25;
+  obj.Collider.isStatic = true;
+  obj.Collider.width = 640;
   TANK.addEntity(obj);
 
-  obj = TANK.createEntity().addComponents("ColoredBox, Collider").attr("Pos2D",
-  {
-    x: -25,
-    y: 480 / 2
-  }).attr("Collider",
-  {
-    isStatic: true,
-    height: 480
-  });
+  obj = TANK.createEntity().addComponents("ColoredBox, Collider");
+  obj.Pos2D.x = -25;
+  obj.Pos2D.y = 480 / 2;
+  obj.Collider.isStatic = true;
+  obj.Collider.height = 480;
   TANK.addEntity(obj);
 
-  obj = TANK.createEntity().addComponents("ColoredBox, Collider").attr("Pos2D",
-  {
-    x: 640 + 25,
-    y: 480 / 2
-  }).attr("Collider",
-  {
-    isStatic: true,
-    height: 480
-  });
+  obj = TANK.createEntity().addComponents("ColoredBox, Collider");
+  obj.Pos2D.x = 640 + 25;
+  obj.Pos2D.y = 480 / 2;
+  obj.Collider.isStatic = true;
+  obj.Collider.height = 480;
   TANK.addEntity(obj);
 
 
-  obj = TANK.createEntity().addComponents("ColoredBox, Collider").attr("Pos2D",
-  {
-    x: 100,
-    y: 150
-  }).attr("Collider",
-  {
-    isStatic: true
-  });
+  obj = TANK.createEntity().addComponents("ColoredBox, Collider");
+  obj.Pos2D.x = 100;
+  obj.Pos2D.y = 150;
+  obj.Collider.isStatic = true;
   TANK.addEntity(obj);
 
-  obj = TANK.createEntity().addComponents("ColoredBox, Collider").attr("Pos2D",
-  {
-    x: 150,
-    y: 150
-  }).attr("Collider",
-  {
-    isStatic: true
-  });
+  obj = TANK.createEntity().addComponents("ColoredBox, Collider");
+  obj.Pos2D.x = 150;
+  obj.Pos2D.y = 150;
+  obj.Collider.isStatic = true;
   TANK.addEntity(obj);
 
-  obj = TANK.createEntity().addComponents("ColoredBox, Collider").attr("Pos2D",
-  {
-    x: 200,
-    y: 150
-  }).attr("Collider",
-  {
-    isStatic: true
-  });
+  obj = TANK.createEntity().addComponents("ColoredBox, Collider");
+  obj.Pos2D.x = 200;
+  obj.Pos2D.y = 150;
+  obj.Collider.isStatic = true;
   TANK.addEntity(obj);
 
-  obj = TANK.createEntity().addComponents("ColoredBox, Collider").attr("Pos2D",
-  {
-    x: 200,
-    y: 100
-  }).attr("Collider",
-  {
-    isStatic: true
-  });
+  obj = TANK.createEntity().addComponents("ColoredBox, Collider");
+  obj.Pos2D.x = 200;
+  obj.Pos2D.y = 100;
+  obj.Collider.isStatic = true;
   TANK.addEntity(obj);
 
-  obj = TANK.createEntity().addComponents("ColoredBox, Collider").attr("Pos2D",
-  {
-    x: 400,
-    y: 350
-  }).attr("Collider",
-  {
-    isStatic: true
-  });
+  obj = TANK.createEntity().addComponents("ColoredBox, Collider");
+  obj.Pos2D.x = 400;
+  obj.Pos2D.y = 350;
+  obj.Collider.isStatic = true;
   TANK.addEntity(obj);
 
-  obj = TANK.createEntity().addComponents("ColoredBox, Collider").attr("Pos2D",
-  {
-    x: 450,
-    y: 350
-  }).attr("Collider",
-  {
-    isStatic: true
-  });
+  obj = TANK.createEntity().addComponents("ColoredBox, Collider");
+  obj.Pos2D.x = 450;
+  obj.Pos2D.y = 350;
+  obj.Collider.isStatic = true;
   TANK.addEntity(obj);
 
-  obj = TANK.createEntity().addComponents("ColoredBox, Collider").attr("Pos2D",
-  {
-    x: 500,
-    y: 350
-  }).attr("Collider",
-  {
-    isStatic: true
-  });
+  obj = TANK.createEntity().addComponents("ColoredBox, Collider");
+  obj.Pos2D.x = 500;
+  obj.Pos2D.y = 350;
+  obj.Collider.isStatic = true;
   TANK.addEntity(obj);
 
-  obj = TANK.createEntity().addComponents("ColoredBox, Collider").attr("Pos2D",
-  {
-    x: 500,
-    y: 400
-  }).attr("Collider",
-  {
-    isStatic: true
-  });
+  obj = TANK.createEntity().addComponents("ColoredBox, Collider");
+  obj.Pos2D.x = 500;
+  obj.Pos2D.y = 400;
+  obj.Collider.isStatic = true;
   TANK.addEntity(obj);
 
   TANK.start();
@@ -253,17 +167,17 @@ TANK.registerComponent("GameLogic")
 
 .initialize(function ()
 {
-  TANK.addEventListener("OnEnterFrame", this);
+  this.addEventListener("OnEnterFrame", this.OnEnterFrame);
 })
 
 .destruct(function ()
 {
-  TANK.removeEventListener("OnEnterFrame", this);
+  this.removeEventListener("OnEnterFrame", this.OnEnterFrame);
 })
 
 .addFunction("OnEnterFrame", function (dt)
 {
-  if (!TANK.getNamedEntity("Player") || !TANK.getNamedEntity("AI"))
+  if (!TANK.getEntity("Player") || !TANK.getEntity("AI"))
   {
     TANK.reset();
   }
@@ -285,19 +199,19 @@ TANK.registerComponent("KlangAI")
   this._right = false;
   this._down = false;
 
-  TANK.addEventListener("OnEnterFrame", this);
+  this.addEventListener("OnEnterFrame", this.OnEnterFrame);
 })
 
 .destruct(function ()
 {
-  TANK.removeEventListener("OnEnterFrame", this);
+  this.removeEventListener("OnEnterFrame", this.OnEnterFrame);
 })
 
 .addFunction("OnEnterFrame", function (dt)
 {
   this._rotateTimer -= dt;
 
-  var player = TANK.getNamedEntity("Player");
+  var player = TANK.getEntity("Player");
   if (!player)
     return;
 
