@@ -1,9 +1,16 @@
+// A component defines a small module of functionality and is
+// initialized by adding it to an `Entity`.
 (function (TANK)
 {
   "use strict";
 
-  // ### Component object
-  // Defines a blueprint for components.
+  // ### Component constructor
+  // Shouldn't really ever be called outside the engine.
+  // If you are trying to register a new type of component,
+  // use `TANK.registerComponent()`. If you are trying to add
+  // a component to an entity, use `Entity.addComponent()`.
+  //
+  // name - The name of the component type.
   TANK.Component = function (name)
   {
     this.name = name;
@@ -14,6 +21,8 @@
 
   // ### Instantiate a component
   // Creates a component object from this blueprint.
+  // Will rarely be necessary to call outside the engine, as
+  // this is dealt with internally in the `addComponent()` methods.
   //
   // - `return`: The new component object.
   TANK.Component.prototype.clone = function ()
@@ -56,14 +65,24 @@
   // ### Require other components
   // Defines a list of components that are required by this one
   // and will be automatically added before this one is added.
+  // Components can be given as a string of comma seperated values,
+  // a list of strings, or some combination of the above.
   //
-  // - `componentNames`: A comma-deliminated string of component names, e.g., "Pos2D, Sprite".
   // - `return`: A reference to itself.
-  TANK.Component.prototype.requires = function (componentNames)
+  TANK.Component.prototype.requires = function ()
   {
-    // Get array of component names
-    componentNames = componentNames.replace(/\s/g, "");
-    this._includes = componentNames.split(",");
+    var i, j, arg;
+    for (i = 0; i < arguments.length; ++i)
+    {
+      arg = arguments[i];
+      arg = arg.replace(/\s/g, "");
+      var includes = arg.split(",");
+
+      for (j = 0; j < includes.length; ++j)
+      {
+        this._includes.push(includes[i]);
+      }
+    }
 
     return this;
   };
@@ -72,14 +91,25 @@
   // Defines a list of interfaces that this component implements.
   // Manager components often look for components that implement a particular interface.
   // Common interfaces include `Drawable2D`, and `Collidable`
+  // Interfaces can be given as a string of comma seperated values,
+  // a list of strings, or some combination of the above.
   //
-  // - `interfaces`: A comma-deliminated string of interface names, e.g., "Drawable2D, Collidable".
   // - `return`: A reference to itself.
-  TANK.Component.prototype.interfaces = function (interfaces)
+  TANK.Component.prototype.interfaces = function ()
   {
-    // Get array of interface names
-    interfaces = interfaces.replace(/\s/g, "");
-    this._interfaces = interfaces.split(",");
+    var i, j, arg;
+    for (i = 0; i < arguments.length; ++i)
+    {
+      arg = arguments[i];
+      arg = arg.replace(/\s/g, "");
+      var interfaces = arg.split(",");
+
+      for (j = 0; j < interfaces.length; ++j)
+      {
+        this._interfaces.push(interfaces[i]);
+      }
+    }
+
     return this;
   };
 
@@ -129,6 +159,13 @@
     return this;
   };
 
+  // ### Listen for an event
+  // Registers a callback as a listener for a given event.
+  // The event will be removed automatically when the component is
+  // destructed.
+  //
+  // - `event`: The name of the event.
+  // - `callback`: A function to call when the event is triggered.
   TANK.Component.prototype.addEventListener = function (event, callback)
   {
     var listeners = TANK._events[event];
@@ -152,6 +189,13 @@
     });
   };
 
+  // ### Stop listening for an event
+  // Unregisters a callback as a listener for a given event.
+  // The event will be removed automatically when the component is
+  // destructed.
+  //
+  // - `event`: The name of the event.
+  // - `callback`: The function that was previously registered.
   TANK.Component.prototype.removeEventListener = function (event, callback)
   {
     var listeners = TANK._events[event],
