@@ -76,8 +76,9 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre>(<span class="function"><span class="keyword">function</span> <span class="params">(TANK, undefined)</span>
-{</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>(<span class="function"><span class="keyword">function</span> <span class="params">(TANK)</span>
+{</span>
+  <span class="string">"use strict"</span>;</pre></div></div>
             
         </li>
         
@@ -99,7 +100,7 @@
     <span class="keyword">this</span>._functions = {};
     <span class="keyword">this</span>._includes = [];
     <span class="keyword">this</span>._interfaces = [];
-  }</pre></div></div>
+  };</pre></div></div>
             
         </li>
         
@@ -153,8 +154,11 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>    c.interfaces = {};
-    <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> <span class="keyword">this</span>._interfaces)
-      c.interfaces[<span class="keyword">this</span>._interfaces[i]] = <span class="literal">true</span>;</pre></div></div>
+    <span class="keyword">var</span> i;
+    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="keyword">this</span>._interfaces.length; ++i)
+    {
+      c.interfaces[<span class="keyword">this</span>._interfaces[i]] = <span class="literal">true</span>;
+    }</pre></div></div>
             
         </li>
         
@@ -169,9 +173,12 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> <span class="keyword">this</span>._functions)
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">for</span> (i <span class="keyword">in</span> <span class="keyword">this</span>._functions)
     {
-      c[i] = <span class="keyword">this</span>._functions[i];
+      <span class="keyword">if</span> (<span class="keyword">this</span>._functions.hasOwnProperty(i))
+      {
+        c[i] = <span class="keyword">this</span>._functions[i];
+      }
     }</pre></div></div>
             
         </li>
@@ -189,8 +196,13 @@
             
             <div class="content"><div class='highlight'><pre>    c.name = <span class="keyword">this</span>.name;
 
+    c.addEventListener = <span class="keyword">this</span>.addEventListener;
+    c.removeEventListener = <span class="keyword">this</span>.removeEventListener;
+
+    c._listeners = [];
+
     <span class="keyword">return</span> c;
-  }</pre></div></div>
+  };</pre></div></div>
             
         </li>
         
@@ -231,7 +243,7 @@ and will be automatically added before this one is added.</p>
     <span class="keyword">this</span>._includes = componentNames.split(<span class="string">","</span>);
 
     <span class="keyword">return</span> <span class="keyword">this</span>;
-  }</pre></div></div>
+  };</pre></div></div>
             
         </li>
         
@@ -272,7 +284,7 @@ Common interfaces include <code>Drawable2D</code>, and <code>Collidable</code></
             <div class="content"><div class='highlight'><pre>    interfaces = interfaces.replace(<span class="regexp">/\s/g</span>, <span class="string">""</span>);
     <span class="keyword">this</span>._interfaces = interfaces.split(<span class="string">","</span>);
     <span class="keyword">return</span> <span class="keyword">this</span>;
-  }</pre></div></div>
+  };</pre></div></div>
             
         </li>
         
@@ -297,7 +309,7 @@ This is commonly where you would define member fields with default values.</p>
   {</span>
     <span class="keyword">this</span>._functions.construct = func;
     <span class="keyword">return</span> <span class="keyword">this</span>;
-  }</pre></div></div>
+  };</pre></div></div>
             
         </li>
         
@@ -321,7 +333,7 @@ This is commonly where you would define member fields with default values.</p>
   {</span>
     <span class="keyword">this</span>._functions.initialize = func;
     <span class="keyword">return</span> <span class="keyword">this</span>;
-  }</pre></div></div>
+  };</pre></div></div>
             
         </li>
         
@@ -345,7 +357,7 @@ This is commonly where you would define member fields with default values.</p>
   {</span>
     <span class="keyword">this</span>._functions.destruct = func;
     <span class="keyword">return</span> <span class="keyword">this</span>;
-  }</pre></div></div>
+  };</pre></div></div>
             
         </li>
         
@@ -369,7 +381,71 @@ This is commonly where you would define member fields with default values.</p>
   {</span>
     <span class="keyword">this</span>._functions[name] = func;
     <span class="keyword">return</span> <span class="keyword">this</span>;
-  }
+  };
+
+  TANK.Component.prototype.addEventListener = <span class="function"><span class="keyword">function</span> <span class="params">(event, callback)</span>
+  {</span>
+    <span class="keyword">var</span> listeners = TANK._events[event];
+    <span class="keyword">if</span> (!listeners)
+    {
+      listeners = [];
+      TANK._events[event] = listeners;
+    }
+
+    <span class="keyword">this</span>._listeners.push(
+    {
+      evt: event,
+      self: <span class="keyword">this</span>,
+      func: callback
+    });
+
+    listeners.push(
+    {
+      self: <span class="keyword">this</span>,
+      func: callback
+    });
+  };
+
+  TANK.Component.prototype.removeEventListener = <span class="function"><span class="keyword">function</span> <span class="params">(event, callback)</span>
+  {</span>
+    <span class="keyword">var</span> listeners = TANK._events[event],
+      i;
+    <span class="keyword">if</span> (!listeners)
+    {
+      <span class="keyword">return</span>;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Delete the listener from the map</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="keyword">this</span>._listeners.length; ++i)
+    {
+      <span class="keyword">if</span> (<span class="keyword">this</span>._listeners[i].evt === event &amp;&amp; <span class="keyword">this</span>._listeners[i].func === callback)
+      {
+        <span class="keyword">this</span>._listeners.splice(i, <span class="number">1</span>);
+        <span class="keyword">break</span>;
+      }
+    }
+
+    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; listeners.length; ++i)
+    {
+      <span class="keyword">if</span> (listeners[i].self === <span class="keyword">this</span> &amp;&amp; listeners[i].func === callback)
+      {
+        listeners.splice(i, <span class="number">1</span>);
+        <span class="keyword">break</span>;
+      }
+    }
+  };
 
 }(<span class="keyword">this</span>.TANK = <span class="keyword">this</span>.TANK ||
 {}));</pre></div></div>

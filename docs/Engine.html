@@ -78,8 +78,9 @@ This includes creating and manipulating game objects, registering components, an
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>(<span class="function"><span class="keyword">function</span> <span class="params">(TANK, undefined)</span>
-{</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>(<span class="function"><span class="keyword">function</span> <span class="params">(TANK)</span>
+{</span>
+  <span class="string">"use strict"</span>;</pre></div></div>
             
         </li>
         
@@ -136,23 +137,19 @@ This includes creating and manipulating game objects, registering components, an
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <h3>Create an Entity</h3>
-<p>Creates a new <code>Entity</code> and returns it.</p>
+<p>Creates a new <code>Entity</code> and returns it. The parameters to the function are passed
+directly to <code>Entity.addComponents</code> after construction.</p>
 <ul>
-<li><code>componentNames</code>: (optional) A list of components to add to the entity.</li>
 <li><code>return</code>: A new <code>Entity</code>.</li>
 </ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  TANK.createEntity = <span class="function"><span class="keyword">function</span> <span class="params">(componentNames)</span>
+            <div class="content"><div class='highlight'><pre>  TANK.createEntity = <span class="function"><span class="keyword">function</span> <span class="params">()</span>
   {</span>
-    <span class="keyword">var</span> object = <span class="keyword">new</span> TANK.Entity(-<span class="number">1</span>);
-
-    <span class="keyword">if</span> (componentNames)
-      object.addComponents(componentNames);
-
-    <span class="keyword">return</span> object;
-  }</pre></div></div>
+    <span class="keyword">var</span> entity = <span class="keyword">new</span> TANK.Entity(-<span class="number">1</span>);
+    <span class="keyword">return</span> entity.addComponents.apply(entity, arguments);
+  };</pre></div></div>
             
         </li>
         
@@ -162,6 +159,71 @@ This includes creating and manipulating game objects, registering components, an
               
               <div class="pilwrap for-h3">
                 <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <h3>Create Entity from prefab</h3>
+<p>Creates a new <code>Entity</code> using a given prefab.</p>
+<ul>
+<li><code>prefabName</code>: Name of the prefab to clone.</li>
+<li><code>return</code>: A new <code>Entity</code>.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  TANK.createEntityFromPrefab = <span class="function"><span class="keyword">function</span> <span class="params">(prefabName)</span>
+  {</span>
+    <span class="keyword">var</span> prefab = TANK.getPrefab(prefabName);
+    <span class="keyword">if</span> (!prefab)
+    {
+      TANK.warning(<span class="string">"Could not find a prefab named "</span> + prefabName);
+      <span class="keyword">return</span>;
+    }
+
+    <span class="keyword">var</span> entity = TANK.createEntity();
+    <span class="keyword">var</span> component;
+    <span class="keyword">var</span> componentData;
+    <span class="keyword">var</span> componentName, propertyName;
+    <span class="keyword">for</span> (componentName <span class="keyword">in</span> prefab)
+    {
+      <span class="keyword">if</span> (prefab.hasOwnProperty(componentName))
+      {
+        entity.addComponent(componentName);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Copy over fields from prefab into new component</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        component = entity[componentName];
+        componentData = prefab[componentName];
+        <span class="keyword">for</span> (propertyName <span class="keyword">in</span> componentData)
+        {
+          <span class="keyword">if</span> (componentData.hasOwnProperty(propertyName))
+          {
+            component[propertyName] = componentData[propertyName];
+          }
+        }
+      }
+    }
+
+    <span class="keyword">return</span> entity;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <h3>Add an entity to the world.</h3>
 <p>Adds the given entity to the world, which will initialize all of its
@@ -176,7 +238,7 @@ components.</p>
             
             <div class="content"><div class='highlight'><pre>  TANK.addEntity = <span class="function"><span class="keyword">function</span> <span class="params">(object, name)</span>
   {</span>
-    <span class="keyword">if</span> (object.id != -<span class="number">1</span>)
+    <span class="keyword">if</span> (object.id !== -<span class="number">1</span>)
     {
       TANK.error(<span class="string">"Attempting to add a Entity twice"</span>);
       <span class="keyword">return</span> object;
@@ -192,11 +254,11 @@ components.</p>
         </li>
         
         
-        <li id="section-7">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <p>If a name was specified, track it by the name</p>
 
@@ -216,35 +278,47 @@ components.</p>
         </li>
         
         
-        <li id="section-8">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <p>Track the object by its id</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    TANK._objects[object.id] = object;
+            <div class="content"><div class='highlight'><pre>    TANK._objects[object.id] = object;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Track the components by their interfaces</p>
 
-
-    <span class="keyword">var</span> n, c;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> n, c, componentDef, i;
     <span class="keyword">for</span> (n <span class="keyword">in</span> object._components)
     {
-      <span class="keyword">var</span> c = object._components[n];
-      <span class="keyword">var</span> componentDef = TANK._registeredComponents[n];
-      <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> componentDef._interfaces)
+      c = object._components[n];
+      componentDef = TANK._registeredComponents[n];
+      <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; componentDef._interfaces.length; ++i)
       {</pre></div></div>
             
         </li>
         
         
-        <li id="section-9">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <p>Get the list of components with this interface</p>
 
@@ -259,12 +333,25 @@ components.</p>
 
         componentList[object.name + <span class="string">"."</span> + componentDef.name] = c;
       }
-    }
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Initialize each component</p>
 
-    <span class="keyword">for</span> (n <span class="keyword">in</span> object._components)
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">for</span> (n <span class="keyword">in</span> object._components)
     {
       c = object._components[n];
-      c.initialize.apply(c);
+      c.initialize();
     }
 
     <span class="keyword">for</span> (n <span class="keyword">in</span> object._components)
@@ -273,108 +360,10 @@ components.</p>
       TANK.dispatchEvent(<span class="string">"OnComponentInitialized"</span>, c);
     }
 
+    object._initialized = <span class="literal">true</span>;
+
     <span class="keyword">return</span> object;
-  }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="pilwrap for-h3">
-                <a class="pilcrow" href="#section-10">&#182;</a>
-              </div>
-              <h3>Create Entity from Prefab</h3>
-<p>Creates a new <code>Entity</code> using a given prefab.</p>
-<ul>
-<li><code>prefabName</code>: Name of the prefab to clone.</li>
-<li><code>return</code>: A new <code>Entity</code>.</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  TANK.createEntityFromPrefab = <span class="function"><span class="keyword">function</span> <span class="params">(prefabName)</span>
-  {</span>
-    <span class="keyword">var</span> prefab = TANK.getPrefab(prefabName);
-    <span class="keyword">if</span> (!prefab)
-    {
-      TANK.log(<span class="string">"Could not find a prefab named "</span> + prefabName);
-      <span class="keyword">return</span>;
-    }
-
-    <span class="keyword">var</span> obj = TANK.createEntity();</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
-              </div>
-              <p>Add all the defined prefab components and set the relevant fields</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> prefab)
-    {
-      <span class="keyword">var</span> cData = prefab[i];
-      obj.addComponent(i);
-      <span class="keyword">var</span> c = obj[i];
-      <span class="keyword">for</span> (<span class="keyword">var</span> j <span class="keyword">in</span> cData)
-      {
-        c[j] = cData[j];
-      }
-    }
-
-    <span class="keyword">return</span> obj;
-  }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="pilwrap for-h3">
-                <a class="pilcrow" href="#section-12">&#182;</a>
-              </div>
-              <h3>Get an entity by id</h3>
-<ul>
-<li><code>id</code>: The id of the entity to get</li>
-<li><code>return</code>: The requested <code>Entity</code> or <code>undefined</code></li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  TANK.getEntity = <span class="function"><span class="keyword">function</span> <span class="params">(id)</span>
-  {</span>
-    <span class="keyword">return</span> TANK._objects[id];
-  }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-13">
-            <div class="annotation">
-              
-              <div class="pilwrap for-h3">
-                <a class="pilcrow" href="#section-13">&#182;</a>
-              </div>
-              <h3>Get an entity by name</h3>
-<ul>
-<li><code>name</code>: The name of the entity to get</li>
-<li><code>return</code>: The requested <code>Entity</code> or <code>undefined</code></li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  TANK.getNamedEntity = <span class="function"><span class="keyword">function</span> <span class="params">(name)</span>
-  {</span>
-    <span class="keyword">return</span> TANK._objectsNamed[name];
-  }</pre></div></div>
+  };</pre></div></div>
             
         </li>
         
@@ -384,6 +373,38 @@ components.</p>
               
               <div class="pilwrap for-h3">
                 <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <h3>Get an entity</h3>
+<ul>
+<li><code>idOrName</code>: Either the id of the entity, or its unique name</li>
+<li><code>return</code>: The requested <code>Entity</code> or <code>undefined</code></li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  TANK.getEntity = <span class="function"><span class="keyword">function</span> <span class="params">(idOrName)</span>
+  {</span>
+    <span class="keyword">if</span> (<span class="keyword">typeof</span> idOrName === <span class="string">"string"</span>)
+    {
+      <span class="keyword">return</span> TANK._objectsNamed[idOrName];
+    }
+
+    <span class="keyword">if</span> (<span class="keyword">typeof</span> idOrName === <span class="string">"number"</span>)
+    {
+      <span class="keyword">return</span> TANK._objects[idOrName];
+    }
+
+    TANK.error(<span class="string">"Attemping to get an Entity with neither a string name nor an id number: "</span> + idOrName);
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <h3>Register an object prefab</h3>
 <p>Use this to define an entity with a set of components that
@@ -405,29 +426,7 @@ with the following format:</p>
             <div class="content"><div class='highlight'><pre>  TANK.addPrefab = <span class="function"><span class="keyword">function</span> <span class="params">(name, data)</span>
   {</span>
     TANK._prefabs[name] = data;
-  }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="pilwrap for-h3">
-                <a class="pilcrow" href="#section-15">&#182;</a>
-              </div>
-              <h3>Get a prefab object</h3>
-<ul>
-<li><code>name</code>: The name of the prefab to find.</li>
-<li><code>return</code>: A prefab JSON object.</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  TANK.getPrefab = <span class="function"><span class="keyword">function</span> <span class="params">(name)</span>
-  {</span>
-    <span class="keyword">return</span> TANK._prefabs[name];
-  }</pre></div></div>
+  };</pre></div></div>
             
         </li>
         
@@ -445,8 +444,29 @@ Will cause <code>destruct</code> to be called on all components of the object be
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  TANK.removeEntity = <span class="function"><span class="keyword">function</span> <span class="params">(id)</span>
-  {</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  TANK.removeEntity = <span class="function"><span class="keyword">function</span> <span class="params">(arg)</span>
+  {</span>
+    <span class="keyword">if</span> (<span class="keyword">typeof</span> arg === <span class="string">"string"</span> || <span class="keyword">typeof</span> arg === <span class="string">"number"</span>)
+    {
+      <span class="keyword">var</span> entity = TANK.getEntity(arg);
+      <span class="keyword">if</span> (entity)
+      {
+        TANK._objectsDeleted.push(TANK.getEntity(arg));
+      }
+      <span class="keyword">else</span>
+      {
+        TANK.error(<span class="string">"Attempting to remove Entity "</span> + arg + <span class="string">" which doesn't exist."</span>);
+      }
+    }
+    <span class="keyword">else</span> <span class="keyword">if</span> (arg <span class="keyword">instanceof</span> TANK.Entity)
+    {
+      TANK._objectsDeleted.push(arg);
+    }
+    <span class="keyword">else</span>
+    {
+      TANK.error(<span class="string">"Attemping to remove an Entity with neither a string name, id number, or Entity reference: "</span> + arg);
+    }
+  };</pre></div></div>
             
         </li>
         
@@ -454,15 +474,25 @@ Will cause <code>destruct</code> to be called on all components of the object be
         <li id="section-17">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h3">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>Add object to trash</p>
+              <h3>Remove all objects</h3>
+<p>Equivalent to calling <code>removeEntity</code> on each objects.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    TANK._objectsDeleted.push(TANK.getEntity(id));
-  }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  TANK.removeAllEntities = <span class="function"><span class="keyword">function</span> <span class="params">()</span>
+  {</span>
+    <span class="keyword">var</span> i;
+    <span class="keyword">for</span> (i <span class="keyword">in</span> TANK._objects)
+    {
+      <span class="keyword">if</span> (TANK._objects.hasOwnProperty(i))
+      {
+        TANK.removeEntity(parseInt(i, <span class="number">10</span>));
+      }
+    }
+  };</pre></div></div>
             
         </li>
         
@@ -473,15 +503,27 @@ Will cause <code>destruct</code> to be called on all components of the object be
               <div class="pilwrap for-h3">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <h3>Remove an entity by name</h3>
-<p>Schedules the given object to be deleted on the next frame.
-Will cause <code>destruct</code> to be called on all components of the object before it is deleted.</p>
-<p><code>name</code>: The unique name of the object. (<code>Entity.name</code>)</p>
+              <h3>Register an object prefab</h3>
+<p>Use this to define an entity with a set of components that
+can be instantiated later, like a blueprint.</p>
+<ul>
+<li><code>name</code>: The name of the prefab to store it under.</li>
+<li><p><code>data</code>: A JSON object describing the components the prefab should contain,
+with the following format:</p>
+<pre><code>{
+  &quot;Pos2D&quot;: { x: 0, y: 42 },
+  &quot;Velocity&quot;: {},
+  &quot;Collider&quot;: { width: 5, height: 5 },
+}</code></pre>
+</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  TANK.removeNamedEntity = <span class="function"><span class="keyword">function</span> <span class="params">(name)</span>
-  {</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  TANK.addPrefab = <span class="function"><span class="keyword">function</span> <span class="params">(name, data)</span>
+  {</span>
+    TANK._prefabs[name] = data;
+  };</pre></div></div>
             
         </li>
         
@@ -489,19 +531,21 @@ Will cause <code>destruct</code> to be called on all components of the object be
         <li id="section-19">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h3">
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <p>Don&#39;t bother if it doesn&#39;t exist</p>
+              <h3>Get a prefab object</h3>
+<ul>
+<li><code>name</code>: The name of the prefab to find.</li>
+<li><code>return</code>: A prefab JSON object.</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> obj = TANK._objectsNamed[name];
-    <span class="keyword">if</span> (!obj)
-      <span class="keyword">return</span>;
-
-    TANK._objectsDeleted.push(obj);
-  }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  TANK.getPrefab = <span class="function"><span class="keyword">function</span> <span class="params">(name)</span>
+  {</span>
+    <span class="keyword">return</span> TANK._prefabs[name];
+  };</pre></div></div>
             
         </li>
         
@@ -512,31 +556,11 @@ Will cause <code>destruct</code> to be called on all components of the object be
               <div class="pilwrap for-h3">
                 <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <h3>Remove all objects</h3>
-<p>Equivalent to calling <code>removeEntity</code> on all objects.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  TANK.removeAllEntities = <span class="function"><span class="keyword">function</span> <span class="params">()</span>
-  {</span>
-    <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> TANK._objects)
-      TANK.removeEntity(i);
-  }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="pilwrap for-h3">
-                <a class="pilcrow" href="#section-21">&#182;</a>
-              </div>
               <h3>Register a new component type</h3>
 <p>Creates a new <code>Component</code> instance which defines a blueprint
 for a type of component.</p>
 <ul>
-<li><code>componentName</code>: The name of the component type to register.</li>
+<li><code>componentName</code>: The name of the component type to register. This must be a valid identifier.</li>
 <li><code>return</code>: A new instance of type <code>Component</code>.</li>
 </ul>
 
@@ -548,11 +572,11 @@ for a type of component.</p>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>Warn about components with invalid identifiers</p>
 
@@ -567,16 +591,16 @@ for a type of component.</p>
     <span class="keyword">var</span> c = <span class="keyword">new</span> TANK.Component(componentName);
     TANK._registeredComponents[componentName] = c;
     <span class="keyword">return</span> c;
-  }</pre></div></div>
+  };</pre></div></div>
             
         </li>
         
         
-        <li id="section-23">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap for-h3">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <h3>Add a component to the engine</h3>
 <p>Components added to the engine are &quot;global&quot; and not
@@ -594,18 +618,41 @@ that contain global state, such as a graphics context.</p>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>Check if we have this component already</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> (TANK[componentName])
-      <span class="keyword">return</span>;</pre></div></div>
+    {
+      <span class="keyword">return</span>;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>Create engine entity if it doesn&#39;t exist</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> (!TANK._engineEntity)
+    {
+      TANK._engineEntity = TANK.createEntity();
+    }
+
+    TANK._engineEntity.addComponent(componentName);
+    TANK[componentName] = TANK._engineEntity[componentName];</pre></div></div>
             
         </li>
         
@@ -616,16 +663,18 @@ that contain global state, such as a graphics context.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
-              <p>Get the component definition object</p>
+              <p>Only run initialize if the engine is already running
+because all components are initialized on <code>TANK.start()</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> componentDef = TANK._registeredComponents[componentName];
-    <span class="keyword">if</span> (!componentDef)
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> (TANK._running)
     {
-      TANK.error(<span class="string">"No component registered with name "</span> + componentName);
-      <span class="keyword">return</span>;
-    }</pre></div></div>
+      TANK[componentName].initialize();
+    }
+
+    <span class="keyword">return</span> TANK;
+  };</pre></div></div>
             
         </li>
         
@@ -633,16 +682,33 @@ that contain global state, such as a graphics context.</p>
         <li id="section-26">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h3">
                 <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
-              <p>Temporarily add a fake component just to mark this one as added
-for the upcoming recursive calls</p>
+              <h3>Add multiple components to the engine</h3>
+<p>Components can be given as a string of comma seperated values,
+a list of strings, or some combination of the above
+e.g., <code>TANK.addComponents(&quot;Pos2D, Velocity&quot;, &quot;Image&quot;, &quot;Collider&quot;);</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    TANK[componentName] = <span class="string">"Placeholder"</span>;
-    TANK._components[componentName] = <span class="string">"Placeholder"</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  TANK.addComponents = <span class="function"><span class="keyword">function</span> <span class="params">()</span>
+  {</span>
+    <span class="keyword">var</span> i, j, arg;
+    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; arguments.length; ++i)
+    {
+      arg = arguments[i];
+      arg = arg.replace(<span class="regexp">/\s/g</span>, <span class="string">""</span>);
+      <span class="keyword">var</span> components = arg.split(<span class="string">","</span>);
+
+      <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; components.length; ++j)
+      {
+        TANK.addComponent(components[j]);
+      }
+    }
+
+    <span class="keyword">return</span> <span class="keyword">this</span>;
+  };</pre></div></div>
             
         </li>
         
@@ -650,171 +716,8 @@ for the upcoming recursive calls</p>
         <li id="section-27">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h3">
                 <a class="pilcrow" href="#section-27">&#182;</a>
-              </div>
-              <p>Add all the included components</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> componentDef._includes)
-    {
-      TANK.addComponent(componentDef._includes[i]);
-    }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-28">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
-              </div>
-              <p>Clone the component into our list of components</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> c = componentDef.clone();
-    TANK[componentName] = c;
-    TANK._components[componentName] = c;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
-              </div>
-              <p>Track this component by its interaces</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> componentDef._interfaces)
-    {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-30">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
-              </div>
-              <p>Get the list of components with this interface</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>      <span class="keyword">var</span> componentList = TANK._interfaceComponents[componentDef._interfaces[i]];
-      <span class="keyword">if</span> (!componentList)
-      {
-        componentList = {};
-        TANK._interfaceComponents[componentDef._interfaces[i]] = componentList;
-      }
-
-      componentList[<span class="string">"TANK"</span> + <span class="string">"."</span> + componentDef.name] = c;
-    }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-31">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
-              </div>
-              <p>Set some attributes of the component instance
-The parent is null because it is a global component</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    c.parent = <span class="literal">null</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-32">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
-              </div>
-              <p>Initialize the component</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    c.construct.apply(c);
-    c.initialize.apply(c);
-
-    <span class="keyword">return</span> TANK;
-  }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-33">
-            <div class="annotation">
-              
-              <div class="pilwrap for-h3">
-                <a class="pilcrow" href="#section-33">&#182;</a>
-              </div>
-              <h3>Add multiple components to the engine</h3>
-<ul>
-<li><code>componentNames</code>: A comma separated list of names in a string.</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  TANK.addComponents = <span class="function"><span class="keyword">function</span> <span class="params">(componentNames)</span>
-  {</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-34">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
-              </div>
-              <p>Get array of component names</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    componentNames = componentNames.replace(<span class="regexp">/\s/g</span>, <span class="string">""</span>);
-    <span class="keyword">var</span> components = componentNames.split(<span class="string">","</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-35">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
-              </div>
-              <p>Add components to object</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> components)
-    {
-      TANK.addComponent(components[i]);
-    }
-  }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-36">
-            <div class="annotation">
-              
-              <div class="pilwrap for-h3">
-                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <h3>Remove a component from the engine</h3>
 <ul>
@@ -829,11 +732,11 @@ The parent is null because it is a global component</p>
         </li>
         
         
-        <li id="section-37">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>If we don&#39;t have the component then just return</p>
 
@@ -841,99 +744,25 @@ The parent is null because it is a global component</p>
             
             <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> c = TANK[componentName];
     <span class="keyword">if</span> (!c)
-      <span class="keyword">return</span>;</pre></div></div>
+    {
+      <span class="keyword">return</span>;
+    }
+
+    <span class="keyword">if</span> (TANK._engineEntity)
+    {
+      TANK._engineEntity.removeComponent(componentName);
+      <span class="keyword">delete</span> TANK[componentName];
+    }
+  };</pre></div></div>
             
         </li>
         
         
-        <li id="section-38">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
-              </div>
-              <p>Inform the engine this component was uninitialized</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    TANK.dispatchEvent(<span class="string">"OnComponentUninitialized"</span>, c);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-39">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
-              </div>
-              <p>Uninitialize the component</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    c.destruct.apply(c);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-40">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
-              </div>
-              <p>Stop tracking this component by its interfaces</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> componentDef = TANK._registeredComponents[componentName];
-    <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> componentDef._interfaces)
-    {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-41">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
-              </div>
-              <p>Get the list of components with this interface</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>      <span class="keyword">var</span> componentList = TANK._interfaceComponents[componentDef._interfaces[i]];
-
-      <span class="keyword">if</span> (componentList)
-        <span class="keyword">delete</span> componentList[<span class="keyword">this</span>.name + <span class="string">"."</span> + componentDef.name];
-    }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-42">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
-              </div>
-              <p>Remove component</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">delete</span> TANK._components[componentName];
-    <span class="keyword">delete</span> TANK[componentName];
-  }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-43">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap for-h3">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <h3>Find components with a given interface</h3>
 <p>Gets all component instances that implement a particular interface.</p>
@@ -947,124 +776,16 @@ The parent is null because it is a global component</p>
             <div class="content"><div class='highlight'><pre>  TANK.getComponentsWithInterface = <span class="function"><span class="keyword">function</span> <span class="params">(interfaceName)</span>
   {</span>
     <span class="keyword">return</span> TANK._interfaceComponents[interfaceName];
-  }</pre></div></div>
+  };</pre></div></div>
             
         </li>
         
         
-        <li id="section-44">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap for-h3">
-                <a class="pilcrow" href="#section-44">&#182;</a>
-              </div>
-              <h3>Register a event handler</h3>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  TANK.addEventListener = <span class="function"><span class="keyword">function</span> <span class="params">(eventName, obj)</span>
-  {</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-45">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
-              </div>
-              <p>Get array of listeners</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> listeners = TANK._events[eventName];
-    <span class="keyword">if</span> (!listeners)
-    {
-      listeners = [];
-      TANK._events[eventName] = listeners;
-    }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-46">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
-              </div>
-              <p>Add listener to the map</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    listeners.push(obj);
-  }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-47">
-            <div class="annotation">
-              
-              <div class="pilwrap for-h3">
-                <a class="pilcrow" href="#section-47">&#182;</a>
-              </div>
-              <h3>Unregister an event handler</h3>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  TANK.removeEventListener = <span class="function"><span class="keyword">function</span> <span class="params">(eventName, obj)</span>
-  {</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-48">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
-              </div>
-              <p>Get array of listeners</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> listeners = TANK._events[eventName];
-    <span class="keyword">if</span> (!listeners)
-      <span class="keyword">return</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-49">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
-              </div>
-              <p>Delete the listener from the map</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> listeners)
-    {
-      <span class="keyword">if</span> (listeners[i] === obj)
-      {
-        listeners.splice(i, <span class="number">1</span>);
-        <span class="keyword">break</span>;
-      }
-    }
-  }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-50">
-            <div class="annotation">
-              
-              <div class="pilwrap for-h3">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <h3>Send out an event</h3>
 
@@ -1076,11 +797,11 @@ The parent is null because it is a global component</p>
         </li>
         
         
-        <li id="section-51">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>Get array of listeners</p>
 
@@ -1093,11 +814,11 @@ The parent is null because it is a global component</p>
         </li>
         
         
-        <li id="section-52">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>Construct arguments</p>
 
@@ -1110,11 +831,11 @@ The parent is null because it is a global component</p>
         </li>
         
         
-        <li id="section-53">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p>Invoke the message on each listener</p>
 
@@ -1123,23 +844,23 @@ The parent is null because it is a global component</p>
             <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> func, thisObj;
     <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> listeners)
     {
-      func = listeners[i][eventName];
-      thisObj = listeners[i];
+      func = listeners[i].func;
+      thisObj = listeners[i].self;
       <span class="keyword">if</span> (func)
         func.apply(thisObj, message_args);
       <span class="keyword">else</span>
         TANK.log(thisObj + <span class="string">" is listening for "</span> + eventName + <span class="string">" but does not implement a method of the same name"</span>);
     }
-  }</pre></div></div>
+  };</pre></div></div>
             
         </li>
         
         
-        <li id="section-54">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap for-h3">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <h3>Start the engine main loop</h3>
 
@@ -1148,18 +869,34 @@ The parent is null because it is a global component</p>
             <div class="content"><div class='highlight'><pre>  TANK.start = <span class="function"><span class="keyword">function</span> <span class="params">()</span>
   {</span>
     TANK._lastTime = <span class="keyword">new</span> Date();
-    TANK._running = <span class="literal">true</span>;
-    update()
-  }</pre></div></div>
+    TANK._running = <span class="literal">true</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-55">
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>Initialize all engine components</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    TANK._engineEntity.invoke(<span class="string">"initialize"</span>);
+
+    update()
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap for-h3">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <h3>Stop the engine</h3>
 
@@ -1168,16 +905,16 @@ The parent is null because it is a global component</p>
             <div class="content"><div class='highlight'><pre>  TANK.stop = <span class="function"><span class="keyword">function</span> <span class="params">()</span>
   {</span>
     TANK._running = <span class="literal">false</span>
-  }</pre></div></div>
+  };</pre></div></div>
             
         </li>
         
         
-        <li id="section-56">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap for-h3">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <h3>Reset the engine</h3>
 <p>This deletes all game objects and resets the state of the engine.
@@ -1189,16 +926,16 @@ Things like prefabs and component definitions are preserved.</p>
   {</span>
     TANK._resetting = <span class="literal">true</span>;
     TANK.removeAllEntities();
-  }</pre></div></div>
+  };</pre></div></div>
             
         </li>
         
         
-        <li id="section-57">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap for-h3">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <h3>Log a message to console</h3>
 <p><code>text</code> - Text to display.</p>
@@ -1210,20 +947,17 @@ Things like prefabs and component definitions are preserved.</p>
     <span class="keyword">if</span> (!TANK.logsEnabled)
       <span class="keyword">return</span>;
 
-    <span class="keyword">if</span> (arguments.callee.caller.name)
-      console.log(arguments.callee.caller.name + <span class="string">": "</span> + text);
-    <span class="keyword">else</span>
-      console.log(<span class="string">"(anonymous function): "</span> + text);
-  }</pre></div></div>
+    console.log(text);
+  };</pre></div></div>
             
         </li>
         
         
-        <li id="section-58">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap for-h3">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <h3>Log a warning message to console</h3>
 <p><code>text</code> - Text to display.</p>
@@ -1235,20 +969,17 @@ Things like prefabs and component definitions are preserved.</p>
     <span class="keyword">if</span> (!TANK.warningsEnabled)
       <span class="keyword">return</span>;
 
-    <span class="keyword">if</span> (arguments.callee.caller.name)
-      console.warn(arguments.callee.caller.name + <span class="string">": "</span> + text);
-    <span class="keyword">else</span>
-      console.warn(<span class="string">"(anonymous function): "</span> + text);
-  }</pre></div></div>
+    console.warn(text);
+  };</pre></div></div>
             
         </li>
         
         
-        <li id="section-59">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap for-h3">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <h3>Log an error message to console</h3>
 <p><code>text</code> - Text to display.</p>
@@ -1260,11 +991,8 @@ Things like prefabs and component definitions are preserved.</p>
     <span class="keyword">if</span> (!TANK.errorsEnabled)
       <span class="keyword">return</span>;
 
-    <span class="keyword">if</span> (arguments.callee.caller.name)
-      console.error(arguments.callee.caller.name + <span class="string">": "</span> + text);
-    <span class="keyword">else</span>
-      console.error(<span class="string">"(anonymous function): "</span> + text);
-  }
+    console.error(text);
+  };
 
   <span class="function"><span class="keyword">function</span> <span class="title">update</span><span class="params">()</span>
   {</span></pre></div></div>
@@ -1272,11 +1000,11 @@ Things like prefabs and component definitions are preserved.</p>
         </li>
         
         
-        <li id="section-60">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p>Get dt</p>
 
@@ -1290,11 +1018,11 @@ Things like prefabs and component definitions are preserved.</p>
         </li>
         
         
-        <li id="section-61">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p>Delete pending objects</p>
 
@@ -1314,11 +1042,11 @@ Things like prefabs and component definitions are preserved.</p>
         </li>
         
         
-        <li id="section-62">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
               <p>If we are resetting the engine, stop updating before the next frame but after
 we&#39;ve cleared up the deleted objects</p>
@@ -1326,7 +1054,25 @@ we&#39;ve cleared up the deleted objects</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> (TANK._resetting)
-    {
+    {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <p>Remove all engine components</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> TANK._engineEntity._components)
+        <span class="keyword">delete</span> TANK[i];
+      TANK._engineEntity.destruct();
+
       TANK._resetting = <span class="literal">false</span>;
       TANK._running = <span class="literal">false</span>;
       main();
@@ -1336,11 +1082,11 @@ we&#39;ve cleared up the deleted objects</p>
         </li>
         
         
-        <li id="section-63">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <p>Dispatch enter frame message</p>
 
@@ -1351,11 +1097,11 @@ we&#39;ve cleared up the deleted objects</p>
         </li>
         
         
-        <li id="section-64">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
               <p>Queue next frame</p>
 
@@ -1363,16 +1109,16 @@ we&#39;ve cleared up the deleted objects</p>
             
             <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> (TANK._running)
       requestAnimFrame(update);
-  }</pre></div></div>
+  };</pre></div></div>
             
         </li>
         
         
-        <li id="section-65">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+                <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
               <p>Map of objects tracked by the core
 Key is the id of the object</p>
@@ -1384,11 +1130,11 @@ Key is the id of the object</p>
         </li>
         
         
-        <li id="section-66">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
               <p>Secondary map of objects with name as key</p>
 
@@ -1399,11 +1145,11 @@ Key is the id of the object</p>
         </li>
         
         
-        <li id="section-67">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
               <p>List of objects to delete</p>
 
@@ -1414,11 +1160,11 @@ Key is the id of the object</p>
         </li>
         
         
-        <li id="section-68">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
               <p>Map of prefabs with name as key</p>
 
@@ -1429,27 +1175,26 @@ Key is the id of the object</p>
         </li>
         
         
-        <li id="section-69">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
-              <p>Map of current engine components
-Key is the name of the component</p>
+              <p>&quot;Proxy&quot; entity that stores engine components</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  TANK._components = {};</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  TANK._engineEntity = <span class="literal">null</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-70">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
+                <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
               <p>Map of current registered component types
 Key is the name of the component</p>
@@ -1461,11 +1206,11 @@ Key is the name of the component</p>
         </li>
         
         
-        <li id="section-71">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-71">&#182;</a>
+                <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
               <p>Map of existing component instances sorted by tag names
 Key is the name of the tag</p>
@@ -1477,11 +1222,11 @@ Key is the name of the tag</p>
         </li>
         
         
-        <li id="section-72">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-72">&#182;</a>
+                <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
               <p>Map of objects listening for a message</p>
 
@@ -1492,11 +1237,11 @@ Key is the name of the tag</p>
         </li>
         
         
-        <li id="section-73">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-73">&#182;</a>
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
               <p>Current ID for game objects</p>
 
@@ -1507,11 +1252,11 @@ Key is the name of the tag</p>
         </li>
         
         
-        <li id="section-74">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-74">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <p>Last update time</p>
 
@@ -1522,11 +1267,11 @@ Key is the name of the tag</p>
         </li>
         
         
-        <li id="section-75">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-75">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
               <p>Whether or not the engine is running</p>
 
@@ -1537,11 +1282,11 @@ Key is the name of the tag</p>
         </li>
         
         
-        <li id="section-76">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-76">&#182;</a>
+                <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
               <p>Whether or not the engine is in the resetting state</p>
 
