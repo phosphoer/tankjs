@@ -27,107 +27,6 @@ function main()
   player.Pos2D.y = 376;
   TANK.addEntity(player, "Player");
 
-  // Define a ball prefab so it is easy to quickly spawn them
-  TANK.addPrefab("Ball",
-  {
-    "Image":
-    {
-      imagePath: "res/tiles.png",
-      subRectOrigin: [48, 64],
-      subRectCorner: [64, 80],
-      zdepth: 1
-    },
-    "Ball":
-    {},
-    "Collider":
-    {
-      width: 16,
-      height: 16
-    },
-    "Velocity":
-    {}
-  });
-
-  // Define a red brick prefab
-  TANK.addPrefab("RedBrick",
-  {
-    "Image":
-    {
-      imagePath: "res/tiles.png",
-      subRectOrigin: [0, 32],
-      subRectCorner: [32, 48],
-      zdepth: 1
-    },
-    "Collider":
-    {
-      width: 32,
-      height: 16,
-      isStatic: true
-    },
-    "Brick":
-    {}
-  });
-
-  // Define a blue brick prefab
-  TANK.addPrefab("BlueBrick",
-  {
-    "Image":
-    {
-      imagePath: "res/tiles.png",
-      subRectOrigin: [0, 0],
-      subRectCorner: [32, 16],
-      zdepth: 1
-    },
-    "Collider":
-    {
-      width: 32,
-      height: 16,
-      isStatic: true
-    },
-    "Brick":
-    {}
-  });
-
-  // Define a green brick prefab
-  TANK.addPrefab("GreenBrick",
-  {
-    "Image":
-    {
-      imagePath: "res/tiles.png",
-      subRectOrigin: [0, 48],
-      subRectCorner: [32, 64],
-      zdepth: 1
-    },
-    "Collider":
-    {
-      width: 32,
-      height: 16,
-      isStatic: true
-    },
-    "Brick":
-    {}
-  });
-
-  // Define an orange brick prefab
-  TANK.addPrefab("OrangeBrick",
-  {
-    "Image":
-    {
-      imagePath: "res/tiles.png",
-      subRectOrigin: [0, 16],
-      subRectCorner: [32, 32],
-      zdepth: 1
-    },
-    "Collider":
-    {
-      width: 32,
-      height: 16,
-      isStatic: true
-    },
-    "Brick":
-    {}
-  });
-
   // Begin running the engine
   TANK.start();
 }
@@ -368,6 +267,105 @@ TANK.registerComponent("Brick")
 .destruct(function ()
 {
   TANK.dispatchEvent("OnBrickRemoved", this);
-})
+});
 
-.addFunction("OnEnterFrame", function (dt) {});
+// Define a ball prefab so it is easy to quickly spawn them
+TANK.addPrefab("Ball",
+{
+  "Image":
+  {
+    imagePath: "res/tiles.png",
+    subRectOrigin: [48, 64],
+    subRectCorner: [64, 80],
+    zdepth: 1
+  },
+  "Ball":
+  {},
+  "Collider":
+  {
+    width: 16,
+    height: 16
+  },
+  "Velocity":
+  {}
+});
+
+// Define a red brick prefab
+TANK.addPrefab("RedBrick",
+{
+  "Image":
+  {
+    imagePath: "res/tiles.png",
+    subRectOrigin: [0, 32],
+    subRectCorner: [32, 48],
+    zdepth: 1
+  },
+  "Collider":
+  {
+    width: 32,
+    height: 16,
+    isStatic: true
+  },
+  "Brick":
+  {}
+});
+
+// Define a blue brick prefab
+TANK.addPrefab("BlueBrick",
+{
+  "Image":
+  {
+    imagePath: "res/tiles.png",
+    subRectOrigin: [0, 0],
+    subRectCorner: [32, 16],
+    zdepth: 1
+  },
+  "Collider":
+  {
+    width: 32,
+    height: 16,
+    isStatic: true
+  },
+  "Brick":
+  {}
+});
+
+// Define a green brick prefab
+TANK.addPrefab("GreenBrick",
+{
+  "Image":
+  {
+    imagePath: "res/tiles.png",
+    subRectOrigin: [0, 48],
+    subRectCorner: [32, 64],
+    zdepth: 1
+  },
+  "Collider":
+  {
+    width: 32,
+    height: 16,
+    isStatic: true
+  },
+  "Brick":
+  {}
+});
+
+// Define an orange brick prefab
+TANK.addPrefab("OrangeBrick",
+{
+  "Image":
+  {
+    imagePath: "res/tiles.png",
+    subRectOrigin: [0, 16],
+    subRectCorner: [32, 32],
+    zdepth: 1
+  },
+  "Collider":
+  {
+    width: 32,
+    height: 16,
+    isStatic: true
+  },
+  "Brick":
+  {}
+});
