@@ -1,15 +1,18 @@
 TANK.registerComponent("CustomUpdate")
 
-.initialize(function ()
+.construct(function ()
 {
   this.func = function () {};
+})
 
-  TANK.addEventListener("OnEnterFrame", this);
+.initialize(function ()
+{
+  this.addEventListener("OnEnterFrame", this.OnEnterFrame);
 })
 
 .destruct(function ()
 {
-  TANK.removeEventListener("OnEnterFrame", this);
+  this.removeEventListener("OnEnterFrame", this.OnEnterFrame);
 })
 
 .addFunction("OnEnterFrame", function (dt)

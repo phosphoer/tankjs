@@ -8,16 +8,16 @@ TANK.registerComponent("RotateController")
   this.right = false;
   this.rotateSpeed = 2;
 
-  TANK.addEventListener("OnKeyPress", this);
-  TANK.addEventListener("OnKeyRelease", this);
-  TANK.addEventListener("OnEnterFrame", this);
+  this.addEventListener("OnKeyPress", this.OnKeyPress);
+  this.addEventListener("OnKeyRelease", this.OnKeyRelease);
+  this.addEventListener("OnEnterFrame", this.OnEnterFrame);
 })
 
 .destruct(function ()
 {
-  TANK.removeEventListener("OnKeyPress", this);
-  TANK.removeEventListener("OnKeyRelease", this);
-  TANK.removeEventListener("OnEnterFrame", this);
+  this.removeEventListener("OnKeyPress", this.OnKeyPress);
+  this.removeEventListener("OnKeyRelease", this.OnKeyRelease);
+  this.removeEventListener("OnEnterFrame", this.OnEnterFrame);
 })
 
 .addFunction("OnKeyPress", function (key)

@@ -16,7 +16,10 @@ TANK.registerComponent("Text")
 .addFunction("draw", function (ctx)
 {
   var t = this.parent.Pos2D;
+
+  ctx.save();
   ctx.fillStyle = this.color;
   ctx.lineWidth = 0;
   ctx.fillText(this.text, t.x + this.offsetX, t.y + this.offsetY);
+  ctx.restore();
 });

@@ -77,7 +77,7 @@ TANK.registerComponent("InputManager")
   else
     removeEventListener("mousemove", this.mousemove);
 
-  this.removeEventListener("OnEnterFrame", this);
+  this.removeEventListener("OnEnterFrame", this.OnEnterFrame);
 });
 
 var onEnterFrame = function (dt)

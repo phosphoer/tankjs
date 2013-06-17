@@ -11,14 +11,14 @@ TANK.registerComponent("ObjectSpawner")
   this.triggerKey = null;
 
   this._spawnTimer = 0;
-  TANK.addEventListener("OnKeyPress", this);
-  TANK.addEventListener("OnEnterFrame", this);
+  this.addEventListener("OnKeyPress", this.OnKeyPress);
+  this.addEventListener("OnEnterFrame", this.OnEnterFrame);
 })
 
 .destruct(function ()
 {
-  TANK.removeEventListener("OnKeyPress", this);
-  TANK.removeEventListener("OnEnterFrame", this);
+  this.removeEventListener("OnKeyPress", this.OnKeyPress);
+  this.removeEventListener("OnEnterFrame", this.OnEnterFrame);
 })
 
 .addFunction("OnKeyPress", function (key)
@@ -43,16 +43,10 @@ TANK.registerComponent("ObjectSpawner")
   {
     var t = this.parent.Pos2D;
     var obj = TANK.createEntityFromPrefab(this.objectPrefab);
-    obj.attr("Pos2D",
-    {
-      x: t.x + Math.cos(t.rotation) * this.spawnDistance,
-      y: t.y + Math.sin(t.rotation) * this.spawnDistance
-    });
-    obj.attr("Velocity",
-    {
-      x: Math.cos(t.rotation) * this.spawnVelocity,
-      y: Math.sin(t.rotation) * this.spawnVelocity
-    });
+    obj.Pos2D.x = t.x + Math.cos(t.rotation) * this.spawnDistance;
+    obj.Pos2D.y = t.y + Math.sin(t.rotation) * this.spawnDistance;
+    obj.Velocity.x = Math.cos(t.rotation) * this.spawnVelocity,
+    obj.Velocity.y = Math.sin(t.rotation) * this.spawnVelocity
     this._spawnTimer = 0;
     TANK.addEntity(obj);
   }
