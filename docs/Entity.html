@@ -73,22 +73,61 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <p>An entity is a generic object which is primarily a container
+for components. Most things in your game will be entities.</p>
+
             </div>
             
             <div class="content"><div class='highlight'><pre>(<span class="function"><span class="keyword">function</span> <span class="params">(TANK)</span>
 {</span>
-  <span class="string">"use strict"</span>;
+  <span class="string">"use strict"</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <h3>Entity constructor</h3>
+<p>Shouldn&#39;t really ever be called except interally by the engine.
+Instead use <code>TANK.createEntity()</code>.</p>
+<ul>
+<li><code>id</code>: ID to give the Entity.</li>
+</ul>
 
-  TANK.Entity = <span class="function"><span class="keyword">function</span> <span class="params">(id)</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  TANK.Entity = <span class="function"><span class="keyword">function</span> <span class="params">(id)</span>
   {</span>
     <span class="keyword">this</span>.name = <span class="literal">null</span>;
     <span class="keyword">this</span>.id = id;
     <span class="keyword">this</span>._components = {};
     <span class="keyword">this</span>._initialized = <span class="literal">false</span>;
-  };
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <h3>Add a component</h3>
+<p>Adds a component to the entity, which invokes the component&#39;s
+constructor.</p>
+<ul>
+<li><code>componentName</code>: The name of the component to add.</li>
+<li><code>return</code>: The entity.</li>
+</ul>
 
-  TANK.Entity.prototype.addComponent = <span class="function"><span class="keyword">function</span> <span class="params">(componentName)</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  TANK.Entity.prototype.addComponent = <span class="function"><span class="keyword">function</span> <span class="params">(componentName)</span>
   {</span>
     <span class="keyword">if</span> (<span class="keyword">this</span>[componentName])
     {
@@ -98,11 +137,11 @@
         </li>
         
         
-        <li id="section-2">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-2">&#182;</a>
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
               <p>Get the component definition object</p>
 
@@ -118,11 +157,11 @@
         </li>
         
         
-        <li id="section-3">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-3">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <p>Temporarily add a fake component just to mark this one as added
 for the upcoming recursive calls</p>
@@ -135,11 +174,11 @@ for the upcoming recursive calls</p>
         </li>
         
         
-        <li id="section-4">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>Add all the included components</p>
 
@@ -154,11 +193,11 @@ for the upcoming recursive calls</p>
         </li>
         
         
-        <li id="section-5">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>Clone the component into our list of components</p>
 
@@ -175,13 +214,13 @@ for the upcoming recursive calls</p>
         </li>
         
         
-        <li id="section-6">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p>For dynamically added components the entity will have 
+              <p>For dynamically added components the entity will have
 already been added to the engine, so we need to make
 sure to initialize them immediately</p>
 
@@ -193,26 +232,31 @@ sure to initialize them immediately</p>
     }
 
     <span class="keyword">return</span> <span class="keyword">this</span>;
-  };
-
-  TANK.Entity.prototype.addComponents = <span class="function"><span class="keyword">function</span> <span class="params">()</span>
-  {</span></pre></div></div>
+  };</pre></div></div>
             
         </li>
         
         
-        <li id="section-7">
+        <li id="section-9">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>Components can be given as a string of comma seperated values,
-or a list of strings, or some combination of the above</p>
+              <h3>Add multiple components</h3>
+<p>Adds a collection of components to the entity.
+Components can be given as a string of comma seperated values,
+a list of strings, or some combination of the above.
+e.g., <code>addComponents(&quot;Pos2D, Velocity&quot;, &quot;Image&quot;, &quot;Collider&quot;);</code></p>
+<ul>
+<li><code>return</code>: The entity.</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> i, j, arg;
+            <div class="content"><div class='highlight'><pre>  TANK.Entity.prototype.addComponents = <span class="function"><span class="keyword">function</span> <span class="params">()</span>
+  {</span>
+    <span class="keyword">var</span> i, j, arg;
     <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; arguments.length; ++i)
     {
       arg = arguments[i];
@@ -226,19 +270,38 @@ or a list of strings, or some combination of the above</p>
     }
 
     <span class="keyword">return</span> <span class="keyword">this</span>;
-  };
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <h3>Remove a component</h3>
+<p>Removes a component from the entity, invoking the component&#39;s
+destructor.</p>
+<ul>
+<li><code>componentName</code>: The name of the component to remove.</li>
+<li><code>return</code>: The entity.</li>
+</ul>
 
-  TANK.Entity.prototype.removeComponent = <span class="function"><span class="keyword">function</span> <span class="params">(componentName)</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  TANK.Entity.prototype.removeComponent = <span class="function"><span class="keyword">function</span> <span class="params">(componentName)</span>
   {</span></pre></div></div>
             
         </li>
         
         
-        <li id="section-8">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p>If we don&#39;t have the component then just return</p>
 
@@ -253,11 +316,11 @@ or a list of strings, or some combination of the above</p>
         </li>
         
         
-        <li id="section-9">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <p>Inform the engine this component was uninitialized</p>
 
@@ -268,11 +331,11 @@ or a list of strings, or some combination of the above</p>
         </li>
         
         
-        <li id="section-10">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <p>Uninitialize the component</p>
 
@@ -283,11 +346,11 @@ or a list of strings, or some combination of the above</p>
         </li>
         
         
-        <li id="section-11">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p>Remove all remaining event listeners</p>
 
@@ -311,11 +374,11 @@ or a list of strings, or some combination of the above</p>
         </li>
         
         
-        <li id="section-12">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>Stop tracking this component by its interfaces</p>
 
@@ -328,11 +391,11 @@ or a list of strings, or some combination of the above</p>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p>Get the list of components with this interface</p>
 
@@ -349,11 +412,11 @@ or a list of strings, or some combination of the above</p>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>Remove component</p>
 
@@ -361,19 +424,40 @@ or a list of strings, or some combination of the above</p>
             
             <div class="content"><div class='highlight'><pre>    <span class="keyword">delete</span> <span class="keyword">this</span>._components[componentName];
     <span class="keyword">delete</span> <span class="keyword">this</span>[componentName];
-  };
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <h3>Invoke a method on the entity.</h3>
+<p>Attempts to invoke the given method name on each component
+contained in the entity. Components that do not contain
+the method are skipped. Any additional parameters given
+will be passed to the invoked function.</p>
+<ul>
+<li><code>funcName</code>: The name of the method to invoke.</li>
+<li><code>return</code>: The entity.</li>
+</ul>
 
-  TANK.Entity.prototype.invoke = <span class="function"><span class="keyword">function</span> <span class="params">(funcName, args)</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  TANK.Entity.prototype.invoke = <span class="function"><span class="keyword">function</span> <span class="params">(funcName)</span>
   {</span></pre></div></div>
             
         </li>
         
         
-        <li id="section-15">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>Construct arguments</p>
 
@@ -389,11 +473,11 @@ or a list of strings, or some combination of the above</p>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>Invoke on each component</p>
 
@@ -401,14 +485,33 @@ or a list of strings, or some combination of the above</p>
             
             <div class="content"><div class='highlight'><pre>    <span class="keyword">for</span> (i <span class="keyword">in</span> <span class="keyword">this</span>._components)
     {
-      <span class="keyword">if</span> (<span class="keyword">this</span>._components.hasOwnProperty(i) &amp;&amp; <span class="keyword">this</span>._components[i][funcName])
+      <span class="keyword">if</span> (<span class="keyword">this</span>._components.hasOwnProperty(i) &amp;&amp; <span class="keyword">this</span>._components[i][funcName] &amp;&amp; <span class="keyword">this</span>._components[i][funcName].apply)
       {
         <span class="keyword">this</span>._components[i][funcName].apply(<span class="keyword">this</span>._components[i], message_args);
       }
     }
-  };
 
-  TANK.Entity.prototype.destruct = <span class="function"><span class="keyword">function</span> <span class="params">()</span>
+    <span class="keyword">return</span> <span class="keyword">this</span>;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <h3>Uninitialize an entity</h3>
+<p>Removes all components on the entity, invoking their destructors.
+Rarely needed outside the engine, more commonly
+you will want to remove the entity with <code>TANK.removeEntity()</code>.</p>
+<p><code>return</code>: The entity.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  TANK.Entity.prototype.destruct = <span class="function"><span class="keyword">function</span> <span class="params">()</span>
   {</span>
     <span class="keyword">var</span> i;
     <span class="keyword">for</span> (i <span class="keyword">in</span> <span class="keyword">this</span>._components)
@@ -418,6 +521,8 @@ or a list of strings, or some combination of the above</p>
         <span class="keyword">this</span>.removeComponent(i);
       }
     }
+
+    <span class="keyword">return</span> <span class="keyword">this</span>;
   };
 
 }(<span class="keyword">this</span>.TANK = <span class="keyword">this</span>.TANK ||

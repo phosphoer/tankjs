@@ -1,7 +1,14 @@
+// An entity is a generic object which is primarily a container
+// for components. Most things in your game will be entities.
 (function (TANK)
 {
   "use strict";
 
+  // ### Entity constructor
+  // Shouldn't really ever be called except interally by the engine.
+  // Instead use `TANK.createEntity()`.
+  //
+  // - `id`: ID to give the Entity.
   TANK.Entity = function (id)
   {
     this.name = null;
@@ -10,6 +17,12 @@
     this._initialized = false;
   };
 
+  // ### Add a component
+  // Adds a component to the entity, which invokes the component's
+  // constructor.
+  //
+  // - `componentName`: The name of the component to add.
+  // - `return`: The entity.
   TANK.Entity.prototype.addComponent = function (componentName)
   {
     if (this[componentName])
@@ -46,7 +59,7 @@
 
     component.construct();
 
-    // For dynamically added components the entity will have 
+    // For dynamically added components the entity will have
     // already been added to the engine, so we need to make
     // sure to initialize them immediately
     if (this._initialized)
@@ -57,10 +70,15 @@
     return this;
   };
 
+  // ### Add multiple components
+  // Adds a collection of components to the entity.
+  // Components can be given as a string of comma seperated values,
+  // a list of strings, or some combination of the above.
+  // e.g., `addComponents("Pos2D, Velocity", "Image", "Collider");`
+  //
+  // - `return`: The entity.
   TANK.Entity.prototype.addComponents = function ()
   {
-    // Components can be given as a string of comma seperated values,
-    // or a list of strings, or some combination of the above
     var i, j, arg;
     for (i = 0; i < arguments.length; ++i)
     {
@@ -77,6 +95,12 @@
     return this;
   };
 
+  // ### Remove a component
+  // Removes a component from the entity, invoking the component's
+  // destructor.
+  //
+  // - `componentName`: The name of the component to remove.
+  // - `return`: The entity.
   TANK.Entity.prototype.removeComponent = function (componentName)
   {
     // If we don't have the component then just return
@@ -126,7 +150,15 @@
     delete this[componentName];
   };
 
-  TANK.Entity.prototype.invoke = function (funcName, args)
+  // ### Invoke a method on the entity.
+  // Attempts to invoke the given method name on each component
+  // contained in the entity. Components that do not contain
+  // the method are skipped. Any additional parameters given
+  // will be passed to the invoked function.
+  //
+  // - `funcName`: The name of the method to invoke.
+  // - `return`: The entity.
+  TANK.Entity.prototype.invoke = function (funcName)
   {
     // Construct arguments
     var message_args = [];
@@ -139,13 +171,21 @@
     // Invoke on each component
     for (i in this._components)
     {
-      if (this._components.hasOwnProperty(i) && this._components[i][funcName])
+      if (this._components.hasOwnProperty(i) && this._components[i][funcName] && this._components[i][funcName].apply)
       {
         this._components[i][funcName].apply(this._components[i], message_args);
       }
     }
+
+    return this;
   };
 
+  // ### Uninitialize an entity
+  // Removes all components on the entity, invoking their destructors.
+  // Rarely needed outside the engine, more commonly
+  // you will want to remove the entity with `TANK.removeEntity()`.
+  //
+  // `return`: The entity.
   TANK.Entity.prototype.destruct = function ()
   {
     var i;
@@ -156,6 +196,8 @@
         this.removeComponent(i);
       }
     }
+
+    return this;
   };
 
 }(this.TANK = this.TANK ||

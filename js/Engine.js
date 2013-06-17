@@ -303,7 +303,7 @@
 
   // ### Add multiple components to the engine
   // Components can be given as a string of comma seperated values,
-  // a list of strings, or some combination of the above
+  // a list of strings, or some combination of the above.
   // e.g., `TANK.addComponents("Pos2D, Velocity", "Image", "Collider");`
   TANK.addComponents = function ()
   {
