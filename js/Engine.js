@@ -1,5 +1,5 @@
 // The main TANK file that provides access to the core functionality of the engine.
-// This includes creating and manipulating game objects, registering components, and listening for / dispatching events.
+// This includes creating and manipulating entities, registering components, and dispatching events.
 
 (function (TANK)
 {
@@ -353,7 +353,10 @@
   };
 
   // ### Send out an event
-  TANK.dispatchEvent = function (eventName, args)
+  // Takes any number of arguments after event name.
+  //
+  // `eventName` - Name of the event to trigger.
+  TANK.dispatchEvent = function (eventName)
   {
     // Get array of listeners
     var listeners = TANK._events[eventName];
