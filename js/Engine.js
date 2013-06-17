@@ -328,7 +328,6 @@
   // - `componentName`: The name of the component to remove.
   TANK.removeComponent = function (componentName)
   {
-    // If we don't have the component then just return
     var c = TANK[componentName];
     if (!c)
     {
