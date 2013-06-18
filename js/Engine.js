@@ -293,8 +293,6 @@
     {
       TANK[componentName].initialize();
     }
-
-    return TANK;
   };
 
   // ### Add multiple components to the engine
@@ -315,8 +313,6 @@
         TANK.addComponent(components[j]);
       }
     }
-
-    return this;
   };
 
   // ### Remove a component from the engine
