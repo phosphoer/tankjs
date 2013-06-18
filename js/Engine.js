@@ -174,24 +174,6 @@
     TANK.error("Attemping to get an Entity with neither a string name nor an id number: " + idOrName);
   };
 
-  // ### Register an object prefab
-  // Use this to define an entity with a set of components that
-  // can be instantiated later, like a blueprint.
-  //
-  // - `name`: The name of the prefab to store it under.
-  // - `data`: A JSON object describing the components the prefab should contain,
-  // with the following format:
-  //
-  //       {
-  //         "Pos2D": { x: 0, y: 42 },
-  //         "Velocity": {},
-  //         "Collider": { width: 5, height: 5 },
-  //       }
-  TANK.addPrefab = function (name, data)
-  {
-    TANK._prefabs[name] = data;
-  };
-
   // ### Remove an object
   // Schedules the given object to be deleted on the next frame.
   // Will cause `destruct` to be called on all components of the object before it is deleted.
