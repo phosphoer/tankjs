@@ -11,8 +11,8 @@
 //
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-//
-//
+
+
 // An entity is a generic object which is primarily a container
 // for components. Most things in your game will be entities.
 (function (TANK)
@@ -34,7 +34,8 @@
 
   // ### Add a component
   // Adds a component to the entity, which invokes the component's
-  // constructor.
+  // constructor. After a component is added, it can be accessed
+  // via `Entity.ComponentName`.
   //
   // - `componentName`: The name of the component to add.
   // - `return`: The entity.

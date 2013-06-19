@@ -11,8 +11,8 @@
 //
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-//
-//
+
+
 // A component defines a small module of functionality and is
 // initialized by adding it to an `Entity`.
 (function (TANK)
@@ -142,6 +142,7 @@
 
   // ### Set init function
   // Defines a function to be called after the component has been constructed and added to an entity.
+  // This is commonly where you would listen for events and define other functions (e.g., this.Foo = function(){})
   //
   // - `func`: A function to call upon initialization.
   // - `return`: A reference to itself.
@@ -172,6 +173,12 @@
   // - `callback`: A function to call when the event is triggered.
   TANK.Component.prototype.addEventListener = function (event, callback)
   {
+    if (this._functions)
+    {
+      TANK.error("The component " + this.name + "tried to listen to " + event + "before it was instantiated.");
+      return;
+    }
+
     if (!this._constructed)
     {
       TANK.error("The component " + this.name + " tried to listen to " + event + " from `construct`, but should do so from `initialize` instead");
@@ -214,6 +221,12 @@
   // - `callback`: The function that was previously registered.
   TANK.Component.prototype.removeEventListener = function (event, callback)
   {
+    if (this._functions)
+    {
+      TANK.error("The component " + this.name + "tried to stop listening to " + event + "before it was instantiated.");
+      return;
+    }
+
     if (!this._constructed)
     {
       TANK.error("The component " + this.name + " tried to stop listening to " + event + " from `construct`, but should do so from `initialize` instead");

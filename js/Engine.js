@@ -11,8 +11,8 @@
 //
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-//
-//
+
+
 // The main TANK file that provides access to the core functionality of the engine.
 // This includes creating and manipulating entities, registering components, and dispatching events.
 (function (TANK)
@@ -267,7 +267,8 @@
   // ### Add a component to the engine
   // Components added to the engine are "global" and not
   // affected by spaces. These are commonly used to add systems
-  // that contain global state, such as a graphics context.
+  // that contain global state, such as a graphics context. After a component is added,
+  // it can be accessed via `TANK.ComponentName`.
   //
   // - `componentName`: The name of the component to add to the engine.
   TANK.addComponent = function (componentName)
