@@ -368,7 +368,7 @@
       if (func)
         func.apply(thisObj, message_args);
       else
-        TANK.log(thisObj + " is listening for " + eventName + " but does not implement a method of the same name");
+        TANK.error(thisObj.name + " is listening for " + eventName + " but does not implement a method of the same name");
     }
   };
 

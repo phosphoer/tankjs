@@ -1,6 +1,9 @@
 TANK.registerComponent("DeleteOnCollide")
 
-.addFunction("OnCollide", function (obj)
+.initialize(function ()
 {
+  this.OnCollide = function (obj)
+  {
     TANK.removeEntity(this.parent);
+  };
 });

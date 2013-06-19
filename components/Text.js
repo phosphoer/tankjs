@@ -13,13 +13,16 @@ TANK.registerComponent("Text")
   this.offsetY = 0;
 })
 
-.addFunction("draw", function (ctx)
+.initialize(function ()
 {
-  var t = this.parent.Pos2D;
+  this.draw = function (ctx)
+  {
+    var t = this.parent.Pos2D;
 
-  ctx.save();
-  ctx.fillStyle = this.color;
-  ctx.lineWidth = 0;
-  ctx.fillText(this.text, t.x + this.offsetX, t.y + this.offsetY);
-  ctx.restore();
+    ctx.save();
+    ctx.fillStyle = this.color;
+    ctx.lineWidth = 0;
+    ctx.fillText(this.text, t.x + this.offsetX, t.y + this.offsetY);
+    ctx.restore();
+  };
 });

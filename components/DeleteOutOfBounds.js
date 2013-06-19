@@ -10,6 +10,13 @@ TANK.registerComponent("DeleteOutOfBounds")
 
 .initialize(function ()
 {
+  this.OnEnterFrame = function (dt)
+  {
+    var t = this.parent.Pos2D;
+    if (!TANK.Math.pointInRect([t.x, t.y], this.topLeft, this.bottomRight))
+      TANK.removeEntity(this.parent);
+  };
+
   this.addEventListener("OnEnterFrame", this.OnEnterFrame);
 })
 
@@ -17,10 +24,3 @@ TANK.registerComponent("DeleteOutOfBounds")
 {
   this.removeEventListener("OnEnterFrame", this.OnEnterFrame);
 })
-
-.addFunction("OnEnterFrame", function (dt)
-{
-  var t = this.parent.Pos2D;
-  if (!TANK.Math.pointInRect([t.x, t.y], this.topLeft, this.bottomRight))
-    TANK.removeEntity(this.parent);
-});

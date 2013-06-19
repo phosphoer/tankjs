@@ -9,6 +9,17 @@ TANK.registerComponent("RenderManager")
 
 .initialize(function ()
 {
+  this.sort = function ()
+  {
+    this._drawablesSorted = [];
+    for (var i in this._drawables)
+      this._drawablesSorted.push(this._drawables[i]);
+    this._drawablesSorted.sort(function (a, b)
+    {
+      return a.zdepth - b.zdepth;
+    });
+  };
+
   var existing = TANK.getComponentsWithInterface("Drawable");
   for (var i in existing)
     this._drawables[existing[i].name + existing[i].parent.id] = existing[i];
@@ -38,14 +49,3 @@ TANK.registerComponent("RenderManager")
     }
   });
 })
-
-.addFunction("sort", function ()
-{
-  this._drawablesSorted = [];
-  for (var i in this._drawables)
-    this._drawablesSorted.push(this._drawables[i]);
-  this._drawablesSorted.sort(function (a, b)
-  {
-    return a.zdepth - b.zdepth;
-  });
-});

@@ -163,17 +163,6 @@
     return this;
   };
 
-  // ### Set a custom function
-  // Defines a custom-named function to be added to the component.
-  //
-  // - `func`: A function object.
-  // - `return`: A reference to itself.
-  TANK.Component.prototype.addFunction = function (name, func)
-  {
-    this._functions[name] = func;
-    return this;
-  };
-
   // ### Listen for an event
   // Registers a callback as a listener for a given event.
   // The event will be removed automatically when the component is

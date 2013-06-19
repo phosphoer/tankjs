@@ -13,16 +13,19 @@ TANK.registerComponent("ColoredBox")
   this.centered = true;
 })
 
-.addFunction("draw", function (ctx)
+.initialize(function()
 {
-  var t = this.parent.Pos2D;
-  ctx.save();
-  ctx.fillStyle = this.color;
+  this.draw = function (ctx)
+  {
+    var t = this.parent.Pos2D;
+    ctx.save();
+    ctx.fillStyle = this.color;
 
-  if (this.centered)
-    ctx.fillRect(t.x - this.width / 2, t.y - this.height / 2, this.width, this.height);
-  else
-    ctx.fillRect(t.x, t.y, this.width, this.height);
+    if (this.centered)
+      ctx.fillRect(t.x - this.width / 2, t.y - this.height / 2, this.width, this.height);
+    else
+      ctx.fillRect(t.x, t.y, this.width, this.height);
 
-  ctx.restore();
+    ctx.restore();
+  };
 });

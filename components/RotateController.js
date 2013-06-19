@@ -11,6 +11,31 @@ TANK.registerComponent("RotateController")
 
 .initialize(function ()
 {
+  this.OnKeyPress = function (key)
+  {
+    if (key == TANK.Q)
+      this.left = true;
+    else if (key == TANK.E)
+      this.right = true;
+  };
+
+  this.OnKeyRelease = function (key)
+  {
+    if (key == TANK.Q)
+      this.left = false;
+    else if (key == TANK.E)
+      this.right = false;
+  };
+
+  this.OnEnterFrame = function (dt)
+  {
+    var t = this.parent.Pos2D;
+    if (this.left)
+      t.rotation -= this.rotateSpeed * dt;
+    if (this.right)
+      t.rotation += this.rotateSpeed * dt;
+  };
+
   this.addEventListener("OnKeyPress", this.OnKeyPress);
   this.addEventListener("OnKeyRelease", this.OnKeyRelease);
   this.addEventListener("OnEnterFrame", this.OnEnterFrame);
@@ -22,28 +47,3 @@ TANK.registerComponent("RotateController")
   this.removeEventListener("OnKeyRelease", this.OnKeyRelease);
   this.removeEventListener("OnEnterFrame", this.OnEnterFrame);
 })
-
-.addFunction("OnKeyPress", function (key)
-{
-  if (key == TANK.Q)
-    this.left = true;
-  else if (key == TANK.E)
-    this.right = true;
-})
-
-.addFunction("OnKeyRelease", function (key)
-{
-  if (key == TANK.Q)
-    this.left = false;
-  else if (key == TANK.E)
-    this.right = false;
-})
-
-.addFunction("OnEnterFrame", function (dt)
-{
-  var t = this.parent.Pos2D;
-  if (this.left)
-    t.rotation -= this.rotateSpeed * dt;
-  if (this.right)
-    t.rotation += this.rotateSpeed * dt;
-});
