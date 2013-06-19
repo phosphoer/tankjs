@@ -69,10 +69,9 @@
     var component = componentDef.clone();
     this[componentName] = component;
     this._components[componentName] = component;
-
-    component.parent = this;
-
     component.construct();
+    component._constructed = true;
+    component.parent = this;
 
     // For dynamically added components the entity will have
     // already been added to the engine, so we need to make

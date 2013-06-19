@@ -9,7 +9,10 @@ TANK.registerComponent("TopDownMovement")
   this.right = false;
   this.down = false;
   this.movementSpeed = 50;
+})
 
+.initialize(function ()
+{
   this.addEventListener("OnKeyPress", this.OnKeyPress);
   this.addEventListener("OnKeyRelease", this.OnKeyRelease);
   this.addEventListener("OnEnterFrame", this.OnEnterFrame);

@@ -7,7 +7,10 @@ TANK.registerComponent("RotateController")
   this.left = false;
   this.right = false;
   this.rotateSpeed = 2;
+})
 
+.initialize(function ()
+{
   this.addEventListener("OnKeyPress", this.OnKeyPress);
   this.addEventListener("OnKeyRelease", this.OnKeyRelease);
   this.addEventListener("OnEnterFrame", this.OnEnterFrame);

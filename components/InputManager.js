@@ -57,14 +57,12 @@ TANK.registerComponent("InputManager")
   {
     that._mouseMoveEvents.push(e);
   }
+})
 
+.initialize(function ()
+{
   addEventListener("keydown", this.keydown);
   addEventListener("keyup", this.keyup);
-  if (this.context)
-    this.context.addEventListener("mousemove", this.mousemove);
-  else
-    addEventListener("mousemove", this.mousemove);
-
   this.addEventListener("OnEnterFrame", onEnterFrame);
 })
 

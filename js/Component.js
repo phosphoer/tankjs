@@ -68,7 +68,7 @@
 
     // Set properties
     c.name = this.name;
-
+    c._constructed = false;
     c.addEventListener = this.addEventListener;
     c.removeEventListener = this.removeEventListener;
 
@@ -183,6 +183,12 @@
   // - `callback`: A function to call when the event is triggered.
   TANK.Component.prototype.addEventListener = function (event, callback)
   {
+    if (!this._constructed)
+    {
+      TANK.error("The component " + this.name + " tried to call `addEventListener` from `construct`, but should call it from `initialize` instead");
+      return;
+    }
+
     var listeners = TANK._events[event];
     if (!listeners)
     {
@@ -213,6 +219,12 @@
   // - `callback`: The function that was previously registered.
   TANK.Component.prototype.removeEventListener = function (event, callback)
   {
+    if (!this._constructed)
+    {
+      TANK.error("The component " + this.name + " tried to call `removeEventListener` from `construct`, but should call it from `initialize` instead");
+      return;
+    }
+
     var listeners = TANK._events[event],
       i;
     if (!listeners)

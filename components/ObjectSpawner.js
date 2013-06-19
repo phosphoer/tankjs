@@ -11,6 +11,10 @@ TANK.registerComponent("ObjectSpawner")
   this.triggerKey = null;
 
   this._spawnTimer = 0;
+})
+
+.initialize(function ()
+{
   this.addEventListener("OnKeyPress", this.OnKeyPress);
   this.addEventListener("OnEnterFrame", this.OnEnterFrame);
 })
