@@ -27,11 +27,8 @@ function main()
     {},
     "DeleteOutOfBounds":
     {},
-    "InvokeOnCollide":
-    {
-      invokeOther: "TakeDamage",
-      argOther: 1
-    }
+    "DamageOnCollide":
+    {}
   });
 
   // Create background object
@@ -44,7 +41,7 @@ function main()
   TANK.addEntity(bg);
 
   // Create a player object
-  var player = TANK.createEntity("Text, Image, TopDownMovement, RotateController, ObjectSpawner, Collider, Health, CustomUpdate");
+  var player = TANK.createEntity("Text, Image, TopDownMovement, RotateController, ObjectSpawner, Collider, Health, HealthUpdater");
   player.Pos2D.x = 150;
   player.Pos2D.y = 100;
   player.Image.imagePath = "res/BlueBall.png";
@@ -56,14 +53,10 @@ function main()
   player.Text.offsetY = 4;
   player.ObjectSpawner.objectPrefab = "Bullet";
   player.ObjectSpawner.triggerKey = TANK.SPACE;
-  player.CustomUpdate.func = function (dt)
-  {
-    this.Text.text = this.Health.value;
-  }
   TANK.addEntity(player, "Player");
 
   // Create AI object
-  var ai = TANK.createEntity("Text, Image, KlangAI, ObjectSpawner, Collider, Health, CustomUpdate");
+  var ai = TANK.createEntity("Text, Image, KlangAI, ObjectSpawner, Collider, Health, HealthUpdater");
   ai.Pos2D.x = 450;
   ai.Pos2D.y = 400;
   ai.Image.imagePath = "res/RedBall.png";
@@ -74,10 +67,6 @@ function main()
   ai.Text.offsetX = -5;
   ai.Text.offsetY = 4;
   ai.ObjectSpawner.objectPrefab = "Bullet";
-  ai.CustomUpdate.func = function (dt)
-  {
-    this.Text.text = this.Health.value;
-  }
   TANK.addEntity(ai, "AI");
 
   // Create walls around edges
@@ -109,7 +98,6 @@ function main()
   obj.Collider.isStatic = true;
   obj.Collider.height = 480;
   TANK.addEntity(obj);
-
 
   obj = TANK.createEntity().addComponents("ColoredBox, Collider");
   obj.Pos2D.x = 100;
@@ -162,11 +150,41 @@ function main()
   TANK.start();
 }
 
+// This component does damage to an object when it collides with it
+TANK.registerComponent("DamageOnCollide")
+
+.initialize(function ()
+{
+  this.OnCollide = function (other)
+  {
+    other.invoke("TakeDamage", 1);
+  };
+});
+
+// This component updates the display of the health counter on the balls
+TANK.registerComponent("HealthUpdater")
+
+.initialize(function ()
+{
+  this.addEventListener("OnEnterFrame", function ()
+  {
+    this.parent.Text.text = this.parent.Health.value;
+  });
+});
+
 // Custom game logic component to manage general state of game
 TANK.registerComponent("GameLogic")
 
 .initialize(function ()
 {
+  this.OnEnterFrame = function (dt)
+  {
+    if (!TANK.getEntity("Player") || !TANK.getEntity("AI"))
+    {
+      TANK.reset();
+    }
+  };
+
   this.addEventListener("OnEnterFrame", this.OnEnterFrame);
 })
 
@@ -175,13 +193,6 @@ TANK.registerComponent("GameLogic")
   this.removeEventListener("OnEnterFrame", this.OnEnterFrame);
 })
 
-.addFunction("OnEnterFrame", function (dt)
-{
-  if (!TANK.getEntity("Player") || !TANK.getEntity("AI"))
-  {
-    TANK.reset();
-  }
-});
 
 // Custom component to implement AI for the other player
 TANK.registerComponent("KlangAI")
@@ -199,6 +210,66 @@ TANK.registerComponent("KlangAI")
   this._right = false;
   this._down = false;
 
+  this.OnEnterFrame = function (dt)
+  {
+    this._rotateTimer -= dt;
+
+    var player = TANK.getEntity("Player");
+    if (!player)
+      return;
+
+    var playerPos = player.Pos2D;
+    var pos = this.parent.Pos2D;
+    var gun = this.parent.ObjectSpawner;
+
+    // Shoot randomly
+    if (Math.random() < 0.05)
+      gun.spawn();
+
+    // Move around semi-randomly
+    if (Math.random() < 0.01)
+      this._up = true;
+    if (Math.random() < 0.01)
+      this._left = true;
+    if (Math.random() < 0.01)
+      this._right = true;
+    if (Math.random() < 0.01)
+      this._down = true;
+    if (Math.random() < 0.01)
+      this._up = false;
+    if (Math.random() < 0.01)
+      this._left = false;
+    if (Math.random() < 0.01)
+      this._right = false;
+    if (Math.random() < 0.01)
+      this._down = false;
+
+    // Apply movement
+    if (this._left)
+      pos.x -= this._movementSpeed * dt;
+    if (this._up)
+      pos.y -= this._movementSpeed * dt;
+    if (this._right)
+      pos.x += this._movementSpeed * dt;
+    if (this._down)
+      pos.y += this._movementSpeed * dt;
+
+    // Aim at player
+    var angle = TANK.Math.angleToPoint([pos.x, pos.y], [playerPos.x, playerPos.y]);
+    if (this._rotateTimer <= this._rotateAmount)
+    {
+      if (pos.rotation < angle)
+        pos.rotation += 0.1;
+      else
+        pos.rotation -= 0.1;
+    }
+    if (this._rotateTimer <= 0)
+    {
+      this._rotateTimer = this._rotateAmount + Math.random() * 3 + 0.5;
+      this._rotateAmount = 0.1 + Math.random() * 1;
+    }
+  };
+
   this.addEventListener("OnEnterFrame", this.OnEnterFrame);
 })
 
@@ -206,63 +277,3 @@ TANK.registerComponent("KlangAI")
 {
   this.removeEventListener("OnEnterFrame", this.OnEnterFrame);
 })
-
-.addFunction("OnEnterFrame", function (dt)
-{
-  this._rotateTimer -= dt;
-
-  var player = TANK.getEntity("Player");
-  if (!player)
-    return;
-
-  var playerPos = player.Pos2D;
-  var pos = this.parent.Pos2D;
-  var gun = this.parent.ObjectSpawner;
-
-  // Shoot randomly
-  if (Math.random() < 0.05)
-    gun.spawn();
-
-  // Move around semi-randomly
-  if (Math.random() < 0.01)
-    this._up = true;
-  if (Math.random() < 0.01)
-    this._left = true;
-  if (Math.random() < 0.01)
-    this._right = true;
-  if (Math.random() < 0.01)
-    this._down = true;
-  if (Math.random() < 0.01)
-    this._up = false;
-  if (Math.random() < 0.01)
-    this._left = false;
-  if (Math.random() < 0.01)
-    this._right = false;
-  if (Math.random() < 0.01)
-    this._down = false;
-
-  // Apply movement
-  if (this._left)
-    pos.x -= this._movementSpeed * dt;
-  if (this._up)
-    pos.y -= this._movementSpeed * dt;
-  if (this._right)
-    pos.x += this._movementSpeed * dt;
-  if (this._down)
-    pos.y += this._movementSpeed * dt;
-
-  // Aim at player
-  var angle = TANK.Math.angleToPoint([pos.x, pos.y], [playerPos.x, playerPos.y]);
-  if (this._rotateTimer <= this._rotateAmount)
-  {
-    if (pos.rotation < angle)
-      pos.rotation += 0.1;
-    else
-      pos.rotation -= 0.1;
-  }
-  if (this._rotateTimer <= 0)
-  {
-    this._rotateTimer = this._rotateAmount + Math.random() * 3 + 0.5;
-    this._rotateAmount = 0.1 + Math.random() * 1;
-  }
-});

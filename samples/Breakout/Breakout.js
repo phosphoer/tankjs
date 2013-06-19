@@ -50,6 +50,77 @@ TANK.registerComponent("GameLogic")
 
 .initialize(function ()
 {
+  this.OnBallAdded = function ()
+  {
+    ++this.numBalls;
+  };
+
+  this.OnBallRemoved = function ()
+  {
+    --this.numBalls;
+  };
+
+  this.OnBrickAdded = function ()
+  {
+    ++this.numBricks;
+  };
+
+  this.OnBrickRemoved = function ()
+  {
+    --this.numBricks;
+  };
+
+  this.OnEnterFrame = function (dt)
+  {
+    // If no balls exist, spawn a new one and decrement lives
+    if (this.numBalls === 0)
+    {
+      --this.lives;
+      if (this.lives === 0)
+        TANK.reset();
+      else
+      {
+        // Create a new ball
+        var ball = TANK.createEntityFromPrefab("Ball");
+        ball.Pos2D.x = 50;
+        ball.Pos2D.y = 200;
+        TANK.addEntity(ball);
+        TANK.dispatchEvent("OnLevelStart");
+      }
+    }
+
+    // If no bricks exist, build the next level
+    if (this.numBricks === 0)
+    {
+
+
+      ++this.lives;
+      ++this.level;
+      TANK.dispatchEvent("OnLevelComplete");
+
+      if (this.level === Breakout.levels.length)
+      {}
+      else
+      {
+        var data = Breakout.levels[this.level];
+        for (var row in data.bricks)
+        {
+          for (var col in data.bricks[row])
+          {
+            var brickType = data.bricks[row][col];
+            if (!brickType)
+              continue;
+
+            var brick = TANK.createEntityFromPrefab(brickType + "Brick");
+            brick.Pos2D.x = 64 + col * brick.Image.width;
+            brick.Pos2D.y = 64 + row * brick.Image.height;
+            TANK.addEntity(brick);
+          }
+        }
+      }
+    }
+  };
+
   this.addEventListener("OnEnterFrame", this.OnEnterFrame);
   this.addEventListener("OnBallAdded", this.OnBallAdded);
   this.addEventListener("OnBallRemoved", this.OnBallRemoved);
@@ -57,76 +128,6 @@ TANK.registerComponent("GameLogic")
   this.addEventListener("OnBrickRemoved", this.OnBrickRemoved);
 })
 
-.addFunction("OnBallAdded", function ()
-{
-  ++this.numBalls;
-})
-
-.addFunction("OnBallRemoved", function ()
-{
-  --this.numBalls;
-})
-
-.addFunction("OnBrickAdded", function ()
-{
-  ++this.numBricks;
-})
-
-.addFunction("OnBrickRemoved", function ()
-{
-  --this.numBricks;
-})
-
-.addFunction("OnEnterFrame", function (dt)
-{
-  // If no balls exist, spawn a new one and decrement lives
-  if (this.numBalls === 0)
-  {
-    --this.lives;
-    if (this.lives === 0)
-      TANK.reset();
-    else
-    {
-      // Create a new ball
-      var ball = TANK.createEntityFromPrefab("Ball");
-      ball.Pos2D.x = 50;
-      ball.Pos2D.y = 200;
-      TANK.addEntity(ball);
-      TANK.dispatchEvent("OnLevelStart");
-    }
-  }
-
-  // If no bricks exist, build the next level
-  if (this.numBricks === 0)
-  {
-
-
-    ++this.lives;
-    ++this.level;
-    TANK.dispatchEvent("OnLevelComplete");
-
-    if (this.level === Breakout.levels.length)
-    {}
-    else
-    {
-      var data = Breakout.levels[this.level];
-      for (var row in data.bricks)
-      {
-        for (var col in data.bricks[row])
-        {
-          var brickType = data.bricks[row][col];
-          if (!brickType)
-            continue;
-
-          var brick = TANK.createEntityFromPrefab(brickType + "Brick");
-          brick.Pos2D.x = 64 + col * brick.Image.width;
-          brick.Pos2D.y = 64 + row * brick.Image.height;
-          TANK.addEntity(brick);
-        }
-      }
-    }
-  }
-});
 
 // ### Paddle component
 // Handles paddle input
@@ -136,23 +137,24 @@ TANK.registerComponent("Paddle")
 
 .initialize(function ()
 {
+  this.OnMouseMove = function (e)
+  {
+    this.parent.Pos2D.x += e.moveX;
+  };
+
+  this.OnEnterFrame = function (dt)
+  {
+    this.parent.Pos2D.x = TANK.InputManager.mousePos[0];
+    if (this.parent.Pos2D.x - 24 < 0)
+      this.parent.Pos2D.x = 24
+    if (this.parent.Pos2D.x + 24 > 320)
+      this.parent.Pos2D.x = 320 - 24;
+  };
+
   this.addEventListener("OnEnterFrame", this.OnEnterFrame);
   this.addEventListener("OnMouseMove", this.OnMouseMove);
 })
 
-.addFunction("OnMouseMove", function (e)
-{
-  this.parent.Pos2D.x += e.moveX;
-})
-
-.addFunction("OnEnterFrame", function (dt)
-{
-  this.parent.Pos2D.x = TANK.InputManager.mousePos[0];
-  if (this.parent.Pos2D.x - 24 < 0)
-    this.parent.Pos2D.x = 24
-  if (this.parent.Pos2D.x + 24 > 320)
-    this.parent.Pos2D.x = 320 - 24;
-});
 
 // ### Ball logic
 // Handles moving the ball and bouncing off blocks
@@ -162,6 +164,83 @@ TANK.registerComponent("Ball")
 
 .initialize(function ()
 {
+  this.OnCollide = function (other)
+  {
+    var centerA = [this.parent.Pos2D.x, this.parent.Pos2D.y];
+    var centerB = [other.Pos2D.x, other.Pos2D.y];
+    var halfSizeA = [this.parent.Collider.width / 2, this.parent.Collider.height / 2];
+    var halfSizeB = [other.Collider.width / 2, other.Collider.height / 2];
+
+    // Bounce off player
+    if (other.Paddle)
+    {
+      this.parent.Velocity.x = ((centerA[0] - centerB[0]) / halfSizeB[0]) * 30;
+      this.parent.Velocity.y *= -1;
+    }
+
+    if (other.Brick)
+    {
+      var pen = [0, 0];
+      if (centerA[0] < centerB[0])
+        pen[0] = (centerA[0] + halfSizeA[0]) - (centerB[0] - halfSizeB[0]);
+      else
+        pen[0] = (centerA[0] - halfSizeA[0]) - (centerB[0] + halfSizeB[0]);
+
+      if (centerA[1] < centerB[1])
+        pen[1] = (centerA[1] + halfSizeA[1]) - (centerB[1] - halfSizeB[1]);
+      else
+        pen[1] = (centerA[1] - halfSizeA[1]) - (centerB[1] + halfSizeB[1]);
+
+      if (Math.abs(pen[0]) < Math.abs(pen[1]))
+      {
+        this.parent.Velocity.x *= -1;
+      }
+      else
+      {
+        this.parent.Velocity.y *= -1;
+      }
+
+      TANK.removeEntity(other);
+    }
+  };
+
+  this.OnLevelComplete = function ()
+  {
+    TANK.removeEntity(this.parent);
+  };
+
+  this.OnLevelStart = function ()
+  {
+    this.parent.Velocity.x = 30;
+    this.parent.Velocity.y = 40;
+  };
+
+  this.OnEnterFrame = function (dt)
+  {
+    // Collide ball with boundaries
+    if (this.parent.Pos2D.x + this.parent.Image.width / 2 > 320 - 16)
+    {
+      this.parent.Pos2D.x = 320 - 16 - this.parent.Image.width / 2;
+      this.parent.Velocity.x *= -1;
+    }
+    if (this.parent.Pos2D.x - this.parent.Image.width / 2 < 0 + 16)
+    {
+      this.parent.Pos2D.x = 0 + 16 + this.parent.Image.width / 2;
+      this.parent.Velocity.x *= -1;
+    }
+    if (this.parent.Pos2D.y - this.parent.Image.height / 2 < 0 + 16)
+    {
+      this.parent.Pos2D.y = 0 + 16 + this.parent.Image.height / 2;
+      this.parent.Velocity.y *= -1;
+    }
+
+    // Remove ball if it goes off screen
+    if (this.parent.Pos2D.y > 416)
+    {
+      TANK.removeEntity(this.parent);
+    }
+  };
+
   // Send out an event that a ball was created
   TANK.dispatchEvent("OnBallAdded", this.parent);
 
@@ -176,82 +255,6 @@ TANK.registerComponent("Ball")
   TANK.dispatchEvent("OnBallRemoved", this.parent);
 })
 
-.addFunction("OnCollide", function (other)
-{
-  var centerA = [this.parent.Pos2D.x, this.parent.Pos2D.y];
-  var centerB = [other.Pos2D.x, other.Pos2D.y];
-  var halfSizeA = [this.parent.Collider.width / 2, this.parent.Collider.height / 2];
-  var halfSizeB = [other.Collider.width / 2, other.Collider.height / 2];
-
-  // Bounce off player
-  if (other.Paddle)
-  {
-    this.parent.Velocity.x = ((centerA[0] - centerB[0]) / halfSizeB[0]) * 30;
-    this.parent.Velocity.y *= -1;
-  }
-
-  if (other.Brick)
-  {
-    var pen = [0, 0];
-    if (centerA[0] < centerB[0])
-      pen[0] = (centerA[0] + halfSizeA[0]) - (centerB[0] - halfSizeB[0]);
-    else
-      pen[0] = (centerA[0] - halfSizeA[0]) - (centerB[0] + halfSizeB[0]);
-
-    if (centerA[1] < centerB[1])
-      pen[1] = (centerA[1] + halfSizeA[1]) - (centerB[1] - halfSizeB[1]);
-    else
-      pen[1] = (centerA[1] - halfSizeA[1]) - (centerB[1] + halfSizeB[1]);
-
-    if (Math.abs(pen[0]) < Math.abs(pen[1]))
-    {
-      this.parent.Velocity.x *= -1;
-    }
-    else
-    {
-      this.parent.Velocity.y *= -1;
-    }
-
-    TANK.removeEntity(other);
-  }
-})
-
-.addFunction("OnLevelComplete", function ()
-{
-  TANK.removeEntity(this.parent);
-})
-
-.addFunction("OnLevelStart", function ()
-{
-  this.parent.Velocity.x = 30;
-  this.parent.Velocity.y = 40;
-})
-
-.addFunction("OnEnterFrame", function (dt)
-{
-  // Collide ball with boundaries
-  if (this.parent.Pos2D.x + this.parent.Image.width / 2 > 320 - 16)
-  {
-    this.parent.Pos2D.x = 320 - 16 - this.parent.Image.width / 2;
-    this.parent.Velocity.x *= -1;
-  }
-  if (this.parent.Pos2D.x - this.parent.Image.width / 2 < 0 + 16)
-  {
-    this.parent.Pos2D.x = 0 + 16 + this.parent.Image.width / 2;
-    this.parent.Velocity.x *= -1;
-  }
-  if (this.parent.Pos2D.y - this.parent.Image.height / 2 < 0 + 16)
-  {
-    this.parent.Pos2D.y = 0 + 16 + this.parent.Image.height / 2;
-    this.parent.Velocity.y *= -1;
-  }
-
-  // Remove ball if it goes off screen
-  if (this.parent.Pos2D.y > 416)
-  {
-    TANK.removeEntity(this.parent);
-  }
-});
 
 // ### Brick component
 // Handles brick logic
