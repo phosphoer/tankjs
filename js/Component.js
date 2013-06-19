@@ -174,7 +174,13 @@
   {
     if (!this._constructed)
     {
-      TANK.error("The component " + this.name + " tried to call `addEventListener` from `construct`, but should call it from `initialize` instead");
+      TANK.error("The component " + this.name + " tried to listen to " + event + " from `construct`, but should do so from `initialize` instead");
+      return;
+    }
+
+    if (!callback || !callback.apply)
+    {
+      TANK.error("The component " + this.name + " tried to listen to " + event + " but did not supply a valid callback");
       return;
     }
 
@@ -210,7 +216,13 @@
   {
     if (!this._constructed)
     {
-      TANK.error("The component " + this.name + " tried to call `removeEventListener` from `construct`, but should call it from `initialize` instead");
+      TANK.error("The component " + this.name + " tried to stop listening to " + event + " from `construct`, but should do so from `initialize` instead");
+      return;
+    }
+
+    if (!callback || !callback.apply)
+    {
+      TANK.error("The component " + this.name + " tried to stop listening to " + event + " but did not supply a valid callback");
       return;
     }
 

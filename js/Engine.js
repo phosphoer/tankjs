@@ -365,10 +365,10 @@
     {
       func = listeners[i].func;
       thisObj = listeners[i].self;
-      if (func)
+      if (func && func.apply)
         func.apply(thisObj, message_args);
       else
-        TANK.error(thisObj.name + " is listening for " + eventName + " but does not implement a method of the same name");
+        TANK.error(thisObj.name + " is listening for " + eventName + " but the supplied method is no longer valid");
     }
   };
 
