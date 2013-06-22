@@ -73,6 +73,7 @@
     component.construct();
     component._constructed = true;
     component.parent = this;
+    component.space = this.space;
 
     // For dynamically added components the entity will have
     // already been added to the engine, so we need to make
@@ -136,7 +137,7 @@
     for (i = 0; i < c._listeners.length; ++i)
     {
       obj = c._listeners[i];
-      listeners = TANK._events[obj.evt];
+      listeners = this.space._events[obj.evt];
       for (j = 0; listeners && j < listeners.length; ++j)
       {
         if (listeners[j].self === obj.self && listeners[j].func === obj.func)
@@ -152,7 +153,7 @@
     for (i = 0; i < componentDef._interfaces.length; ++i)
     {
       // Get the list of components with this interface
-      var componentList = TANK._interfaceComponents[componentDef._interfaces[i]];
+      var componentList = this.space._interfaceComponents[componentDef._interfaces[i]];
 
       if (componentList)
       {

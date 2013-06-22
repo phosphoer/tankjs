@@ -1,18 +1,19 @@
 function main()
 {
   // Create the "engine" object with the main components
-  TANK.addComponents("InputManager, CollisionManager, RenderManager, GameLogic");
+  TANK.addSpace("Game");
+  TANK.Game.addComponents("InputManager, CollisionManager, RenderManager, GameLogic");
 
   // Point the render manager's context to the canvas one
   // Would be nice not to require this somehow?
-  TANK.RenderManager.context = document.getElementById("screen").getContext("2d");
-  TANK.InputManager.context = document.getElementById("stage");
+  TANK.Game.RenderManager.context = document.getElementById("screen").getContext("2d");
+  TANK.Game.InputManager.context = document.getElementById("stage");
 
   // Add background object
   var background = TANK.createEntity("Image");
   background.Image.imagePath = "res/bg_prerendered.png";
   background.Image.centered = false;
-  TANK.addEntity(background);
+  TANK.Game.addEntity(background);
 
   // Add paddle
   var player = TANK.createEntity("Image, Paddle, Collider");
@@ -25,7 +26,7 @@ function main()
   player.Collider.isStatic = true;
   player.Pos2D.x = 160;
   player.Pos2D.y = 376;
-  TANK.addEntity(player, "Player");
+  TANK.Game.addEntity(player, "Player");
 
   // Begin running the engine
   TANK.start();
@@ -84,19 +85,17 @@ TANK.registerComponent("GameLogic")
         var ball = TANK.createEntityFromPrefab("Ball");
         ball.Pos2D.x = 50;
         ball.Pos2D.y = 200;
-        TANK.addEntity(ball);
-        TANK.dispatchEvent("OnLevelStart");
+        TANK.Game.addEntity(ball);
+        TANK.Game.dispatchEvent("OnLevelStart");
       }
     }
 
     // If no bricks exist, build the next level
     if (this.numBricks === 0)
     {
-
-
       ++this.lives;
       ++this.level;
-      TANK.dispatchEvent("OnLevelComplete");
+      TANK.Game.dispatchEvent("OnLevelComplete");
 
       if (this.level === Breakout.levels.length)
       {}
@@ -114,7 +113,7 @@ TANK.registerComponent("GameLogic")
             var brick = TANK.createEntityFromPrefab(brickType + "Brick");
             brick.Pos2D.x = 64 + col * brick.Image.width;
             brick.Pos2D.y = 64 + row * brick.Image.height;
-            TANK.addEntity(brick);
+            TANK.Game.addEntity(brick);
           }
         }
       }
@@ -144,7 +143,7 @@ TANK.registerComponent("Paddle")
 
   this.OnEnterFrame = function (dt)
   {
-    this.parent.Pos2D.x = TANK.InputManager.mousePos[0];
+    this.parent.Pos2D.x = TANK.Game.InputManager.mousePos[0];
     if (this.parent.Pos2D.x - 24 < 0)
       this.parent.Pos2D.x = 24
     if (this.parent.Pos2D.x + 24 > 320)
@@ -200,13 +199,13 @@ TANK.registerComponent("Ball")
         this.parent.Velocity.y *= -1;
       }
 
-      TANK.removeEntity(other);
+      TANK.Game.removeEntity(other);
     }
   };
 
   this.OnLevelComplete = function ()
   {
-    TANK.removeEntity(this.parent);
+    TANK.Game.removeEntity(this.parent);
   };
 
   this.OnLevelStart = function ()
@@ -237,12 +236,12 @@ TANK.registerComponent("Ball")
     // Remove ball if it goes off screen
     if (this.parent.Pos2D.y > 416)
     {
-      TANK.removeEntity(this.parent);
+      TANK.Game.removeEntity(this.parent);
     }
   };
 
   // Send out an event that a ball was created
-  TANK.dispatchEvent("OnBallAdded", this.parent);
+  TANK.Game.dispatchEvent("OnBallAdded", this.parent);
 
   this.addEventListener("OnEnterFrame", this.OnEnterFrame);
   this.addEventListener("OnLevelComplete", this.OnLevelComplete);
@@ -252,7 +251,7 @@ TANK.registerComponent("Ball")
 .destruct(function ()
 {
   // Send out an event that a ball was destroyed
-  TANK.dispatchEvent("OnBallRemoved", this.parent);
+  TANK.Game.dispatchEvent("OnBallRemoved", this.parent);
 })
 
 
@@ -264,12 +263,12 @@ TANK.registerComponent("Brick")
 
 .initialize(function ()
 {
-  TANK.dispatchEvent("OnBrickAdded", this);
+  TANK.Game.dispatchEvent("OnBrickAdded", this);
 })
 
 .destruct(function ()
 {
-  TANK.dispatchEvent("OnBrickRemoved", this);
+  TANK.Game.dispatchEvent("OnBrickRemoved", this);
 });
 
 // Define a ball prefab so it is easy to quickly spawn them

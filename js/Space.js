@@ -17,9 +17,13 @@
 {
   "use strict";
 
-  TANK.Space = function ()
+  TANK.Space = function (name)
   {
-    this.name = null;
+    // Name of space
+    this.name = name;
+
+    // True if the space has been added to the engine
+    this._initialized = false;
 
     // Map of objects tracked by the core
     // Key is the id of the object
@@ -29,17 +33,17 @@
     this._objectsNamed = {};
 
     // List of objects to delete
-    TANK._objectsDeleted = [];
+    this._objectsDeleted = [];
 
     // "Proxy" entity that stores space components
     this._spaceEntity = null;
 
     // Map of existing component instances sorted by tag names
     // Key is the name of the tag
-    TANK._interfaceComponents = {};
+    this._interfaceComponents = {};
 
     // Map of objects listening for a message
-    TANK._events = {};
+    this._events = {};
   };
 
   // ### Add an entity to the space.
@@ -58,6 +62,7 @@
     }
 
     object.id = TANK._currentID++;
+    object.space = this;
 
     if (object.name === null)
     {
@@ -103,6 +108,7 @@
     for (n in object._components)
     {
       c = object._components[n];
+      c.space = this;
       c.initialize();
     }
 
@@ -194,6 +200,7 @@
     if (!this._spaceEntity)
     {
       this._spaceEntity = TANK.createEntity();
+      this._spaceEntity.space = this;
     }
 
     this._spaceEntity.addComponent(componentName);
@@ -201,7 +208,7 @@
 
     // Only run initialize if the engine is already running
     // because all components are initialized on `TANK.start()`
-    if (TANK._running)
+    if (this._initialized)
     {
       this[componentName].initialize();
     }
@@ -283,6 +290,21 @@
         TANK.error(thisObj.name + " is listening for " + eventName + " but the supplied method is no longer valid");
     }
   };
+
+  TANK.Space.prototype.update = function (dt)
+  {
+    // Delete pending objects
+    for (var i in this._objectsDeleted)
+    {
+      var obj = this._objectsDeleted[i];
+      obj.destruct();
+      delete this._objects[obj.id];
+      delete this._objectsNamed[obj.name];
+      obj.id = -1;
+      obj.name = "Deleted";
+    }
+    this._objectsDeleted = [];
+  }
 
 }(this.TANK = this.TANK ||
 {}));
