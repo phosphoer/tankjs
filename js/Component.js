@@ -191,11 +191,11 @@
       return;
     }
 
-    var listeners = this.space._events[event];
+    var listeners = TANK._events[event];
     if (!listeners)
     {
       listeners = [];
-      this.space._events[event] = listeners;
+      TANK._events[event] = listeners;
     }
 
     this._listeners.push(
@@ -239,7 +239,7 @@
       return;
     }
 
-    var listeners = this.space._events[event],
+    var listeners = TANK._events[event],
       i;
     if (!listeners)
     {
