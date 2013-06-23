@@ -1,8 +1,8 @@
 function main()
 {
   // Create the "engine" object with the main components
-  TANK.addSpace("Game");
-  TANK.Game.addComponents("InputManager, CollisionManager, RenderManager, GameLogic");
+  var space = TANK.createSpace("InputManager, CollisionManager, RenderManager, GameLogic");
+  TANK.addSpace(space, "Game");
 
   // Point the render manager's context to the canvas one
   // Would be nice not to require this somehow?

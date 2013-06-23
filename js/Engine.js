@@ -79,7 +79,14 @@
     return entity;
   };
 
-  TANK.addSpace = function (name)
+  TANK.createSpace = function ()
+  {
+    var space = new TANK.Space();
+    space.addComponents.apply(space, arguments);
+    return space;
+  }
+
+  TANK.addSpace = function (space, name)
   {
     if (TANK[name])
     {
@@ -87,7 +94,15 @@
       return;
     }
 
-    var space = new TANK.Space(name);
+    // Initialize all space components
+    for (var i in space._spaceEntity._components)
+    {
+      if (space._spaceEntity._components.hasOwnProperty(i))
+      {
+        space._spaceEntity._components[i].initialize();
+      }
+    }
+
     space._initialized = true;
     TANK._spaces[name] = space;
     TANK[name] = space;

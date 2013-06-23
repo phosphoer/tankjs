@@ -36,7 +36,8 @@
     this._objectsDeleted = [];
 
     // "Proxy" entity that stores space components
-    this._spaceEntity = null;
+    this._spaceEntity = TANK.createEntity();
+    this._spaceEntity.space = this;
 
     // Map of existing component instances sorted by tag names
     // Key is the name of the tag
