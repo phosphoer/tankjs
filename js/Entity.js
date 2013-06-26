@@ -28,7 +28,9 @@
   {
     this.name = null;
     this.id = id;
+    this.space = null;
     this._components = {};
+    this._events = {};
     this._initialized = false;
   };
 
@@ -73,6 +75,7 @@
     component.construct();
     component._constructed = true;
     component.parent = this;
+    component.space = this.space;
 
     // For dynamically added components the entity will have
     // already been added to the engine, so we need to make
@@ -126,7 +129,7 @@
     }
 
     // Inform the engine this component was uninitialized
-    TANK.dispatchEvent("OnComponentUninitialized", c);
+    this.space.dispatchEvent("OnComponentUninitialized", c);
 
     // Uninitialize the component
     c.destruct();
@@ -136,7 +139,7 @@
     for (i = 0; i < c._listeners.length; ++i)
     {
       obj = c._listeners[i];
-      listeners = TANK._events[obj.evt];
+      listeners = this.space._events[obj.evt];
       for (j = 0; listeners && j < listeners.length; ++j)
       {
         if (listeners[j].self === obj.self && listeners[j].func === obj.func)
@@ -152,7 +155,7 @@
     for (i = 0; i < componentDef._interfaces.length; ++i)
     {
       // Get the list of components with this interface
-      var componentList = TANK._interfaceComponents[componentDef._interfaces[i]];
+      var componentList = this.space._interfaceComponents[componentDef._interfaces[i]];
 
       if (componentList)
       {
@@ -193,6 +196,35 @@
     }
 
     return this;
+  };
+
+  // ### Send out an event
+  // Takes any number of arguments after event name.
+  //
+  // `eventName` - Name of the event to trigger.
+  TANK.Entity.prototype.dispatchEvent = function (eventName)
+  {
+    // Get array of listeners
+    var listeners = this._events[eventName];
+    if (!listeners)
+      return;
+
+    // Construct arguments
+    var message_args = [];
+    for (var i = 1; i < arguments.length; ++i)
+      message_args.push(arguments[i]);
+
+    // Invoke the message on each listener
+    var func, thisObj;
+    for (var i in listeners)
+    {
+      func = listeners[i].func;
+      thisObj = listeners[i].self;
+      if (func && func.apply)
+        func.apply(thisObj, message_args);
+      else
+        TANK.error(thisObj.name + " is listening for " + eventName + " but the supplied method is no longer valid");
+    }
   };
 
   // ### Uninitialize an entity

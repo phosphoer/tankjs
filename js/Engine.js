@@ -88,71 +88,12 @@
   // - `return`: The initialized entity.
   TANK.addEntity = function (object, name)
   {
-    if (object.id !== -1)
+    if (TANK._spaces["Main"] === undefined)
     {
-      TANK.error("Attempting to add a Entity twice");
-      return object;
+      TANK.addSpace(TANK.createSpace(), "Main");
     }
 
-    object.id = this._currentID++;
-
-    if (object.name === null)
-    {
-      object.name = "Entity " + object.id;
-    }
-
-    // If a name was specified, track it by the name
-    if (name)
-    {
-      object.name = name;
-      if (TANK._objectsNamed[name])
-      {
-        TANK.error("An Entity named " + name + " already exists");
-        return object;
-      }
-      TANK._objectsNamed[name] = object;
-    }
-
-    // Track the object by its id
-    TANK._objects[object.id] = object;
-
-
-    // Track the components by their interfaces
-    var n, c, componentDef, i;
-    for (n in object._components)
-    {
-      c = object._components[n];
-      componentDef = TANK._registeredComponents[n];
-      for (i = 0; i < componentDef._interfaces.length; ++i)
-      {
-        // Get the list of components with this interface
-        var componentList = TANK._interfaceComponents[componentDef._interfaces[i]];
-        if (!componentList)
-        {
-          componentList = {};
-          TANK._interfaceComponents[componentDef._interfaces[i]] = componentList;
-        }
-
-        componentList[object.name + "." + componentDef.name] = c;
-      }
-    }
-
-    // Initialize each component
-    for (n in object._components)
-    {
-      c = object._components[n];
-      c.initialize();
-    }
-
-    for (n in object._components)
-    {
-      c = object._components[n];
-      TANK.dispatchEvent("OnComponentInitialized", c);
-    }
-
-    object._initialized = true;
-
-    return object;
+    return TANK.Main.addEntity(object, name);
   };
 
   // ### Get an entity
@@ -161,61 +102,67 @@
   // - `return`: The requested `Entity` or `undefined`
   TANK.getEntity = function (idOrName)
   {
-    if (typeof idOrName === "string")
+    if (TANK._spaces["Main"] === undefined)
     {
-      return TANK._objectsNamed[idOrName];
+      TANK.addSpace(TANK.createSpace(), "Main");
     }
 
-    if (typeof idOrName === "number")
-    {
-      return TANK._objects[idOrName];
-    }
-
-    TANK.error("Attemping to get an Entity with neither a string name nor an id number: " + idOrName);
+    return TANK.Main.getEntity(idOrName);
   };
 
   // ### Remove an object
   // Schedules the given object to be deleted on the next frame.
   // Will cause `destruct` to be called on all components of the object before it is deleted.
   //
-  // `id`: The id of the object. (`Entity.id`)
+  // `arg`: Either the id of the entity, its unique name, or the object itself
   TANK.removeEntity = function (arg)
   {
-    if (typeof arg === "string" || typeof arg === "number")
+    if (TANK._spaces["Main"] === undefined)
     {
-      var entity = TANK.getEntity(arg);
-      if (entity)
-      {
-        TANK._objectsDeleted.push(TANK.getEntity(arg));
-      }
-      else
-      {
-        TANK.error("Attempting to remove Entity " + arg + " which doesn't exist.");
-      }
+      TANK.addSpace(TANK.createSpace(), "Main");
     }
-    else if (arg instanceof TANK.Entity)
-    {
-      TANK._objectsDeleted.push(arg);
-    }
-    else
-    {
-      TANK.error("Attemping to remove an Entity with neither a string name, id number, or Entity reference: " + arg);
-    }
+
+    return TANK.Main.removeEntity(arg);
   };
 
   // ### Remove all objects
   // Equivalent to calling `removeEntity` on each objects.
   TANK.removeAllEntities = function ()
   {
-    var i;
-    for (i in TANK._objects)
+    if (TANK._spaces["Main"] === undefined)
     {
-      if (TANK._objects.hasOwnProperty(i))
-      {
-        TANK.removeEntity(parseInt(i, 10));
-      }
+      TANK.addSpace(TANK.createSpace(), "Main");
     }
+
+    return TANK.Main.removeAllEntities();
   };
+
+  TANK.createSpace = function ()
+  {
+    var space = new TANK.Space();
+    space.addComponents.apply(space, arguments);
+    return space;
+  }
+
+  TANK.addSpace = function (space, name)
+  {
+    TANK._spaces[name] = space;
+    TANK[name] = space;
+
+    for (var i in space._components)
+    {
+      if (space._components.hasOwnProperty(i))
+        space._components[i].initialize();
+    }
+
+    for (var i in space._components)
+    {
+      if (space._components.hasOwnProperty(i))
+        space.dispatchEvent("OnComponentInitialized", space._components[i]);
+    }
+
+    space._initialized = true;
+  }
 
   // ### Register an object prefab
   // Use this to define an entity with a set of components that
@@ -273,27 +220,15 @@
   // - `componentName`: The name of the component to add to the engine.
   TANK.addComponent = function (componentName)
   {
-    // Check if we have this component already
-    if (TANK[componentName])
+    if (TANK._spaces["Main"] === undefined)
     {
-      return;
+      TANK.addSpace(TANK.createSpace(), "Main");
     }
 
-    // Create engine entity if it doesn't exist
-    if (!TANK._engineEntity)
-    {
-      TANK._engineEntity = TANK.createEntity();
-    }
 
-    TANK._engineEntity.addComponent(componentName);
-    TANK[componentName] = TANK._engineEntity[componentName];
-
-    // Only run initialize if the engine is already running
-    // because all components are initialized on `TANK.start()`
-    if (TANK._running)
-    {
-      TANK[componentName].initialize();
-    }
+    var ret = TANK.Main.addComponent(componentName);
+    TANK[componentName] = TANK.Main[componentName];
+    return ret;
   };
 
   // ### Add multiple components to the engine
@@ -302,6 +237,11 @@
   // e.g., `TANK.addComponents("Pos2D, Velocity", "Image", "Collider");`
   TANK.addComponents = function ()
   {
+    if (TANK._spaces["Main"] === undefined)
+    {
+      TANK.addSpace(TANK.createSpace(), "Main");
+    }
+
     var i, j, arg;
     for (i = 0; i < arguments.length; ++i)
     {
@@ -321,17 +261,13 @@
   // - `componentName`: The name of the component to remove.
   TANK.removeComponent = function (componentName)
   {
-    var c = TANK[componentName];
-    if (!c)
+    if (TANK._spaces["Main"] === undefined)
     {
-      return;
+      TANK.addSpace(TANK.createSpace(), "Main");
     }
 
-    if (TANK._engineEntity)
-    {
-      TANK._engineEntity.removeComponent(componentName);
-      delete TANK[componentName];
-    }
+    delete TANK[componentName];
+    return TANK.Main.removeComponent(componentName);
   };
 
   // ### Find components with a given interface
@@ -341,7 +277,12 @@
   // - `return`: An array of component instances.
   TANK.getComponentsWithInterface = function (interfaceName)
   {
-    return TANK._interfaceComponents[interfaceName];
+    if (TANK._spaces["Main"] === undefined)
+    {
+      TANK.addSpace(TANK.createSpace(), "Main");
+    }
+
+    return TANK.Main.getComponentsWithInterface(interfaceName);
   };
 
   // ### Send out an event
@@ -350,27 +291,12 @@
   // `eventName` - Name of the event to trigger.
   TANK.dispatchEvent = function (eventName)
   {
-    // Get array of listeners
-    var listeners = TANK._events[eventName];
-    if (!listeners)
-      return;
-
-    // Construct arguments
-    var message_args = [];
-    for (var i = 1; i < arguments.length; ++i)
-      message_args.push(arguments[i]);
-
-    // Invoke the message on each listener
-    var func, thisObj;
-    for (var i in listeners)
+    if (TANK._spaces["Main"] === undefined)
     {
-      func = listeners[i].func;
-      thisObj = listeners[i].self;
-      if (func && func.apply)
-        func.apply(thisObj, message_args);
-      else
-        TANK.error(thisObj.name + " is listening for " + eventName + " but the supplied method is no longer valid");
+      TANK.addSpace(TANK.createSpace(), "Main");
     }
+
+    return TANK.Main.dispatchEvent.apply(TANK.Main, arguments);
   };
 
   // ### Start the engine main loop
@@ -379,8 +305,14 @@
     TANK._lastTime = new Date();
     TANK._running = true;
 
-    // Initialize all engine components
-    TANK._engineEntity.invoke("initialize");
+    // Initialize all spaces
+    for (var i in TANK._spaces)
+    {
+      if (TANK._spaces.hasOwnProperty(i))
+      {
+        TANK._spaces[i].invoke("initialize");
+      }
+    }
 
     update()
   };
@@ -442,17 +374,14 @@
     if (dt > 0.05)
       dt = 0.05;
 
-    // Delete pending objects
-    for (var i in TANK._objectsDeleted)
+    // Cleanup each space
+    for (var i in TANK._spaces)
     {
-      var obj = TANK._objectsDeleted[i];
-      obj.destruct();
-      delete TANK._objects[obj.id];
-      delete TANK._objectsNamed[obj.name];
-      obj.id = -1;
-      obj.name = "Deleted";
+      if (TANK._spaces.hasOwnProperty(i))
+      {
+        TANK._spaces[i].clearDeletedObjects();
+      }
     }
-    TANK._objectsDeleted = [];
 
     // If we are resetting the engine, stop updating before the next frame but after
     // we've cleared up the deleted objects
@@ -469,40 +398,29 @@
       return;
     }
 
-    // Dispatch enter frame message
-    TANK.dispatchEvent("OnEnterFrame", dt);
+    // Update each space
+    for (var i in TANK._spaces)
+    {
+      if (TANK._spaces.hasOwnProperty(i))
+      {
+        TANK._spaces[i].update(dt);
+      }
+    }
 
     // Queue next frame
     if (TANK._running)
       requestAnimFrame(update);
   };
 
-  // Map of objects tracked by the core
-  // Key is the id of the object
-  TANK._objects = {};
-
-  // Secondary map of objects with name as key
-  TANK._objectsNamed = {};
-
-  // List of objects to delete
-  TANK._objectsDeleted = [];
-
   // Map of prefabs with name as key
   TANK._prefabs = {};
 
-  // "Proxy" entity that stores engine components
-  TANK._engineEntity = null;
+  // Map of spaces by name
+  TANK._spaces = {};
 
   // Map of current registered component types
   // Key is the name of the component
   TANK._registeredComponents = {};
-
-  // Map of existing component instances sorted by tag names
-  // Key is the name of the tag
-  TANK._interfaceComponents = {};
-
-  // Map of objects listening for a message
-  TANK._events = {};
 
   // Current ID for game objects
   TANK._currentID = 0;

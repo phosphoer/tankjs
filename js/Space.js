@@ -17,10 +17,10 @@
 {
   "use strict";
 
-  TANK.Space = function (name)
+  TANK.Space = function ()
   {
     // Name of space
-    this.name = name;
+    this.name = null;
 
     // True if the space has been added to the engine
     this._initialized = false;
@@ -212,6 +212,7 @@
     if (this._initialized)
     {
       this[componentName].initialize();
+      this.dispatchEvent("OnComponentInitialized", this[componentName]);
     }
   };
 
@@ -292,7 +293,37 @@
     }
   };
 
-  TANK.Space.prototype.update = function (dt)
+  // ### Invoke a method on the space.
+  // Attempts to invoke the given method name on each component
+  // contained in the space. Components that do not contain
+  // the method are skipped. Any additional parameters given
+  // will be passed to the invoked function.
+  //
+  // - `funcName`: The name of the method to invoke.
+  // - `return`: The space.
+  TANK.Space.prototype.invoke = function (funcName)
+  {
+    // Construct arguments
+    var message_args = [];
+    var i;
+    for (i = 1; i < arguments.length; ++i)
+    {
+      message_args.push(arguments[i]);
+    }
+
+    // Invoke on each component
+    for (i in this._components)
+    {
+      if (this._components.hasOwnProperty(i) && this._components[i][funcName] && this._components[i][funcName].apply)
+      {
+        this._components[i][funcName].apply(this._components[i], message_args);
+      }
+    }
+
+    return this;
+  };
+
+  TANK.Space.prototype.clearDeletedObjects = function ()
   {
     // Delete pending objects
     for (var i in this._objectsDeleted)
@@ -305,6 +336,11 @@
       obj.name = "Deleted";
     }
     this._objectsDeleted = [];
+  }
+
+  TANK.Space.prototype.update = function (dt)
+  {
+    this.dispatchEvent("OnEnterFrame", dt);
   }
 
 }(this.TANK = this.TANK ||
