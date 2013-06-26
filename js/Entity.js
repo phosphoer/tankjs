@@ -30,7 +30,6 @@
     this.id = id;
     this.space = null;
     this._components = {};
-    this._events = {};
     this._initialized = false;
   };
 
@@ -196,35 +195,6 @@
     }
 
     return this;
-  };
-
-  // ### Send out an event
-  // Takes any number of arguments after event name.
-  //
-  // `eventName` - Name of the event to trigger.
-  TANK.Entity.prototype.dispatchEvent = function (eventName)
-  {
-    // Get array of listeners
-    var listeners = this._events[eventName];
-    if (!listeners)
-      return;
-
-    // Construct arguments
-    var message_args = [];
-    for (var i = 1; i < arguments.length; ++i)
-      message_args.push(arguments[i]);
-
-    // Invoke the message on each listener
-    var func, thisObj;
-    for (var i in listeners)
-    {
-      func = listeners[i].func;
-      thisObj = listeners[i].self;
-      if (func && func.apply)
-        func.apply(thisObj, message_args);
-      else
-        TANK.error(thisObj.name + " is listening for " + eventName + " but the supplied method is no longer valid");
-    }
   };
 
   // ### Uninitialize an entity
