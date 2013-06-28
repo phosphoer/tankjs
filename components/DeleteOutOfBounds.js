@@ -14,7 +14,7 @@ TANK.registerComponent("DeleteOutOfBounds")
   {
     var t = this.parent.Pos2D;
     if (!TANK.Math.pointInRect([t.x, t.y], this.topLeft, this.bottomRight))
-      TANK.removeEntity(this.parent);
+      this.space.removeEntity(this.parent);
   };
 
   this.addEventListener("OnEnterFrame", this.OnEnterFrame);

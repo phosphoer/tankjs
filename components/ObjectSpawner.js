@@ -42,7 +42,7 @@ TANK.registerComponent("ObjectSpawner")
       obj.Velocity.x = Math.cos(t.rotation) * this.spawnVelocity,
       obj.Velocity.y = Math.sin(t.rotation) * this.spawnVelocity
       this._spawnTimer = 0;
-      TANK.addEntity(obj);
+      this.space.addEntity(obj);
     }
   };
 

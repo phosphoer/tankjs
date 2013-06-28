@@ -1,12 +1,13 @@
 function main()
 {
   // Create the "engine" object with the main components
-  TANK.addComponents("InputManager, CollisionManager, RenderManager, GameLogic");
+  var space = TANK.createSpace("InputManager, CollisionManager, RenderManager, GameLogic");
+  TANK.addSpace(space, "Game");
 
   // Point the render manager's context to the canvas one
   // Would be nice not to require this somehow?
-  TANK.RenderManager.context = document.getElementById("screen").getContext("2d");
-  TANK.InputManager.context = document.getElementById("stage");
+  TANK.Game.RenderManager.context = document.getElementById("screen").getContext("2d");
+  TANK.Game.InputManager.context = document.getElementById("stage");
 
   // Create a bullet object prefab
   TANK.addPrefab("Bullet",
@@ -38,7 +39,7 @@ function main()
   bg.ColoredBox.color = "#fff";
   bg.ColoredBox.zdepth = -1;
   bg.ColoredBox.centered = false;
-  TANK.addEntity(bg);
+  TANK.Game.addEntity(bg);
 
   // Create a player object
   var player = TANK.createEntity("Text, Image, TopDownMovement, RotateController, ObjectSpawner, Collider, Health, HealthUpdater");
@@ -53,7 +54,7 @@ function main()
   player.Text.offsetY = 4;
   player.ObjectSpawner.objectPrefab = "Bullet";
   player.ObjectSpawner.triggerKey = TANK.SPACE;
-  TANK.addEntity(player, "Player");
+  TANK.Game.addEntity(player, "Player");
 
   // Create AI object
   var ai = TANK.createEntity("Text, Image, KlangAI, ObjectSpawner, Collider, Health, HealthUpdater");
@@ -67,7 +68,7 @@ function main()
   ai.Text.offsetX = -5;
   ai.Text.offsetY = 4;
   ai.ObjectSpawner.objectPrefab = "Bullet";
-  TANK.addEntity(ai, "AI");
+  TANK.Game.addEntity(ai, "AI");
 
   // Create walls around edges
   var obj;
@@ -76,76 +77,76 @@ function main()
   obj.Pos2D.y = -25;
   obj.Collider.isStatic = true;
   obj.Collider.width = 640;
-  TANK.addEntity(obj);
+  TANK.Game.addEntity(obj);
 
   obj = TANK.createEntity().addComponents("ColoredBox, Collider");
   obj.Pos2D.x = 640 / 2;
   obj.Pos2D.y = 480 + 25;
   obj.Collider.isStatic = true;
   obj.Collider.width = 640;
-  TANK.addEntity(obj);
+  TANK.Game.addEntity(obj);
 
   obj = TANK.createEntity().addComponents("ColoredBox, Collider");
   obj.Pos2D.x = -25;
   obj.Pos2D.y = 480 / 2;
   obj.Collider.isStatic = true;
   obj.Collider.height = 480;
-  TANK.addEntity(obj);
+  TANK.Game.addEntity(obj);
 
   obj = TANK.createEntity().addComponents("ColoredBox, Collider");
   obj.Pos2D.x = 640 + 25;
   obj.Pos2D.y = 480 / 2;
   obj.Collider.isStatic = true;
   obj.Collider.height = 480;
-  TANK.addEntity(obj);
+  TANK.Game.addEntity(obj);
 
   obj = TANK.createEntity().addComponents("ColoredBox, Collider");
   obj.Pos2D.x = 100;
   obj.Pos2D.y = 150;
   obj.Collider.isStatic = true;
-  TANK.addEntity(obj);
+  TANK.Game.addEntity(obj);
 
   obj = TANK.createEntity().addComponents("ColoredBox, Collider");
   obj.Pos2D.x = 150;
   obj.Pos2D.y = 150;
   obj.Collider.isStatic = true;
-  TANK.addEntity(obj);
+  TANK.Game.addEntity(obj);
 
   obj = TANK.createEntity().addComponents("ColoredBox, Collider");
   obj.Pos2D.x = 200;
   obj.Pos2D.y = 150;
   obj.Collider.isStatic = true;
-  TANK.addEntity(obj);
+  TANK.Game.addEntity(obj);
 
   obj = TANK.createEntity().addComponents("ColoredBox, Collider");
   obj.Pos2D.x = 200;
   obj.Pos2D.y = 100;
   obj.Collider.isStatic = true;
-  TANK.addEntity(obj);
+  TANK.Game.addEntity(obj);
 
   obj = TANK.createEntity().addComponents("ColoredBox, Collider");
   obj.Pos2D.x = 400;
   obj.Pos2D.y = 350;
   obj.Collider.isStatic = true;
-  TANK.addEntity(obj);
+  TANK.Game.addEntity(obj);
 
   obj = TANK.createEntity().addComponents("ColoredBox, Collider");
   obj.Pos2D.x = 450;
   obj.Pos2D.y = 350;
   obj.Collider.isStatic = true;
-  TANK.addEntity(obj);
+  TANK.Game.addEntity(obj);
 
   obj = TANK.createEntity().addComponents("ColoredBox, Collider");
   obj.Pos2D.x = 500;
   obj.Pos2D.y = 350;
   obj.Collider.isStatic = true;
-  TANK.addEntity(obj);
+  TANK.Game.addEntity(obj);
 
   obj = TANK.createEntity().addComponents("ColoredBox, Collider");
   obj.Pos2D.x = 500;
   obj.Pos2D.y = 400;
   obj.Collider.isStatic = true;
-  TANK.addEntity(obj);
+  TANK.Game.addEntity(obj);
 
   TANK.start();
 }
@@ -179,7 +180,7 @@ TANK.registerComponent("GameLogic")
 {
   this.OnEnterFrame = function (dt)
   {
-    if (!TANK.getEntity("Player") || !TANK.getEntity("AI"))
+    if (!TANK.Game.getEntity("Player") || !TANK.Game.getEntity("AI"))
     {
       TANK.reset();
     }
@@ -214,7 +215,7 @@ TANK.registerComponent("KlangAI")
   {
     this._rotateTimer -= dt;
 
-    var player = TANK.getEntity("Player");
+    var player = TANK.Game.getEntity("Player");
     if (!player)
       return;
 
