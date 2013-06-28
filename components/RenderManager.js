@@ -27,11 +27,15 @@ TANK.registerComponent("RenderManager")
 
   this.addEventListener("OnEnterFrame", function (dt)
   {
+    if (!this.context)
+      return;
+
     for (var i in this._drawablesSorted)
     {
       this._drawablesSorted[i].draw(this.context);
     }
   });
+
   this.addEventListener("OnComponentInitialized", function (c)
   {
     if (c.interfaces["Drawable"])
@@ -40,6 +44,7 @@ TANK.registerComponent("RenderManager")
       this.sort();
     }
   });
+
   this.addEventListener("OnComponentUninitialized", function (c)
   {
     if (c.interfaces["Drawable"])

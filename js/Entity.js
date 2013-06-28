@@ -82,6 +82,7 @@
     if (this._initialized)
     {
       component.initialize();
+      this.space.dispatchEvent("OnComponentUninitialized", component);
     }
 
     return this;

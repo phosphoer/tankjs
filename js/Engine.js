@@ -305,15 +305,6 @@
     TANK._lastTime = new Date();
     TANK._running = true;
 
-    // Initialize all spaces
-    for (var i in TANK._spaces)
-    {
-      if (TANK._spaces.hasOwnProperty(i))
-      {
-        TANK._spaces[i].invoke("initialize");
-      }
-    }
-
     update()
   };
 
@@ -388,10 +379,12 @@
     if (TANK._resetting)
     {
       // Remove all engine components
-      for (var i in TANK._engineEntity._components)
+      for (var i in TANK._spaces)
+      {
+        TANK._spaces[i].destruct();
         delete TANK[i];
-      TANK._engineEntity.destruct();
-
+      }
+      TANK._spaces = {};
       TANK._resetting = false;
       TANK._running = false;
       main();

@@ -1,7 +1,7 @@
 function main()
 {
   // Create the "engine" object with the main components
-  TANK.addComponents("InputManager, CollisionManager, RenderManager, GameLogic");
+  TANK.addComponents("InputManager, GameLogic, CollisionManager, RenderManager");
 
   // Point the render manager's context to the canvas one
   // Would be nice not to require this somehow?

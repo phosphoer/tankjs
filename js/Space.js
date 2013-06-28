@@ -22,6 +22,9 @@
     // Name of space
     this.name = null;
 
+    // Necessary for using some entity functions
+    this.space = this;
+
     // True if the space has been added to the engine
     this._initialized = false;
 
@@ -35,9 +38,9 @@
     // List of objects to delete
     this._objectsDeleted = [];
 
-    // "Proxy" entity that stores space components
-    this._spaceEntity = TANK.createEntity();
-    this._spaceEntity.space = this;
+    // Components for the space
+    // Used by entity functions
+    this._components = {};
 
     // Map of existing component instances sorted by tag names
     // Key is the name of the tag
@@ -46,6 +49,13 @@
     // Map of objects listening for a message
     this._events = {};
   };
+
+  // "Borrow" some functions from Entity : )
+  TANK.Space.prototype.addComponent = TANK.Entity.prototype.addComponent;
+  TANK.Space.prototype.addComponents = TANK.Entity.prototype.addComponents;
+  TANK.Space.prototype.removeComponent = TANK.Entity.prototype.removeComponent;
+  TANK.Space.prototype.invoke = TANK.Entity.prototype.invoke;
+  TANK.Space.prototype.destruct = TANK.Entity.prototype.destruct;
 
   // ### Add an entity to the space.
   // Adds the given entity to the space, which will initialize all of its
@@ -186,74 +196,6 @@
     }
   };
 
-  // ### Add a component to the space
-  //
-  // - `componentName`: The name of the component to add to the engine.
-  TANK.Space.prototype.addComponent = function (componentName)
-  {
-    // Check if we have this component already
-    if (this[componentName])
-    {
-      return;
-    }
-
-    // Create engine entity if it doesn't exist
-    if (!this._spaceEntity)
-    {
-      this._spaceEntity = TANK.createEntity();
-      this._spaceEntity.space = this;
-    }
-
-    this._spaceEntity.addComponent(componentName);
-    this[componentName] = this._spaceEntity[componentName];
-
-    // Only run initialize if the engine is already running
-    // because all components are initialized on `TANK.start()`
-    if (this._initialized)
-    {
-      this[componentName].initialize();
-      this.dispatchEvent("OnComponentInitialized", this[componentName]);
-    }
-  };
-
-  // ### Add multiple components to the engine
-  // Components can be given as a string of comma seperated values,
-  // a list of strings, or some combination of the above.
-  // e.g., `TANK.addComponents("Pos2D, Velocity", "Image", "Collider");`
-  TANK.Space.prototype.addComponents = function ()
-  {
-    var i, j, arg;
-    for (i = 0; i < arguments.length; ++i)
-    {
-      arg = arguments[i];
-      arg = arg.replace(/\s/g, "");
-      var components = arg.split(",");
-
-      for (j = 0; j < components.length; ++j)
-      {
-        this.addComponent(components[j]);
-      }
-    }
-  };
-
-  // ### Remove a component from the engine
-  //
-  // - `componentName`: The name of the component to remove.
-  TANK.Space.prototype.removeComponent = function (componentName)
-  {
-    var c = this[componentName];
-    if (!c)
-    {
-      return;
-    }
-
-    if (this._spaceEntity)
-    {
-      this._spaceEntity.removeComponent(componentName);
-      delete this[componentName];
-    }
-  };
-
   // ### Find components with a given interface
   // Gets all component instances that implement a particular interface.
   //
@@ -291,36 +233,6 @@
       else
         TANK.error(thisObj.name + " is listening for " + eventName + " but the supplied method is no longer valid");
     }
-  };
-
-  // ### Invoke a method on the space.
-  // Attempts to invoke the given method name on each component
-  // contained in the space. Components that do not contain
-  // the method are skipped. Any additional parameters given
-  // will be passed to the invoked function.
-  //
-  // - `funcName`: The name of the method to invoke.
-  // - `return`: The space.
-  TANK.Space.prototype.invoke = function (funcName)
-  {
-    // Construct arguments
-    var message_args = [];
-    var i;
-    for (i = 1; i < arguments.length; ++i)
-    {
-      message_args.push(arguments[i]);
-    }
-
-    // Invoke on each component
-    for (i in this._components)
-    {
-      if (this._components.hasOwnProperty(i) && this._components[i][funcName] && this._components[i][funcName].apply)
-      {
-        this._components[i][funcName].apply(this._components[i], message_args);
-      }
-    }
-
-    return this;
   };
 
   TANK.Space.prototype.clearDeletedObjects = function ()
