@@ -79,64 +79,6 @@
     return entity;
   };
 
-  // ### Add an entity to the world.
-  // Adds the given entity to the world, which will initialize all of its
-  // components.
-  //
-  // - `object`: The entity to add the world.
-  // - `name`: (optional) A unique name to track the entity by.
-  // - `return`: The initialized entity.
-  TANK.addEntity = function (object, name)
-  {
-    if (TANK._spaces["Main"] === undefined)
-    {
-      TANK.addSpace(TANK.createSpace(), "Main");
-    }
-
-    return TANK.Main.addEntity(object, name);
-  };
-
-  // ### Get an entity
-  //
-  // - `idOrName`: Either the id of the entity, or its unique name
-  // - `return`: The requested `Entity` or `undefined`
-  TANK.getEntity = function (idOrName)
-  {
-    if (TANK._spaces["Main"] === undefined)
-    {
-      TANK.addSpace(TANK.createSpace(), "Main");
-    }
-
-    return TANK.Main.getEntity(idOrName);
-  };
-
-  // ### Remove an object
-  // Schedules the given object to be deleted on the next frame.
-  // Will cause `destruct` to be called on all components of the object before it is deleted.
-  //
-  // `arg`: Either the id of the entity, its unique name, or the object itself
-  TANK.removeEntity = function (arg)
-  {
-    if (TANK._spaces["Main"] === undefined)
-    {
-      TANK.addSpace(TANK.createSpace(), "Main");
-    }
-
-    return TANK.Main.removeEntity(arg);
-  };
-
-  // ### Remove all objects
-  // Equivalent to calling `removeEntity` on each objects.
-  TANK.removeAllEntities = function ()
-  {
-    if (TANK._spaces["Main"] === undefined)
-    {
-      TANK.addSpace(TANK.createSpace(), "Main");
-    }
-
-    return TANK.Main.removeAllEntities();
-  };
-
   TANK.createSpace = function ()
   {
     var space = new TANK.Space();
@@ -211,94 +153,6 @@
     return c;
   };
 
-  // ### Add a component to the engine
-  // Components added to the engine are "global" and not
-  // affected by spaces. These are commonly used to add systems
-  // that contain global state, such as a graphics context. After a component is added,
-  // it can be accessed via `TANK.ComponentName`.
-  //
-  // - `componentName`: The name of the component to add to the engine.
-  TANK.addComponent = function (componentName)
-  {
-    if (TANK._spaces["Main"] === undefined)
-    {
-      TANK.addSpace(TANK.createSpace(), "Main");
-    }
-
-
-    var ret = TANK.Main.addComponent(componentName);
-    TANK[componentName] = TANK.Main[componentName];
-    return ret;
-  };
-
-  // ### Add multiple components to the engine
-  // Components can be given as a string of comma seperated values,
-  // a list of strings, or some combination of the above.
-  // e.g., `TANK.addComponents("Pos2D, Velocity", "Image", "Collider");`
-  TANK.addComponents = function ()
-  {
-    if (TANK._spaces["Main"] === undefined)
-    {
-      TANK.addSpace(TANK.createSpace(), "Main");
-    }
-
-    var i, j, arg;
-    for (i = 0; i < arguments.length; ++i)
-    {
-      arg = arguments[i];
-      arg = arg.replace(/\s/g, "");
-      var components = arg.split(",");
-
-      for (j = 0; j < components.length; ++j)
-      {
-        TANK.addComponent(components[j]);
-      }
-    }
-  };
-
-  // ### Remove a component from the engine
-  //
-  // - `componentName`: The name of the component to remove.
-  TANK.removeComponent = function (componentName)
-  {
-    if (TANK._spaces["Main"] === undefined)
-    {
-      TANK.addSpace(TANK.createSpace(), "Main");
-    }
-
-    delete TANK[componentName];
-    return TANK.Main.removeComponent(componentName);
-  };
-
-  // ### Find components with a given interface
-  // Gets all component instances that implement a particular interface.
-  //
-  // - `interfaceName`: Name of the interface that returned components should implement.
-  // - `return`: An array of component instances.
-  TANK.getComponentsWithInterface = function (interfaceName)
-  {
-    if (TANK._spaces["Main"] === undefined)
-    {
-      TANK.addSpace(TANK.createSpace(), "Main");
-    }
-
-    return TANK.Main.getComponentsWithInterface(interfaceName);
-  };
-
-  // ### Send out an event
-  // Takes any number of arguments after event name.
-  //
-  // `eventName` - Name of the event to trigger.
-  TANK.dispatchEvent = function (eventName)
-  {
-    if (TANK._spaces["Main"] === undefined)
-    {
-      TANK.addSpace(TANK.createSpace(), "Main");
-    }
-
-    return TANK.Main.dispatchEvent.apply(TANK.Main, arguments);
-  };
-
   // ### Start the engine main loop
   TANK.start = function ()
   {
@@ -320,7 +174,10 @@
   TANK.reset = function ()
   {
     TANK._resetting = true;
-    TANK.removeAllEntities();
+    for (var i in TANK._spaces)
+    {
+      TANK._spaces[i].removeAllEntities();
+    }
   };
 
   // ### Log a message to console

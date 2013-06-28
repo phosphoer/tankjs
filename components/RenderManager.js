@@ -20,7 +20,7 @@ TANK.registerComponent("RenderManager")
     });
   };
 
-  var existing = TANK.getComponentsWithInterface("Drawable");
+  var existing = this.space.getComponentsWithInterface("Drawable");
   for (var i in existing)
     this._drawables[existing[i].name + existing[i].parent.id] = existing[i];
   this.sort();

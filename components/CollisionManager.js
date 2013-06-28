@@ -4,7 +4,7 @@ TANK.registerComponent("CollisionManager")
 {
   this._colliders = {};
 
-  var existing = TANK.getComponentsWithInterface("Collidable");
+  var existing = this.space.getComponentsWithInterface("Collidable");
   for (var i in existing)
     this._colliders[existing[i].parent.id] = existing[i];
 
