@@ -111,8 +111,8 @@ TANK.registerComponent("GameLogic")
               continue;
 
             var brick = TANK.createEntityFromPrefab(brickType + "Brick");
-            brick.Pos2D.x = 64 + col * brick.Image.width;
-            brick.Pos2D.y = 64 + row * brick.Image.height;
+            brick.Pos2D.x = 64 + col * brick.Sprite.width;
+            brick.Pos2D.y = 64 + row * brick.Sprite.height;
             TANK.Game.addEntity(brick);
           }
         }
@@ -199,7 +199,7 @@ TANK.registerComponent("Ball")
         this.parent.Velocity.y *= -1;
       }
 
-      TANK.Game.removeEntity(other);
+      other.Sprite.playing = true;
     }
   };
 
@@ -263,6 +263,11 @@ TANK.registerComponent("Brick")
 
 .initialize(function ()
 {
+  this.OnAnimationComplete = function ()
+  {
+    this.space.removeEntity(this.parent);
+  };
+
   TANK.Game.dispatchEvent("OnBrickAdded", this);
 })
 
@@ -295,11 +300,34 @@ TANK.addPrefab("Ball",
 // Define a red brick prefab
 TANK.addPrefab("RedBrick",
 {
-  "Image":
+  "Sprite":
   {
+    playing: false,
     imagePath: "res/tiles.png",
-    subRectOrigin: [0, 32],
-    subRectCorner: [32, 48],
+    frames: [
+      {
+        duration: 0.1,
+        rectOrigin: [0, 0 + 32],
+        rectCorner: [32, 16 + 32]
+      },
+      {
+        duration: 0.5,
+        rectOrigin: [32, 0 + 32],
+        rectCorner: [64, 16 + 32]
+      },
+      {
+        duration: 0.5,
+        rectOrigin: [64, 0 + 32],
+        rectCorner: [96, 16 + 32]
+      },
+      {
+        duration: 0.5,
+        rectOrigin: [96, 0 + 32],
+        rectCorner: [128, 16 + 32]
+      }
+    ],
+    subRectOrigin: [0, 0 + 32],
+    subRectCorner: [32, 16 + 32],
     zdepth: 1
   },
   "Collider":
@@ -315,9 +343,32 @@ TANK.addPrefab("RedBrick",
 // Define a blue brick prefab
 TANK.addPrefab("BlueBrick",
 {
-  "Image":
+  "Sprite":
   {
+    playing: false,
     imagePath: "res/tiles.png",
+    frames: [
+      {
+        duration: 0.1,
+        rectOrigin: [0, 0],
+        rectCorner: [32, 16]
+      },
+      {
+        duration: 0.5,
+        rectOrigin: [32, 0],
+        rectCorner: [64, 16]
+      },
+      {
+        duration: 0.5,
+        rectOrigin: [64, 0],
+        rectCorner: [96, 16]
+      },
+      {
+        duration: 0.5,
+        rectOrigin: [96, 0],
+        rectCorner: [128, 16]
+      }
+    ],
     subRectOrigin: [0, 0],
     subRectCorner: [32, 16],
     zdepth: 1
@@ -335,11 +386,34 @@ TANK.addPrefab("BlueBrick",
 // Define a green brick prefab
 TANK.addPrefab("GreenBrick",
 {
-  "Image":
+  "Sprite":
   {
+    playing: false,
     imagePath: "res/tiles.png",
-    subRectOrigin: [0, 48],
-    subRectCorner: [32, 64],
+    frames: [
+      {
+        duration: 0.1,
+        rectOrigin: [0, 0 + 48],
+        rectCorner: [32, 16 + 48]
+      },
+      {
+        duration: 0.5,
+        rectOrigin: [32, 0 + 48],
+        rectCorner: [64, 16 + 48]
+      },
+      {
+        duration: 0.5,
+        rectOrigin: [64, 0 + 48],
+        rectCorner: [96, 16 + 48]
+      },
+      {
+        duration: 0.5,
+        rectOrigin: [96, 0 + 48],
+        rectCorner: [128, 16 + 48]
+      }
+    ],
+    subRectOrigin: [0, 0 + 48],
+    subRectCorner: [32, 16 + 48],
     zdepth: 1
   },
   "Collider":
@@ -355,11 +429,34 @@ TANK.addPrefab("GreenBrick",
 // Define an orange brick prefab
 TANK.addPrefab("OrangeBrick",
 {
-  "Image":
+  "Sprite":
   {
+    playing: false,
     imagePath: "res/tiles.png",
-    subRectOrigin: [0, 16],
-    subRectCorner: [32, 32],
+    frames: [
+      {
+        duration: 0.1,
+        rectOrigin: [0, 0 + 16],
+        rectCorner: [32, 16 + 16]
+      },
+      {
+        duration: 0.5,
+        rectOrigin: [32, 0 + 16],
+        rectCorner: [64, 16 + 16]
+      },
+      {
+        duration: 0.5,
+        rectOrigin: [64, 0 + 16],
+        rectCorner: [96, 16 + 16]
+      },
+      {
+        duration: 0.5,
+        rectOrigin: [96, 0 + 16],
+        rectCorner: [128, 16 + 16]
+      }
+    ],
+    subRectOrigin: [0, 0 + 16],
+    subRectCorner: [32, 16 + 16],
     zdepth: 1
   },
   "Collider":
