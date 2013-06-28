@@ -14,7 +14,7 @@
 
 
 // A component defines a small module of functionality and is
-// initialized by adding it to an `Entity`.
+// initialized by adding it to an `Entity` or `Space`.
 (function (TANK)
 {
   "use strict";
@@ -82,7 +82,9 @@
   // and will be automatically added before this one is added.
   // Components can be given as a string of comma seperated values,
   // a list of strings, or some combination of the above.
-  //
+
+  // `Component Component.requires()`
+
   // - `return`: A reference to itself.
   TANK.Component.prototype.requires = function ()
   {
@@ -108,7 +110,9 @@
   // Common interfaces include `Drawable2D`, and `Collidable`
   // Interfaces can be given as a string of comma seperated values,
   // a list of strings, or some combination of the above.
-  //
+
+  // `Component Component.interfaces()`
+
   // - `return`: A reference to itself.
   TANK.Component.prototype.interfaces = function ()
   {
@@ -131,7 +135,9 @@
   // ### Set constructor function
   // Defines a function to be called after the component has been instantiated.
   // This is commonly where you would define member fields with default values.
-  //
+
+  // `Component Component.construct(func)`
+
   // - `func`: A function to call after instantiation.
   // - `return`: A reference to itself.
   TANK.Component.prototype.construct = function (func)
@@ -142,8 +148,10 @@
 
   // ### Set init function
   // Defines a function to be called after the component has been constructed and added to an entity.
-  // This is commonly where you would listen for events and define other functions (e.g., this.Foo = function(){})
-  //
+  // This is commonly where you would listen for events and define other functions (e.g., `this.Foo = function(){}`)
+
+  // `Component Component.initialize(func)`
+
   // - `func`: A function to call upon initialization.
   // - `return`: A reference to itself.
   TANK.Component.prototype.initialize = function (func)
@@ -155,7 +163,8 @@
   // ### Set uninit function
   // Defines a function to be called after the component has been removed from an entity.
 
-  //
+  // `Component Component.destruct(func)`
+
   // - `func`: A function to call upon uninitialization.
   // - `return`: A reference to itself.
   TANK.Component.prototype.destruct = function (func)
@@ -168,7 +177,9 @@
   // Registers a callback as a listener for a given event.
   // The event will be removed automatically when the component is
   // destructed.
-  //
+
+  // `void Component.addEventListener(event, callback)`
+
   // - `event`: The name of the event.
   // - `callback`: A function to call when the event is triggered.
   TANK.Component.prototype.addEventListener = function (event, callback)
@@ -216,7 +227,9 @@
   // Unregisters a callback as a listener for a given event.
   // The event will be removed automatically when the component is
   // destructed.
-  //
+
+  // `void Component.removeEventListener(event, callback)`
+
   // - `event`: The name of the event.
   // - `callback`: The function that was previously registered.
   TANK.Component.prototype.removeEventListener = function (event, callback)

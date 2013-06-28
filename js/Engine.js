@@ -13,8 +13,8 @@
 // all copies or substantial portions of the Software.
 
 
-// The main TANK file that provides access to the core functionality of the engine.
-// This includes creating and manipulating entities, registering components, and dispatching events.
+// The `TANK` namespace provides access to the core functionality of the engine.
+// This includes creating entities and spaces, and registering components
 (function (TANK)
 {
   "use strict";
@@ -29,10 +29,14 @@
   TANK.logsEnabled = true;
 
   // ### Create an Entity
-  // Creates a new `Entity` and returns it. The parameters to the function are passed
-  // directly to `Entity.addComponents` after construction.
-  //
-  // - `return`: A new `Entity`.
+  // Creates a new entity and returns it. The parameters to the function are
+  // passed directly to `Entity.addComponents` after construction.
+  // Components can be given as a string of comma seperated values, a list of strings, or some combination of the above.
+
+  // `Entity TANK.createEntity(...)`
+
+  // - `...` a string of comma seperated values, a list of strings, or some combination of the above.
+  // - `return` A new entity.
   TANK.createEntity = function ()
   {
     var entity = new TANK.Entity(-1);
@@ -41,9 +45,11 @@
 
   // ### Create Entity from prefab
   // Creates a new `Entity` using a given prefab.
-  //
-  // - `prefabName`: Name of the prefab to clone.
-  // - `return`: A new `Entity`.
+
+  // `Entity TANK.createEntityFromPrefab(prefabName)`
+
+  // - `prefabName` Name of the prefab to clone.
+  // - `return` A new `Entity`.
   TANK.createEntityFromPrefab = function (prefabName)
   {
     var prefab = TANK.getPrefab(prefabName);
@@ -79,6 +85,14 @@
     return entity;
   };
 
+  // ### Create a space
+  // Creates a new `Space` and returns it. The parameters to the function are passed
+  // directly to `Space.addComponents` after construction.
+
+  // `Space TANK.createSpace(...)
+
+  // - `...` a string of comma seperated values, a list of strings, or some combination of the above.
+  // - `return` A new space.
   TANK.createSpace = function ()
   {
     var space = new TANK.Space();
@@ -86,6 +100,13 @@
     return space;
   }
 
+  // ### Add a space to the engine
+  // Adds the given space to the engine, which will initialize all of its components.
+
+  // `void TANK.addSpace(space, name)`
+
+  // - `space` The space object to add.
+  // - `name` The name to refer to the space by. The space will then be accessible through `TANK.SpaceName`.
   TANK.addSpace = function (space, name)
   {
     TANK._spaces[name] = space;
@@ -106,39 +127,74 @@
     space._initialized = true;
   }
 
+  // ### Remove a space from the engine
+  // Removes the given space from the engine, uninitializing all its components.
+
+  // `void TANK.removeSpace(space)`
+
+  // - `space` Either the name of the space or the space object.
+  TANK.removeSpace = function (space)
+  {
+    if (typeof space === "string")
+    {
+      if (TANK[space])
+      {
+        TANK._spacesDeleted.push(TANK[space]);
+      }
+      else
+      {
+        TANK.error("Attempting to remove Space " + space + " which doesn't exist.");
+      }
+    }
+    else if (space instanceof TANK.Space)
+    {
+      TANK._spacesDeleted.push(space);
+    }
+    else
+    {
+      TANK.error("Attemping to remove a Space with neither a string name, nor Space reference: " + arg);
+    }
+  }
+
   // ### Register an object prefab
   // Use this to define an entity with a set of components that
   // can be instantiated later, like a blueprint.
-  //
-  // - `name`: The name of the prefab to store it under.
-  // - `data`: A JSON object describing the components the prefab should contain,
+
+  // `void TANK.addPrefab(name, data)`
+
+  // - `name` The name of the prefab to store it under.
+  // - `data` A JSON object describing the components the prefab should contain,
   // with the following format:
-  //
-  //       {
-  //         "Pos2D": { x: 0, y: 42 },
-  //         "Velocity": {},
-  //         "Collider": { width: 5, height: 5 },
-  //       }
+
+  //         {
+  //             "Pos2D": { x: 0, y: 42 },
+  //             "Velocity": {},
+  //             "Collider": { width: 5, height: 5 },
+  //         }
   TANK.addPrefab = function (name, data)
   {
     TANK._prefabs[name] = data;
   };
 
   // ### Get a prefab object
-  //
-  // - `name`: The name of the prefab to find.
-  // - `return`: A prefab JSON object.
+
+  // `Object TANK.getPrefab(name)`
+
+  // - `name` The name of the prefab to find.
+  // - `return` A prefab JSON object in the same format as given to `TANK.addPrefab`.
   TANK.getPrefab = function (name)
   {
     return TANK._prefabs[name];
   };
 
   // ### Register a new component type
-  // Creates a new `Component` instance which defines a blueprint
+  // Creates a new component instance which defines a blueprint
   // for a type of component.
-  //
-  // - `componentName`: The name of the component type to register. This must be a valid identifier.
-  // - `return`: A new instance of type `Component`.
+
+  // `Component TANK.registerComponent(componentName)`
+
+  // - `componentName` The name of the component type to register. This must be a valid identifier.
+  // - `return` A new instance of type `Component`.
   TANK.registerComponent = function (componentName)
   {
     // Warn about components with invalid identifiers
@@ -154,6 +210,8 @@
   };
 
   // ### Start the engine main loop
+
+  // `void TANK.start()`
   TANK.start = function ()
   {
     TANK._lastTime = new Date();
@@ -163,6 +221,8 @@
   };
 
   // ### Stop the engine
+
+  // `void TANK.stop()`
   TANK.stop = function ()
   {
     TANK._running = false
@@ -171,6 +231,8 @@
   // ### Reset the engine
   // This deletes all game objects and resets the state of the engine.
   // Things like prefabs and component definitions are preserved.
+
+  // `void TANK.reset()`
   TANK.reset = function ()
   {
     TANK._resetting = true;
@@ -181,7 +243,9 @@
   };
 
   // ### Log a message to console
-  //
+
+  // `void TANK.log(text)`
+
   // `text` - Text to display.
   TANK.log = function (text)
   {
@@ -193,7 +257,9 @@
 
 
   // ### Log a warning message to console
-  //
+
+  // `void TANK.warn(text)`
+
   // `text` - Text to display.
   TANK.warn = function (text)
   {
@@ -204,7 +270,9 @@
   };
 
   // ### Log an error message to console
-  //
+
+  // `void TANK.error(text)`
+
   // `text` - Text to display.
   TANK.error = function (text)
   {
@@ -267,6 +335,9 @@
 
   // Map of spaces by name
   TANK._spaces = {};
+
+  // Array of spaces to delete
+  TANK._spacesDeleted = [];
 
   // Map of current registered component types
   // Key is the name of the component

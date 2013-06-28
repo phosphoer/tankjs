@@ -22,8 +22,10 @@
   // ### Entity constructor
   // Shouldn't really ever be called except interally by the engine.
   // Instead use `TANK.createEntity()`.
-  //
-  // - `id`: ID to give the Entity.
+
+  // `new TANK.Entity(id)`
+
+  // - `id` ID to give the Entity.
   TANK.Entity = function (id)
   {
     this.name = null;
@@ -37,7 +39,9 @@
   // Adds a component to the entity, which invokes the component's
   // constructor. After a component is added, it can be accessed
   // via `Entity.ComponentName`.
-  //
+
+  // `Entity.addComponent(componentName)`
+
   // - `componentName`: The name of the component to add.
   // - `return`: The entity.
   TANK.Entity.prototype.addComponent = function (componentName)
@@ -93,7 +97,9 @@
   // Components can be given as a string of comma seperated values,
   // a list of strings, or some combination of the above.
   // e.g., `addComponents("Pos2D, Velocity", "Image", "Collider");`
-  //
+
+  // `Entity.addComponents()`
+
   // - `return`: The entity.
   TANK.Entity.prototype.addComponents = function ()
   {
@@ -116,7 +122,9 @@
   // ### Remove a component
   // Removes a component from the entity, invoking the component's
   // destructor.
-  //
+
+  // `Entity.removeComponent(componentName)`
+
   // - `componentName`: The name of the component to remove.
   // - `return`: The entity.
   TANK.Entity.prototype.removeComponent = function (componentName)
@@ -173,7 +181,9 @@
   // contained in the entity. Components that do not contain
   // the method are skipped. Any additional parameters given
   // will be passed to the invoked function.
-  //
+
+  // `Entity.invoke(funcName)`
+
   // - `funcName`: The name of the method to invoke.
   // - `return`: The entity.
   TANK.Entity.prototype.invoke = function (funcName)
@@ -202,7 +212,9 @@
   // Removes all components on the entity, invoking their destructors.
   // Rarely needed outside the engine, more commonly
   // you will want to remove the entity with `TANK.removeEntity()`.
-  //
+
+  // `Entity.destruct()`
+
   // `return`: The entity.
   TANK.Entity.prototype.destruct = function ()
   {

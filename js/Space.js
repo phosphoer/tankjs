@@ -12,7 +12,12 @@
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
 
-
+// A Space is what keeps track of Entities. Each Space in the engine
+// has its own collection of Entities, and also its own components.
+// A component on a Space is usually something like a Render Manager or
+// Collision Manager that performs some action on the Space's Entities.
+// Since Spaces have their own events and can be paused individually,
+// they are a convenient way of implementing UI, amongst other things.
 (function (TANK)
 {
   "use strict";
@@ -51,19 +56,63 @@
   };
 
   // "Borrow" some functions from Entity : )
+
+  // ### Add a component to the space
+  // After a component is added, it can be accessed via `Space.ComponentName`.
+  // A component on a space is usually a system that manages entities in some way.
+
+  // `void Space.addComponent(componentName)`
+
+  // - `componentName`: The name of the component to add to the space.
   TANK.Space.prototype.addComponent = TANK.Entity.prototype.addComponent;
+
+  // ### Add multiple components to the space
+  // Components can be given as a string of comma seperated values,
+  // a list of strings, or some combination of the above.
+  // e.g., `Space.addComponents("Pos2D, Velocity", "Image", "Collider");`
+
+  // `void Space.addComponents(...)`
+
+  // - `...` a string of comma seperated values, a list of strings, or some combination of the above.
   TANK.Space.prototype.addComponents = TANK.Entity.prototype.addComponents;
+
+  // ### Remove a component from the space
+
+  // `void Space.removeComponent(componentName)`
+
+  // - `componentName` The name of the component to remove.
   TANK.Space.prototype.removeComponent = TANK.Entity.prototype.removeComponent;
+
+  // ### Invoke a method on the space.
+  // Attempts to invoke the given method name on each component
+  // contained in the space. Components that do not contain
+  // the method are skipped. Any additional parameters given
+  // will be passed to the invoked function.
+
+  // `Space.invoke(funcName)`
+
+  // - `funcName`: The name of the method to invoke.
+  // - `return`: The space.
   TANK.Space.prototype.invoke = TANK.Entity.prototype.invoke;
+
+  // ### Uninitialize the space
+  // Removes all components on the space, invoking their destructors.
+  // Rarely needed outside the engine, more commonly
+  // you will want to remove the space with `TANK.removeSpace()`.
+
+  // `Entity.destruct()`
+
+  // `return`: The entity.
   TANK.Space.prototype.destruct = TANK.Entity.prototype.destruct;
 
   // ### Add an entity to the space.
-  // Adds the given entity to the space, which will initialize all of its
-  // components.
-  //
-  // - `object`: The entity to add the space.
-  // - `name`: (optional) A unique name to track the entity by.
-  // - `return`: The initialized entity.
+  // Adds the given entity to the space, which will initialize all of its components.
+
+  // `Entity Space.addEntity(object, name)`
+
+  // - `object` The entity to add the world.
+  // - `name` (optional) A unique name to track the entity by.
+  // - `return` The initialized entity.
   TANK.Space.prototype.addEntity = function (object, name)
   {
     if (object.id !== -1)
@@ -135,9 +184,11 @@
   };
 
   // ### Get an entity
-  //
-  // - `idOrName`: Either the id of the entity, or its unique name
-  // - `return`: The requested `Entity` or `undefined`
+
+  // `Space.getEntity = function (idOrName)`
+
+  // - `idOrName` Either the id of the entity, or its unique name
+  // - `return` The requested `Entity` or `undefined`
   TANK.Space.prototype.getEntity = function (idOrName)
   {
     if (typeof idOrName === "string")
@@ -153,10 +204,12 @@
     TANK.error("Attemping to get an Entity with neither a string name nor an id number: " + idOrName);
   };
 
-  // ### Remove an object
+  // ### Remove an entity
   // Schedules the given object to be deleted on the next frame.
   // Will cause `destruct` to be called on all components of the object before it is deleted.
-  //
+
+  // `void Space.removeEntity(arg)`
+
   // `id`: The id of the object. (`Entity.id`)
   TANK.Space.prototype.removeEntity = function (arg)
   {
@@ -183,7 +236,10 @@
   };
 
   // ### Remove all objects
-  // Equivalent to calling `removeEntity` on each object.
+
+  // `void TANK.removeAllEntities()`
+
+  // Equivalent to calling `Space.removeEntity` on every entity. Schedules all entities for deletion.
   TANK.Space.prototype.removeAllEntities = function ()
   {
     var i;
@@ -198,9 +254,11 @@
 
   // ### Find components with a given interface
   // Gets all component instances that implement a particular interface.
-  //
-  // - `interfaceName`: Name of the interface that returned components should implement.
-  // - `return`: An array of component instances.
+
+  // `Array<Component> Space.getComponentsWithInterface(interfaceName)`
+
+  // - `interfaceName` Name of the interface that returned components should implement.
+  // - `return` An array of component instances.
   TANK.Space.prototype.getComponentsWithInterface = function (interfaceName)
   {
     return this._interfaceComponents[interfaceName];
@@ -208,7 +266,9 @@
 
   // ### Send out an event
   // Takes any number of arguments after event name.
-  //
+
+  // `void Space.dispatchEvent(eventName)`
+
   // `eventName` - Name of the event to trigger.
   TANK.Space.prototype.dispatchEvent = function (eventName)
   {
