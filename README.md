@@ -17,8 +17,9 @@ The goal of TANK is to provide a simple framework that removes some of the tedio
 The core engine is very small, and provides 3 main objects.
 
 - TANK: The main interface through which all the functionality of the engine is accessed.
+- Space: A collection of Entities, a self contained "world"
 - Entity: A container for components with methods to manipulate them.
-- Component: Used to define a "blueprint" of a component that can be added to an Entity. Components can choose to implement "interfaces" which are used to define what sort of functionality they provide. For example, the `RenderManager` component looks for components that implement 'Drawable' and calls `draw` on them.
+- Component: Used to define a "blueprint" of a component that can be added to an Entity or Space. Components can choose to implement "interfaces" which are used to define what sort of functionality they provide. For example, the `RenderManager` component looks for components that implement 'Drawable' and calls `draw` on them.
 
 ###Components
 Most of the engine functionality is achieved through components. The set of components that you choose to include determines the graphics, physics, and other capabilities of your game.
