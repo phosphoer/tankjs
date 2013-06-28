@@ -326,8 +326,6 @@ TANK.addPrefab("RedBrick",
         rectCorner: [128, 16 + 32]
       }
     ],
-    subRectOrigin: [0, 0 + 32],
-    subRectCorner: [32, 16 + 32],
     zdepth: 1
   },
   "Collider":
@@ -369,8 +367,6 @@ TANK.addPrefab("BlueBrick",
         rectCorner: [128, 16]
       }
     ],
-    subRectOrigin: [0, 0],
-    subRectCorner: [32, 16],
     zdepth: 1
   },
   "Collider":
@@ -412,8 +408,6 @@ TANK.addPrefab("GreenBrick",
         rectCorner: [128, 16 + 48]
       }
     ],
-    subRectOrigin: [0, 0 + 48],
-    subRectCorner: [32, 16 + 48],
     zdepth: 1
   },
   "Collider":
@@ -455,8 +449,6 @@ TANK.addPrefab("OrangeBrick",
         rectCorner: [128, 16 + 16]
       }
     ],
-    subRectOrigin: [0, 0 + 16],
-    subRectCorner: [32, 16 + 16],
     zdepth: 1
   },
   "Collider":
