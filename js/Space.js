@@ -30,6 +30,9 @@
     // Necessary for using some entity functions
     this.space = this;
 
+    // If the space is paused then no update events will be sent
+    this.paused = false;
+
     // True if the space has been added to the engine
     this._initialized = false;
 
@@ -312,6 +315,9 @@
 
   TANK.Space.prototype.update = function (dt)
   {
+    if (this.paused)
+      return;
+
     this.dispatchEvent("OnEnterFrame", dt);
   }
 

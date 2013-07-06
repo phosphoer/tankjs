@@ -1,13 +1,17 @@
 function main()
 {
   // Create the "engine" object with the main components
-  var space = TANK.createSpace("InputManager, GameLogic, CollisionManager, RenderManager");
-  TANK.addSpace(space, "Game");
+  var gameSpace = TANK.createSpace("InputManager, GameLogic, CollisionManager, RenderManager");
+  var uiSpace = TANK.createSpace("InputManager, RenderManager");
+  TANK.addSpace(gameSpace, "Game");
+  TANK.addSpace(uiSpace, "UI");
 
   // Point the render manager's context to the canvas one
   // Would be nice not to require this somehow?
   TANK.Game.RenderManager.context = document.getElementById("screen").getContext("2d");
   TANK.Game.InputManager.context = document.getElementById("stage");
+  TANK.UI.RenderManager.context = document.getElementById("screen").getContext("2d");
+  TANK.UI.InputManager.context = document.getElementById("stage");
 
   // Add background object
   var background = TANK.createEntity("Image");
@@ -120,11 +124,27 @@ TANK.registerComponent("GameLogic")
     }
   };
 
+  this.OnLevelComplete = function ()
+  {
+    TANK.Game.paused = true;
+    var counter = TANK.createEntityFromPrefab("CountDown");
+    counter.Pos2D.x = 150;
+    counter.Pos2D.y = 200;
+    counter.Sprite.playing = true;
+    TANK.UI.addEntity(counter);
+    counter.Sprite.OnAnimationComplete = function ()
+    {
+      TANK.Game.paused = false;
+      this.space.removeEntity(this.parent);
+    };
+  };
+
   this.addEventListener("OnEnterFrame", this.OnEnterFrame);
   this.addEventListener("OnBallAdded", this.OnBallAdded);
   this.addEventListener("OnBallRemoved", this.OnBallRemoved);
   this.addEventListener("OnBrickAdded", this.OnBrickAdded);
   this.addEventListener("OnBrickRemoved", this.OnBrickRemoved);
+  this.addEventListener("OnLevelComplete", this.OnLevelComplete);
 })
 
 
@@ -459,4 +479,32 @@ TANK.addPrefab("OrangeBrick",
   },
   "Brick":
   {}
+});
+
+// Define prefab for timer
+TANK.addPrefab("CountDown",
+{
+  "Sprite":
+  {
+    playing: false,
+    imagePath: "res/tiles.png",
+    frames: [
+      {
+        duration: 1,
+        rectOrigin: [0, 96],
+        rectCorner: [32, 144]
+      },
+      {
+        duration: 1,
+        rectOrigin: [32, 96],
+        rectCorner: [64, 144]
+      },
+      {
+        duration: 1,
+        rectOrigin: [64, 96],
+        rectCorner: [96, 144]
+      }
+    ],
+    zdepth: 5
+  }
 });
