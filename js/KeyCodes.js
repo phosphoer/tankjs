@@ -16,6 +16,10 @@
 (function (TANK, undefined)
 {
 
+  TANK.LEFT_MOUSE = 0;
+  TANK.MIDDLE_MOUSE = 1;
+  TANK.RIGHT_MOUSE = 2;
+
   TANK.LEFT_ARROW = 37;
   TANK.UP_ARROW = 38;
   TANK.RIGHT_ARROW = 39;

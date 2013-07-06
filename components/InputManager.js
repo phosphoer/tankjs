@@ -25,22 +25,41 @@
     }, function (val)
     {
       if (that._context)
+      {
         that.context.removeEventListener("mousemove", that.mousemove);
+        that.context.removeEventListener("mousedown", that.mousedown);
+        that.context.removeEventListener("mouseup", that.mouseup);
+      }
       else
+      {
         removeEventListener("mousemove", that.mousemove);
+        removeEventListener("mousedown", that.mousedown);
+        removeEventListener("mouseup", that.mouseup);
+      }
 
       that._context = val;
       if (that._context)
+      {
         that.context.addEventListener("mousemove", that.mousemove);
+        that.context.addEventListener("mousedown", that.mousedown);
+        that.context.addEventListener("mouseup", that.mouseup);
+      }
       else
+      {
         addEventListener("mousemove", that.mousemove);
+        addEventListener("mousedown", that.mousedown);
+        addEventListener("mouseup", that.mouseup);
+      }
     });
 
     this._context = null;
     this._keyDownEvents = [];
     this._keyUpEvents = [];
-    this._mouseMoveEvents = []
+    this._mouseMoveEvents = [];
+    this._mouseDownEvents = [];
+    this._mouseUpEvents = [];
     this._keysHeld = {};
+    this._buttonsHeld = {};
 
     var that = this;
     this.keydown = function (e)
@@ -58,7 +77,19 @@
     this.mousemove = function (e)
     {
       that._mouseMoveEvents.push(e);
-    }
+    };
+
+    this.mousedown = function (e)
+    {
+      that._mouseDownEvents.push(e);
+    };
+
+    this.mouseup = function (e)
+    {
+      that._mouseUpEvents.push(e);
+    };
+
+    this.context = null;
   })
 
   .initialize(function ()
@@ -73,9 +104,17 @@
     removeEventListener("keydown", this.keydown);
     removeEventListener("keyup", this.keyup);
     if (this.context)
+    {
       this.context.removeEventListener("mousemove", this.mousemove);
+      this.context.removeEventListener("mousedown", this.mousedown);
+      this.context.removeEventListener("mouseup", this.mouseup);
+    }
     else
+    {
       removeEventListener("mousemove", this.mousemove);
+      removeEventListener("mousedown", this.mousedown);
+      removeEventListener("mouseup", this.mouseup);
+    }
 
     this.removeEventListener("OnEnterFrame", OnEnterFrame);
   });
@@ -86,7 +125,7 @@
     for (var i in this._keyDownEvents)
     {
       e = this._keyDownEvents[i];
-      this.space.dispatchEvent("OnKeyPress", e.keyCode, this._keysHeld);
+      this.space.dispatchEvent("OnKeyPress", e.keyCode, this._keysHeld, this._buttonsHeld);
       this._keysHeld[e.keyCode] = true;
     }
     this._keyDownEvents = [];
@@ -99,7 +138,7 @@
     for (var i in this._keyUpEvents)
     {
       e = this._keyUpEvents[i];
-      this.space.dispatchEvent("OnKeyRelease", e.keyCode, this._keysHeld);
+      this.space.dispatchEvent("OnKeyRelease", e.keyCode, this._keysHeld, this._buttonsHeld);
       delete this._keysHeld[e.keyCode];
     }
     this._keyUpEvents = [];
@@ -124,8 +163,29 @@
       mouseEvent.y = this.mousePos[1];
       mouseEvent.moveX = this.mouseDelta[0];
       mouseEvent.moveY = this.mouseDelta[1];
-      this.space.dispatchEvent("OnMouseMove", mouseEvent, this._keysHeld);
+      this.space.dispatchEvent("OnMouseMove", mouseEvent, this._keysHeld, this._buttonsHeld);
     }
     this._mouseMoveEvents = [];
+
+    for (var i in this._mouseDownEvents)
+    {
+      e = this._mouseDownEvents[i];
+      this.space.dispatchEvent("OnMouseDown", e.button, this._keysHeld, this._buttonsHeld);
+      this._buttonsHeld[e.button] = true;
+    }
+    this._mouseDownEvents = [];
+
+    for (var i in this._buttonsHeld)
+    {
+      this.space.dispatchEvent("OnMouseButtonHeld", i);
+    }
+
+    for (var i in this._mouseUpEvents)
+    {
+      e = this._mouseUpEvents[i];
+      this.space.dispatchEvent("OnMouseUp", e.button, this._keysHeld, this._buttonsHeld);
+      delete this._buttonsHeld[e.button];
+    }
+    this._mouseUpEvents = [];
   };
 }());
