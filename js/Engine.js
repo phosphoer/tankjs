@@ -285,8 +285,9 @@
   function update()
   {
     // Get dt
-    var new_time = new Date();
-    var dt = (new_time - TANK._lastTime) / 1000.0;
+    var newTime = new Date();
+    var dt = (newTime - TANK._lastTime) / 1000.0;
+    TANK._lastTime = newTime;
     if (dt > 0.05)
       dt = 0.05;
 
