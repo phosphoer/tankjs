@@ -66,6 +66,10 @@
     {
       if (!that._keysHeld[e.keyCode])
         that._keyDownEvents.push(e);
+      if (e.preventDefault)
+        e.preventDefault();
+      if (e.stopPropagation)
+        e.stopPropagation();
       return false;
     };
 
@@ -73,24 +77,40 @@
     {
       if (that._keysHeld[e.keyCode])
         that._keyUpEvents.push(e);
+      if (e.preventDefault)
+        e.preventDefault();
+      if (e.stopPropagation)
+        e.stopPropagation();
       return false;
     };
 
     this.mousemove = function (e)
     {
       that._mouseMoveEvents.push(e);
+      if (e.preventDefault)
+        e.preventDefault();
+      if (e.stopPropagation)
+        e.stopPropagation();
       return false;
     };
 
     this.mousedown = function (e)
     {
       that._mouseDownEvents.push(e);
+      if (e.preventDefault)
+        e.preventDefault();
+      if (e.stopPropagation)
+        e.stopPropagation();
       return false;
     };
 
     this.mouseup = function (e)
     {
       that._mouseUpEvents.push(e);
+      if (e.preventDefault)
+        e.preventDefault();
+      if (e.stopPropagation)
+        e.stopPropagation();
       return false;
     };
 
