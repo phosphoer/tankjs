@@ -66,27 +66,32 @@
     {
       if (!that._keysHeld[e.keyCode])
         that._keyDownEvents.push(e);
+      return false;
     };
 
     this.keyup = function (e)
     {
       if (that._keysHeld[e.keyCode])
         that._keyUpEvents.push(e);
+      return false;
     };
 
     this.mousemove = function (e)
     {
       that._mouseMoveEvents.push(e);
+      return false;
     };
 
     this.mousedown = function (e)
     {
       that._mouseDownEvents.push(e);
+      return false;
     };
 
     this.mouseup = function (e)
     {
       that._mouseUpEvents.push(e);
+      return false;
     };
 
     this.context = null;
