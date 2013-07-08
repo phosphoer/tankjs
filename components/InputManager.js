@@ -16,6 +16,16 @@
     // Stored as array [x, y]
     this.mouseDelta = [0, 0];
 
+    // ### Prevent default keyboard events
+    // When set to true the browser won't handle
+    // keyboard events like F5 and Back
+    this.preventKeyboardDefault = true;
+
+    // ### Prevent default mouse
+    // When set to true the browser won't handle
+    // mouse events like drag selecting
+    this.preventMouseDefault = true;
+
     // ### Input UI element
     // Defines which HTML element mouse input is relative to
     // If left null mouse input will be relative to window
@@ -66,10 +76,15 @@
     {
       if (!that._keysHeld[e.keyCode])
         that._keyDownEvents.push(e);
-      if (e.preventDefault)
-        e.preventDefault();
-      if (e.stopPropagation)
-        e.stopPropagation();
+
+      if (that.preventKeyboardDefault)
+      {
+        if (e.preventDefault)
+          e.preventDefault();
+        if (e.stopPropagation)
+          e.stopPropagation();
+      }
+
       return false;
     };
 
@@ -81,36 +96,60 @@
         e.preventDefault();
       if (e.stopPropagation)
         e.stopPropagation();
+
+      if (that.preventKeyboardDefault)
+      {
+        if (e.preventDefault)
+          e.preventDefault();
+        if (e.stopPropagation)
+          e.stopPropagation();
+      }
+
       return false;
     };
 
     this.mousemove = function (e)
     {
       that._mouseMoveEvents.push(e);
-      if (e.preventDefault)
-        e.preventDefault();
-      if (e.stopPropagation)
-        e.stopPropagation();
+
+      if (that.preventMouseDefault)
+      {
+        if (e.preventDefault)
+          e.preventDefault();
+        if (e.stopPropagation)
+          e.stopPropagation();
+      }
+
       return false;
     };
 
     this.mousedown = function (e)
     {
       that._mouseDownEvents.push(e);
-      if (e.preventDefault)
-        e.preventDefault();
-      if (e.stopPropagation)
-        e.stopPropagation();
+
+      if (that.preventMouseDefault)
+      {
+        if (e.preventDefault)
+          e.preventDefault();
+        if (e.stopPropagation)
+          e.stopPropagation();
+      }
+
       return false;
     };
 
     this.mouseup = function (e)
     {
       that._mouseUpEvents.push(e);
-      if (e.preventDefault)
-        e.preventDefault();
-      if (e.stopPropagation)
-        e.stopPropagation();
+
+      if (that.preventMouseDefault)
+      {
+        if (e.preventDefault)
+          e.preventDefault();
+        if (e.stopPropagation)
+          e.stopPropagation();
+      }
+
       return false;
     };
 
