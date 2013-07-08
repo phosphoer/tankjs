@@ -26,6 +26,12 @@
     // mouse events like drag selecting
     this.preventMouseDefault = true;
 
+    // ### Prevent right click
+    // When set to true the browser won't
+    // display the default context menu on a
+    // right click
+    this.preventRightClick = true;
+
     // ### Input UI element
     // Defines which HTML element mouse input is relative to
     // If left null mouse input will be relative to window
@@ -39,12 +45,16 @@
         that.context.removeEventListener("mousemove", that.mousemove);
         that.context.removeEventListener("mousedown", that.mousedown);
         that.context.removeEventListener("mouseup", that.mouseup);
+        that.context.removeEventListener("mousewheel", that.mousewheel);
+        that.context.removeEventListener("contextmenu", that.contextmenu);
       }
       else
       {
         removeEventListener("mousemove", that.mousemove);
         removeEventListener("mousedown", that.mousedown);
         removeEventListener("mouseup", that.mouseup);
+        removeEventListener("mousewheel", that.mousewheel);
+        removeEventListener("contextmenu", that.contextmenu);
       }
 
       that._context = val;
@@ -53,12 +63,16 @@
         that.context.addEventListener("mousemove", that.mousemove);
         that.context.addEventListener("mousedown", that.mousedown);
         that.context.addEventListener("mouseup", that.mouseup);
+        that.context.addEventListener("mousewheel", that.mousewheel);
+        that.context.addEventListener("contextmenu", that.contextmenu);
       }
       else
       {
         addEventListener("mousemove", that.mousemove);
         addEventListener("mousedown", that.mousedown);
         addEventListener("mouseup", that.mouseup);
+        addEventListener("mousewheel", that.mousewheel);
+        addEventListener("contextmenu", that.contextmenu);
       }
     });
 
@@ -68,6 +82,7 @@
     this._mouseMoveEvents = [];
     this._mouseDownEvents = [];
     this._mouseUpEvents = [];
+    this._mouseWheelEvents = [];
     this._keysHeld = {};
     this._buttonsHeld = {};
 
@@ -153,6 +168,34 @@
       return false;
     };
 
+    this.mousewheel = function (e)
+    {
+      that._mouseWheelEvents.push(e);
+
+      if (that.preventMouseDefault)
+      {
+        if (e.preventDefault)
+          e.preventDefault();
+        if (e.stopPropagation)
+          e.stopPropagation();
+      }
+
+      return false;
+    }
+
+    this.contextmenu = function (e)
+    {
+      if (that.preventRightClick)
+      {
+        if (e.preventDefault)
+          e.preventDefault();
+        if (e.stopPropagation)
+          e.stopPropagation();
+      }
+
+      return false;
+    }
+
     this.context = null;
   })
 
@@ -172,12 +215,16 @@
       this.context.removeEventListener("mousemove", this.mousemove);
       this.context.removeEventListener("mousedown", this.mousedown);
       this.context.removeEventListener("mouseup", this.mouseup);
+      this.context.removeEventListener("mousewheel", this.mousewheel);
+      this.context.removeEventListener("contextmenu", this.contextmenu);
     }
     else
     {
       removeEventListener("mousemove", this.mousemove);
       removeEventListener("mousedown", this.mousedown);
       removeEventListener("mouseup", this.mouseup);
+      removeEventListener("mousewheel", this.mousewheel);
+      removeEventListener("contextmenu", this.contextmenu);
     }
 
     this.removeEventListener("OnEnterFrame", OnEnterFrame);
@@ -186,6 +233,7 @@
   var OnEnterFrame = function (dt)
   {
     var e;
+    // Handle key down events
     for (var i in this._keyDownEvents)
     {
       e = this._keyDownEvents[i];
@@ -199,6 +247,7 @@
       this.space.dispatchEvent("OnKeyHeld", i);
     }
 
+    // Handle key up events
     for (var i in this._keyUpEvents)
     {
       e = this._keyUpEvents[i];
@@ -207,6 +256,7 @@
     }
     this._keyUpEvents = [];
 
+    // Handle mouse move events
     for (var i in this._mouseMoveEvents)
     {
       e = this._mouseMoveEvents[i];
@@ -231,6 +281,7 @@
     }
     this._mouseMoveEvents = [];
 
+    // Handle mouse down events
     for (var i in this._mouseDownEvents)
     {
       e = this._mouseDownEvents[i];
@@ -244,6 +295,7 @@
       this.space.dispatchEvent("OnMouseButtonHeld", i);
     }
 
+    // Handle mouse up events
     for (var i in this._mouseUpEvents)
     {
       e = this._mouseUpEvents[i];
@@ -251,5 +303,13 @@
       delete this._buttonsHeld[e.button];
     }
     this._mouseUpEvents = [];
+
+    // Handle mouse wheel events
+    for (var i in this._mouseWheelEvents)
+    {
+      e = this._mouseWheelEvents[i];
+      this.space.dispatchEvent("OnMouseWheel", e.wheelDelta, this._keysHeld, this._buttonsHeld);
+    }
+    this._mouseWheelEvents = [];
   };
 }());
