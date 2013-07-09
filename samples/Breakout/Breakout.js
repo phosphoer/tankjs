@@ -89,6 +89,7 @@ TANK.registerComponent("GameLogic")
         ball.Pos2D.x = 50;
         ball.Pos2D.y = 200;
         TANK.addEntity(ball);
+        TANK.dispatchEvent("OnLevelContinue");
       }
     }
 
@@ -122,7 +123,7 @@ TANK.registerComponent("GameLogic")
     }
   };
 
-  this.OnLevelComplete = function ()
+  this.OnLevelContinue = function ()
   {
     var counter = TANK.createEntityFromPrefab("CountDown");
     counter.Pos2D.x = 150;
@@ -132,7 +133,7 @@ TANK.registerComponent("GameLogic")
     counter.Sprite.OnAnimationComplete = function ()
     {
       this.space.removeEntity(this.parent);
-      TANK.dispatchEvent("OnLevelStart");
+      TANK.dispatchEvent("OnCountdownFinished");
     };
   };
 
@@ -141,7 +142,7 @@ TANK.registerComponent("GameLogic")
   this.addEventListener("OnBallRemoved", this.OnBallRemoved);
   this.addEventListener("OnBrickAdded", this.OnBrickAdded);
   this.addEventListener("OnBrickRemoved", this.OnBrickRemoved);
-  this.addEventListener("OnLevelComplete", this.OnLevelComplete);
+  this.addEventListener("OnLevelContinue", this.OnLevelContinue);
 })
 
 
@@ -225,10 +226,10 @@ TANK.registerComponent("Ball")
     TANK.removeEntity(this.parent);
   };
 
-  this.OnLevelStart = function ()
+  this.OnCountdownFinished = function ()
   {
-    this.parent.Velocity.x = 60;
-    this.parent.Velocity.y = 80;
+    this.parent.Velocity.x = 80;
+    this.parent.Velocity.y = 100;
   };
 
   this.OnEnterFrame = function (dt)
@@ -262,7 +263,7 @@ TANK.registerComponent("Ball")
 
   this.addEventListener("OnEnterFrame", this.OnEnterFrame);
   this.addEventListener("OnLevelComplete", this.OnLevelComplete);
-  this.addEventListener("OnLevelStart", this.OnLevelStart);
+  this.addEventListener("OnCountdownFinished", this.OnCountdownFinished);
 })
 
 .destruct(function ()
