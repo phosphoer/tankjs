@@ -92,10 +92,9 @@
   // the method are skipped. Any additional parameters given
   // will be passed to the invoked function.
 
-  // `Space.invoke(funcName)`
+  // `void Space.invoke(funcName)`
 
   // - `funcName`: The name of the method to invoke.
-  // - `return`: The space.
   TANK.Space.prototype.invoke = TANK.Entity.prototype.invoke;
 
   // ### Uninitialize the space
@@ -103,9 +102,7 @@
   // Rarely needed outside the engine, more commonly
   // you will want to remove the space with `TANK.removeSpace()`.
 
-  // `Entity.destruct()`
-
-  // `return`: The entity.
+  // `void Space.destruct()`
   TANK.Space.prototype.destruct = TANK.Entity.prototype.destruct;
 
   // ### Add an entity to the space.
