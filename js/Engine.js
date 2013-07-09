@@ -85,76 +85,19 @@
     return entity;
   };
 
-  // ### Create a space
-  // Creates a new `Space` and returns it. The parameters to the function are passed
-  // directly to `Space.addComponents` after construction.
-
-  // `Space TANK.createSpace(...)
-
-  // - `...` a string of comma seperated values, a list of strings, or some combination of the above.
-  // - `return` A new space.
-  TANK.createSpace = function ()
-  {
-    var space = new TANK.Space();
-    space.addComponents.apply(space, arguments);
-    return space;
-  }
-
-  // ### Add a space to the engine
-  // Adds the given space to the engine, which will initialize all of its components.
-
-  // `void TANK.addSpace(space, name)`
-
-  // - `space` The space object to add.
-  // - `name` The name to refer to the space by. The space will then be accessible through `TANK.SpaceName`.
-  TANK.addSpace = function (space, name)
-  {
-    TANK._spaces[name] = space;
-    TANK[name] = space;
-
-    for (var i in space._components)
-    {
-      if (space._components.hasOwnProperty(i))
-        space._components[i].initialize();
-    }
-
-    for (var i in space._components)
-    {
-      if (space._components.hasOwnProperty(i))
-        space.dispatchEvent("OnComponentInitialized", space._components[i]);
-    }
-
-    space._initialized = true;
-  }
-
-  // ### Remove a space from the engine
-  // Removes the given space from the engine, uninitializing all its components.
-
-  // `void TANK.removeSpace(space)`
-
-  // - `space` Either the name of the space or the space object.
-  TANK.removeSpace = function (space)
-  {
-    if (typeof space === "string")
-    {
-      if (TANK[space])
-      {
-        TANK._spacesDeleted.push(TANK[space]);
-      }
-      else
-      {
-        TANK.error("Attempting to remove Space " + space + " which doesn't exist.");
-      }
-    }
-    else if (space instanceof TANK.Space)
-    {
-      TANK._spacesDeleted.push(space);
-    }
-    else
-    {
-      TANK.error("Attemping to remove a Space with neither a string name, nor Space reference: " + space);
-    }
-  }
+  TANK.addComponent = TANK.Entity.prototype.addComponent;
+  TANK.addComponents = TANK.Entity.prototype.addComponents;
+  TANK.removeComponent = TANK.Entity.prototype.removeComponent;
+  TANK.invoke = TANK.Entity.prototype.invoke;
+  TANK.destruct = TANK.Entity.prototype.destruct;
+  TANK.addEntity = TANK.Space.prototype.addEntity;
+  TANK.getEntity = TANK.Space.prototype.getEntity;
+  TANK.removeEntity = TANK.Space.prototype.removeEntity;
+  TANK.removeAllEntities = TANK.Space.prototype.removeAllEntities;
+  TANK.getComponentsWithInterface = TANK.Space.prototype.getComponentsWithInterface;
+  TANK.dispatchEvent = TANK.Space.prototype.dispatchEvent;
+  TANK.clearDeletedObjects = TANK.Space.prototype.clearDeletedObjects;
+  TANK.update = TANK.Space.prototype.update;
 
   // ### Register an object prefab
   // Use this to define an entity with a set of components that
@@ -217,6 +160,7 @@
     TANK._lastTime = new Date();
     TANK._running = true;
 
+
     update()
   };
 
@@ -236,6 +180,7 @@
   TANK.reset = function ()
   {
     TANK._resetting = true;
+    TANK.removeAllEntities();
     for (var i in TANK._spaces)
     {
       TANK._spaces[i].removeAllEntities();
@@ -292,6 +237,7 @@
       dt = 0.05;
 
     // Cleanup each space
+    TANK.clearDeletedObjects();
     for (var i in TANK._spaces)
     {
       if (TANK._spaces.hasOwnProperty(i))
@@ -305,6 +251,7 @@
     if (TANK._resetting)
     {
       // Remove all engine components
+      TANK.destruct();
       for (var i in TANK._spaces)
       {
         TANK._spaces[i].destruct();
@@ -318,6 +265,7 @@
     }
 
     // Update each space
+    TANK.update(dt);
     for (var i in TANK._spaces)
     {
       if (TANK._spaces.hasOwnProperty(i))
@@ -355,6 +303,41 @@
 
   // Whether or not the engine is in the resetting state
   TANK._resetting = false;
+
+  // Fields necessary for inherited Space and Entity functions
+
+  // Name of space
+  TANK.name = "TANK";
+
+  // Necessary for using some entity functions
+  TANK.space = TANK;
+
+  // If the space is paused then no update events will be sent
+  TANK.paused = false;
+
+  // True if the space has been added to the engine
+  TANK._initialized = false;
+
+  // Map of objects tracked by the core
+  // Key is the id of the object
+  TANK._objects = {};
+
+  // Secondary map of objects with name as key
+  TANK._objectsNamed = {};
+
+  // List of objects to delete
+  TANK._objectsDeleted = [];
+
+  // Components for the space
+  // Used by entity functions
+  TANK._components = {};
+
+  // Map of existing component instances sorted by tag names
+  // Key is the name of the tag
+  TANK._interfaceComponents = {};
+
+  // Map of objects listening for a message
+  TANK._events = {};
 
 }(this.TANK = this.TANK ||
 {}));
