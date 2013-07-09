@@ -152,7 +152,7 @@
     }
     else
     {
-      TANK.error("Attemping to remove a Space with neither a string name, nor Space reference: " + arg);
+      TANK.error("Attemping to remove a Space with neither a string name, nor Space reference: " + space);
     }
   }
 
