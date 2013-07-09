@@ -124,9 +124,9 @@
       return object;
     }
 
+    // Setup some object properties
     object.id = TANK._currentID++;
     object.space = this;
-
     if (object.name === null)
     {
       object.name = "Entity " + object.id;
@@ -147,41 +147,8 @@
     // Track the object by its id
     this._objects[object.id] = object;
 
-    // Track the components by their interfaces
-    var n, c, componentDef, i;
-    for (n in object._components)
-    {
-      c = object._components[n];
-      componentDef = TANK._registeredComponents[n];
-      for (i = 0; i < componentDef._interfaces.length; ++i)
-      {
-        // Get the list of components with this interface
-        var componentList = this._interfaceComponents[componentDef._interfaces[i]];
-        if (!componentList)
-        {
-          componentList = {};
-          this._interfaceComponents[componentDef._interfaces[i]] = componentList;
-        }
-
-        componentList[object.name + "." + componentDef.name] = c;
-      }
-    }
-
-    // Initialize each component
-    for (n in object._components)
-    {
-      c = object._components[n];
-      c.space = this;
-      c.initialize();
-    }
-
-    for (n in object._components)
-    {
-      c = object._components[n];
-      this.dispatchEvent("OnComponentInitialized", c);
-    }
-
-    object._initialized = true;
+    // Initialize the object
+    object.initialize();
 
     return object;
   };

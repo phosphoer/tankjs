@@ -208,6 +208,44 @@
     return this;
   };
 
+  TANK.Entity.prototype.initialize = function ()
+  {
+    // Track the components by their interfaces
+    var n, c, componentDef, i;
+    for (n in this._components)
+    {
+      c = this._components[n];
+      componentDef = TANK._registeredComponents[n];
+      for (i = 0; i < componentDef._interfaces.length; ++i)
+      {
+        // Get the list of components with this interface
+        var componentList = this.space._interfaceComponents[componentDef._interfaces[i]];
+        if (!componentList)
+        {
+          componentList = {};
+          this.space._interfaceComponents[componentDef._interfaces[i]] = componentList;
+        }
+
+        componentList[this.name + "." + componentDef.name] = c;
+      }
+    }
+
+    // Initialize each component
+    for (n in this._components)
+    {
+      c = this._components[n];
+      c.space = this.space;
+      c.initialize();
+    }
+    for (n in this._components)
+    {
+      c = this._components[n];
+      this.space.dispatchEvent("OnComponentInitialized", c);
+    }
+
+    this._initialized = true;
+  }
+
   // ### Uninitialize an entity
   // Removes all components on the entity, invoking their destructors.
   // Rarely needed outside the engine, more commonly

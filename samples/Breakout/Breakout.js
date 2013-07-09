@@ -89,7 +89,6 @@ TANK.registerComponent("GameLogic")
         ball.Pos2D.x = 50;
         ball.Pos2D.y = 200;
         TANK.addEntity(ball);
-        TANK.dispatchEvent("OnLevelStart");
       }
     }
 
@@ -125,16 +124,15 @@ TANK.registerComponent("GameLogic")
 
   this.OnLevelComplete = function ()
   {
-    TANK.paused = true;
     var counter = TANK.createEntityFromPrefab("CountDown");
     counter.Pos2D.x = 150;
     counter.Pos2D.y = 200;
     counter.Sprite.playing = true;
-    TANK.UI.addEntity(counter);
+    TANK.addEntity(counter);
     counter.Sprite.OnAnimationComplete = function ()
     {
-      TANK.paused = false;
       this.space.removeEntity(this.parent);
+      TANK.dispatchEvent("OnLevelStart");
     };
   };
 
@@ -229,8 +227,8 @@ TANK.registerComponent("Ball")
 
   this.OnLevelStart = function ()
   {
-    this.parent.Velocity.x = 30;
-    this.parent.Velocity.y = 40;
+    this.parent.Velocity.x = 60;
+    this.parent.Velocity.y = 80;
   };
 
   this.OnEnterFrame = function (dt)

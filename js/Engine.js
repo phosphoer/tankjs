@@ -89,6 +89,7 @@
   TANK.addComponents = TANK.Entity.prototype.addComponents;
   TANK.removeComponent = TANK.Entity.prototype.removeComponent;
   TANK.invoke = TANK.Entity.prototype.invoke;
+  TANK.initialize = TANK.Entity.prototype.initialize;
   TANK.destruct = TANK.Entity.prototype.destruct;
   TANK.addEntity = TANK.Space.prototype.addEntity;
   TANK.getEntity = TANK.Space.prototype.getEntity;
@@ -160,6 +161,7 @@
     TANK._lastTime = new Date();
     TANK._running = true;
 
+    TANK.initialize();
 
     update()
   };
