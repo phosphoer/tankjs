@@ -14,10 +14,13 @@
 
 
 // The `TANK` namespace provides access to the core functionality of the engine.
-// This includes creating entities and spaces, and registering components
+// This includes creating/manipulating entities, and dispatching events.
 (function (TANK)
 {
   "use strict";
+
+  // ### Messages sent
+  // - `OnEnterFrame` is sent every frame with the parameter `dt` as the elapsed time in seconds.
 
   // ### Enable/Disable error messages
   TANK.errorsEnabled = true;
@@ -85,59 +88,6 @@
     return entity;
   };
 
-  // ### Add a component to the engine
-  // After a component is added, it can be accessed via `TANK.ComponentName`.
-  // A component the engine is usually a system that manages entities in some way.
-
-  // `void TANK.addComponent(componentName)`
-
-  // - `componentName`: The name of the component to add to the engine.
-  TANK.addComponent = TANK.Entity.prototype.addComponent;
-
-  // ### Add multiple components to the engine
-  // Components can be given as a string of comma seperated values,
-  // a list of strings, or some combination of the above.
-  // e.g., `TANK.addComponents("Pos2D, Velocity", "Image", "Collider");`
-
-  // `void TANK.addComponents(...)`
-
-  // - `...` a string of comma seperated values, a list of strings, or some combination of the above.
-  TANK.addComponents = TANK.Entity.prototype.addComponents;
-
-  // ### Remove a component from the engine
-
-  // `void TANK.removeComponent(componentName)`
-
-  // - `componentName` The name of the component to remove.
-  TANK.removeComponent = TANK.Entity.prototype.removeComponent;
-
-  // ### Invoke a method on the engine.
-  // Attempts to invoke the given method name on each component
-  // contained in the engine. Components that do not contain
-  // the method are skipped. Any additional parameters given
-  // will be passed to the invoked function.
-
-  // `void TANK.invoke(funcName)`
-
-  // - `funcName`: The name of the method to invoke.
-  TANK.invoke = TANK.Entity.prototype.invoke;
-
-
-  // ### Initialize the engine
-  // This is called when TANK.start() is called, so this should almost never
-  // be directly called. It initializes each component in the engine.
-
-  // `TANK.initialize()`
-  TANK.initialize = TANK.Entity.prototype.initialize;
-
-  // ### Uninitialize the engine
-  // Removes all components on the engine, invoking their destructors.
-  // Rarely needed outside the engine, more commonly
-  // you will want to reset the engine with `TANK.reset`.
-
-  // `TANK.destruct()`
-  TANK.destruct = TANK.Entity.prototype.destruct;
-
   // ### Add an entity to the engine.
   // Adds the given entity to the engine, which will initialize all of its components.
 
@@ -172,6 +122,32 @@
   // Equivalent to calling `TANK.removeEntity` on every entity. Schedules all entities for deletion.
   TANK.removeAllEntities = TANK.Space.prototype.removeAllEntities;
 
+  // ### Add a component to the engine
+  // After a component is added, it can be accessed via `TANK.ComponentName`.
+  // A component the engine is usually a system that manages entities in some way.
+
+  // `void TANK.addComponent(componentName)`
+
+  // - `componentName`: The name of the component to add to the engine.
+  TANK.addComponent = TANK.Entity.prototype.addComponent;
+
+  // ### Add multiple components to the engine
+  // Components can be given as a string of comma seperated values,
+  // a list of strings, or some combination of the above.
+  // e.g., `TANK.addComponents("Pos2D, Velocity", "Image", "Collider");`
+
+  // `void TANK.addComponents(...)`
+
+  // - `...` a string of comma seperated values, a list of strings, or some combination of the above.
+  TANK.addComponents = TANK.Entity.prototype.addComponents;
+
+  // ### Remove a component from the engine
+
+  // `void TANK.removeComponent(componentName)`
+
+  // - `componentName` The name of the component to remove.
+  TANK.removeComponent = TANK.Entity.prototype.removeComponent;
+
   // ### Find components with a given interface
   // Gets all component instances that implement a particular interface.
 
@@ -180,6 +156,32 @@
   // - `interfaceName` Name of the interface that returned components should implement.
   // - `return` An array of component instances.
   TANK.getComponentsWithInterface = TANK.Space.prototype.getComponentsWithInterface;
+
+  // ### Initialize the engine
+  // This is called when TANK.start() is called, so this should almost never
+  // be directly called. It initializes each component in the engine.
+
+  // `TANK.initialize()`
+  TANK.initialize = TANK.Entity.prototype.initialize;
+
+  // ### Uninitialize the engine
+  // Removes all components on the engine, invoking their destructors.
+  // Rarely needed outside the engine, more commonly
+  // you will want to reset the engine with `TANK.reset`.
+
+  // `TANK.destruct()`
+  TANK.destruct = TANK.Entity.prototype.destruct;
+
+  // ### Invoke a method on the engine.
+  // Attempts to invoke the given method name on each component
+  // contained in the engine. Components that do not contain
+  // the method are skipped. Any additional parameters given
+  // will be passed to the invoked function.
+
+  // `void TANK.invoke(funcName)`
+
+  // - `funcName`: The name of the method to invoke.
+  TANK.invoke = TANK.Entity.prototype.invoke;
 
   // ### Send out an event
   // Takes any number of arguments after event name.

@@ -19,6 +19,10 @@
 {
   "use strict";
 
+  // ### Messages sent
+  // - `OnComponentInitialized` is sent when a component is initialized from an entity, with the component as the parameter.
+  // - `OnComponentUninitialized` is sent when a component is initialized from an entity, with the component as the parameter.
+
   // ### Entity constructor
   // Shouldn't really ever be called except interally by the engine.
   // Instead use `TANK.createEntity()`.
