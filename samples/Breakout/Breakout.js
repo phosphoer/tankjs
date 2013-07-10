@@ -46,7 +46,7 @@ TANK.registerComponent("GameLogic")
   this.numBricks = 0;
 
   // Keep track of current level
-  this.level = -1;
+  this.level = 0;
 
   // Keep track of player lives
   this.lives = 3;
@@ -104,21 +104,26 @@ TANK.registerComponent("GameLogic")
       {}
       else
       {
-        var data = Breakout.levels[this.level];
-        for (var row in data.bricks)
-        {
-          for (var col in data.bricks[row])
-          {
-            var brickType = data.bricks[row][col];
-            if (!brickType)
-              continue;
+        this.buildLevel();
+      }
+    }
+  };
 
-            var brick = TANK.createEntityFromPrefab(brickType + "Brick");
-            brick.Pos2D.x = 64 + col * brick.Sprite.width;
-            brick.Pos2D.y = 64 + row * brick.Sprite.height;
-            TANK.addEntity(brick);
-          }
-        }
+  this.buildLevel = function ()
+  {
+    var data = Breakout.levels[this.level];
+    for (var row in data.bricks)
+    {
+      for (var col in data.bricks[row])
+      {
+        var brickType = data.bricks[row][col];
+        if (!brickType)
+          continue;
+
+        var brick = TANK.createEntityFromPrefab(brickType + "Brick");
+        brick.Pos2D.x = 64 + col * brick.Sprite.width;
+        brick.Pos2D.y = 64 + row * brick.Sprite.height;
+        TANK.addEntity(brick);
       }
     }
   };
@@ -143,6 +148,8 @@ TANK.registerComponent("GameLogic")
   this.addEventListener("OnBrickAdded", this.OnBrickAdded);
   this.addEventListener("OnBrickRemoved", this.OnBrickRemoved);
   this.addEventListener("OnLevelContinue", this.OnLevelContinue);
+
+  this.buildLevel();
 })
 
 
@@ -295,214 +302,182 @@ TANK.registerComponent("Brick")
 });
 
 // Define a ball prefab so it is easy to quickly spawn them
-TANK.addPrefab("Ball",
+TANK.addPrefab("Ball", function ()
 {
-  "Image":
-  {
-    imagePath: "res/tiles.png",
-    subRectOrigin: [48, 64],
-    subRectCorner: [64, 80],
-    zdepth: 1
-  },
-  "Ball":
-  {},
-  "Collider":
-  {
-    width: 16,
-    height: 16
-  },
-  "Velocity":
-  {}
+  var e = TANK.createEntity("Image, Ball, Collider, Velocity");
+  e.Image.imagePath = "res/tiles.png";
+  e.Image.subRectOrigin = [48, 64];
+  e.Image.subRectCorner = [64, 80];
+  e.Image.zdepth = 1;
+  e.Collider.width = 16;
+  e.Collider.height = 16;
+  return e;
 });
 
 // Define a red brick prefab
-TANK.addPrefab("RedBrick",
+TANK.addPrefab("RedBrick", function ()
 {
-  "Sprite":
-  {
-    playing: false,
-    imagePath: "res/tiles.png",
-    frames: [
-      {
-        duration: 0.1,
-        rectOrigin: [0, 0 + 32],
-        rectCorner: [32, 16 + 32]
-      },
-      {
-        duration: 0.5,
-        rectOrigin: [32, 0 + 32],
-        rectCorner: [64, 16 + 32]
-      },
-      {
-        duration: 0.5,
-        rectOrigin: [64, 0 + 32],
-        rectCorner: [96, 16 + 32]
-      },
-      {
-        duration: 0.5,
-        rectOrigin: [96, 0 + 32],
-        rectCorner: [128, 16 + 32]
-      }
-    ],
-    zdepth: 1
-  },
-  "Collider":
-  {
-    width: 32,
-    height: 16,
-    isStatic: true
-  },
-  "Brick":
-  {}
+  var e = TANK.createEntity("Sprite, Collider, Brick");
+  e.Sprite.playing = false;
+  e.Sprite.imagePath = "res/tiles.png";
+  e.Sprite.frames = [
+    {
+      duration: 0.1,
+      rectOrigin: [0, 0 + 32],
+      rectCorner: [32, 16 + 32]
+    },
+    {
+      duration: 0.5,
+      rectOrigin: [32, 0 + 32],
+      rectCorner: [64, 16 + 32]
+    },
+    {
+      duration: 0.5,
+      rectOrigin: [64, 0 + 32],
+      rectCorner: [96, 16 + 32]
+    },
+    {
+      duration: 0.5,
+      rectOrigin: [96, 0 + 32],
+      rectCorner: [128, 16 + 32]
+    }
+  ];
+  e.Sprite.zdepth = 1;
+
+  e.Collider.width = 32;
+  e.Collider.height = 16;
+  e.Collider.isStatic = true;
+  return e;
 });
 
 // Define a blue brick prefab
-TANK.addPrefab("BlueBrick",
+TANK.addPrefab("BlueBrick", function ()
 {
-  "Sprite":
-  {
-    playing: false,
-    imagePath: "res/tiles.png",
-    frames: [
-      {
-        duration: 0.1,
-        rectOrigin: [0, 0],
-        rectCorner: [32, 16]
-      },
-      {
-        duration: 0.5,
-        rectOrigin: [32, 0],
-        rectCorner: [64, 16]
-      },
-      {
-        duration: 0.5,
-        rectOrigin: [64, 0],
-        rectCorner: [96, 16]
-      },
-      {
-        duration: 0.5,
-        rectOrigin: [96, 0],
-        rectCorner: [128, 16]
-      }
-    ],
-    zdepth: 1
-  },
-  "Collider":
-  {
-    width: 32,
-    height: 16,
-    isStatic: true
-  },
-  "Brick":
-  {}
+  var e = TANK.createEntity("Sprite, Collider, Brick");
+  e.Sprite.playing = false;
+  e.Sprite.imagePath = "res/tiles.png";
+  e.Sprite.frames = [
+    {
+      duration: 0.1,
+      rectOrigin: [0, 0],
+      rectCorner: [32, 16]
+    },
+    {
+      duration: 0.5,
+      rectOrigin: [32, 0],
+      rectCorner: [64, 16]
+    },
+    {
+      duration: 0.5,
+      rectOrigin: [64, 0],
+      rectCorner: [96, 16]
+    },
+    {
+      duration: 0.5,
+      rectOrigin: [96, 0],
+      rectCorner: [128, 16]
+    }
+  ];
+  e.Sprite.zdepth = 1;
+  e.Collider.width = 32;
+  e.Collider.height = 16;
+  e.Collider.isStatic = true;
+  return e;
 });
 
 // Define a green brick prefab
-TANK.addPrefab("GreenBrick",
+TANK.addPrefab("GreenBrick", function ()
 {
-  "Sprite":
-  {
-    playing: false,
-    imagePath: "res/tiles.png",
-    frames: [
-      {
-        duration: 0.1,
-        rectOrigin: [0, 0 + 48],
-        rectCorner: [32, 16 + 48]
-      },
-      {
-        duration: 0.5,
-        rectOrigin: [32, 0 + 48],
-        rectCorner: [64, 16 + 48]
-      },
-      {
-        duration: 0.5,
-        rectOrigin: [64, 0 + 48],
-        rectCorner: [96, 16 + 48]
-      },
-      {
-        duration: 0.5,
-        rectOrigin: [96, 0 + 48],
-        rectCorner: [128, 16 + 48]
-      }
-    ],
-    zdepth: 1
-  },
-  "Collider":
-  {
-    width: 32,
-    height: 16,
-    isStatic: true
-  },
-  "Brick":
-  {}
+  var e = TANK.createEntity("Sprite, Collider, Brick");
+  e.Sprite.playing = false;
+  e.Sprite.imagePath = "res/tiles.png";
+  e.Sprite.frames = [
+    {
+      duration: 0.1,
+      rectOrigin: [0, 0 + 48],
+      rectCorner: [32, 16 + 48]
+    },
+    {
+      duration: 0.5,
+      rectOrigin: [32, 0 + 48],
+      rectCorner: [64, 16 + 48]
+    },
+    {
+      duration: 0.5,
+      rectOrigin: [64, 0 + 48],
+      rectCorner: [96, 16 + 48]
+    },
+    {
+      duration: 0.5,
+      rectOrigin: [96, 0 + 48],
+      rectCorner: [128, 16 + 48]
+    }
+  ];
+  e.Sprite.zdepth = 1;
+  e.Collider.width = 32;
+  e.Collider.height = 16;
+  e.Collider.isStatic = true;
+  return e;
 });
 
 // Define an orange brick prefab
-TANK.addPrefab("OrangeBrick",
+TANK.addPrefab("OrangeBrick", function ()
 {
-  "Sprite":
-  {
-    playing: false,
-    imagePath: "res/tiles.png",
-    frames: [
-      {
-        duration: 0.1,
-        rectOrigin: [0, 0 + 16],
-        rectCorner: [32, 16 + 16]
-      },
-      {
-        duration: 0.5,
-        rectOrigin: [32, 0 + 16],
-        rectCorner: [64, 16 + 16]
-      },
-      {
-        duration: 0.5,
-        rectOrigin: [64, 0 + 16],
-        rectCorner: [96, 16 + 16]
-      },
-      {
-        duration: 0.5,
-        rectOrigin: [96, 0 + 16],
-        rectCorner: [128, 16 + 16]
-      }
-    ],
-    zdepth: 1
-  },
-  "Collider":
-  {
-    width: 32,
-    height: 16,
-    isStatic: true
-  },
-  "Brick":
-  {}
+  var e = TANK.createEntity("Sprite, Collider, Brick");
+  e.Sprite.playing = false;
+  e.Sprite.imagePath = "res/tiles.png";
+  e.Sprite.frames = [
+    {
+      duration: 0.1,
+      rectOrigin: [0, 0 + 16],
+      rectCorner: [32, 16 + 16]
+    },
+    {
+      duration: 0.5,
+      rectOrigin: [32, 0 + 16],
+      rectCorner: [64, 16 + 16]
+    },
+    {
+      duration: 0.5,
+      rectOrigin: [64, 0 + 16],
+      rectCorner: [96, 16 + 16]
+    },
+    {
+      duration: 0.5,
+      rectOrigin: [96, 0 + 16],
+      rectCorner: [128, 16 + 16]
+    }
+  ];
+  e.Sprite.zdepth = 1;
+  e.Collider.width = 32;
+  e.Collider.height = 16;
+  e.Collider.isStatic = true;
+  return e;
 });
 
 // Define prefab for timer
-TANK.addPrefab("CountDown",
+TANK.addPrefab("CountDown", function ()
 {
-  "Sprite":
-  {
-    playing: false,
-    imagePath: "res/tiles.png",
-    frames: [
-      {
-        duration: 1,
-        rectOrigin: [0, 96],
-        rectCorner: [32, 144]
-      },
-      {
-        duration: 1,
-        rectOrigin: [32, 96],
-        rectCorner: [64, 144]
-      },
-      {
-        duration: 1,
-        rectOrigin: [64, 96],
-        rectCorner: [96, 144]
-      }
-    ],
-    zdepth: 5
-  }
+  var e = TANK.createEntity("Sprite, Collider");
+  e.Sprite.playing = false;
+  e.Sprite.imagePath = "res/tiles.png";
+  e.Sprite.frames = [
+    {
+      duration: 1,
+      rectOrigin: [0, 96],
+      rectCorner: [32, 144]
+    },
+    {
+      duration: 1,
+      rectOrigin: [32, 96],
+      rectCorner: [64, 144]
+    },
+    {
+      duration: 1,
+      rectOrigin: [64, 96],
+      rectCorner: [96, 144]
+    }
+  ];
+  e.Sprite.zdepth = 5;
+  return e;
 });
