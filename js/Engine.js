@@ -47,45 +47,27 @@
   };
 
   // ### Create Entity from prefab
-  // Creates a new `Entity` using a given prefab.
+  // Creates a new `Entity` using a given prefab function.
 
   // `Entity TANK.createEntityFromPrefab(prefabName)`
 
-  // - `prefabName` Name of the prefab to clone.
-  // - `return` A new `Entity`.
+  // - `prefabName` Name of the prefab function to use.
+  // - `return` The return of the prefab function, which should be an Entity.
   TANK.createEntityFromPrefab = function (prefabName)
   {
     var prefab = TANK.getPrefab(prefabName);
     if (!prefab)
     {
-      TANK.warning("Could not find a prefab named " + prefabName);
+      TANK.error("Could not find a prefab named " + prefabName);
+      return;
+    }
+    if (!prefab.apply)
+    {
+      TANK.error("Prefab function supplied for " + prefabName + " is not a function: " + prefab);
       return;
     }
 
-    var entity = TANK.createEntity();
-    var component;
-    var componentData;
-    var componentName, propertyName;
-    for (componentName in prefab)
-    {
-      if (prefab.hasOwnProperty(componentName))
-      {
-        entity.addComponent(componentName);
-
-        // Copy over fields from prefab into new component
-        component = entity[componentName];
-        componentData = prefab[componentName];
-        for (propertyName in componentData)
-        {
-          if (componentData.hasOwnProperty(propertyName))
-          {
-            component[propertyName] = componentData[propertyName];
-          }
-        }
-      }
-    }
-
-    return entity;
+    return prefab();
   };
 
   // ### Add an entity to the engine.
@@ -195,31 +177,25 @@
   TANK.update = TANK.Space.prototype.update;
 
   // ### Register an object prefab
-  // Use this to define an entity with a set of components that
-  // can be instantiated later, like a blueprint.
+  // Use this to define a function that constructs an entity with
+  // a particular set of components and values.
 
-  // `void TANK.addPrefab(name, data)`
+  // `void TANK.addPrefab(name, func)`
 
   // - `name` The name of the prefab to store it under.
-  // - `data` A JSON object describing the components the prefab should contain,
-  // with the following format:
-
-  //         {
-  //             "Pos2D": { x: 0, y: 42 },
-  //             "Velocity": {},
-  //             "Collider": { width: 5, height: 5 },
-  //         }
-  TANK.addPrefab = function (name, data)
+  // - `func` A function which should create an entity and add components to it,
+  // but NOT add it. The return of the function must be the entity.
+  TANK.addPrefab = function (name, func)
   {
-    TANK._prefabs[name] = data;
+    TANK._prefabs[name] = func;
   };
 
   // ### Get a prefab object
 
-  // `Object TANK.getPrefab(name)`
+  // `function TANK.getPrefab(name)`
 
   // - `name` The name of the prefab to find.
-  // - `return` A prefab JSON object in the same format as given to `TANK.addPrefab`.
+  // - `return` A prefab function.
   TANK.getPrefab = function (name)
   {
     return TANK._prefabs[name];
