@@ -169,7 +169,7 @@ TANK.registerComponent("GameLogic")
   {
     if (!TANK.getEntity("Player") || !TANK.getEntity("AI"))
     {
-      TANK.reset();
+      TANK.reset(main);
     }
   };
 

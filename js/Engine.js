@@ -251,8 +251,11 @@
   // Things like prefabs and component definitions are preserved.
 
   // `void TANK.reset()`
-  TANK.reset = function ()
+
+  // `entryPointFunc` - Function to call after resetting has completed
+  TANK.reset = function (entryPointFunc)
   {
+    TANK._entryPointFunc = entryPointFunc;
     TANK._resetting = true;
     TANK.removeAllEntities();
     for (var i in TANK._spaces)
@@ -334,7 +337,9 @@
       TANK._spaces = {};
       TANK._resetting = false;
       TANK._running = false;
-      main();
+      if (TANK._entryPointFunc)
+        TANK._entryPointFunc();
+
       return;
     }
 

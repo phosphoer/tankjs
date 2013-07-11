@@ -81,7 +81,7 @@ TANK.registerComponent("GameLogic")
     {
       --this.lives;
       if (this.lives === 0)
-        TANK.reset();
+        TANK.reset(main);
       else
       {
         // Create a new ball
