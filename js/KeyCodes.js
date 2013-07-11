@@ -18,10 +18,12 @@
 
   (function (Key)
   {
+    // Mouse buttons treated as "key"
     Key.LEFT_MOUSE = 0;
     Key.MIDDLE_MOUSE = 1;
     Key.RIGHT_MOUSE = 2;
 
+    // Special keys
     Key.LEFT_ARROW = 37;
     Key.UP_ARROW = 38;
     Key.RIGHT_ARROW = 39;
@@ -33,6 +35,9 @@
     Key.CONTROL = 17;
     Key.ALT = 18;
     Key.SUPER = 91;
+    Key.TILDE = 192;
+
+    // Letters
     Key.A = 65;
     Key.B = 66;
     Key.C = 67;
@@ -59,6 +64,8 @@
     Key.X = 88;
     Key.Y = 89;
     Key.Z = 90;
+
+    // Number keys (not numpad)
     Key.NUM1 = 49;
     Key.NUM2 = 50;
     Key.NUM3 = 51;
