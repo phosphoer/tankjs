@@ -32,9 +32,18 @@
   // - `id` ID to give the Entity.
   TANK.Entity = function (id)
   {
+    // ### Name of the entity
+    // `const string Entity.name`
     this.name = null;
+
+    // ### Id of the entity
+    // `const int Entity.id`
     this.id = id;
+
+    // ### Space the entity inhabits
+    // `const Space Entity.space`
     this.space = null;
+
     this._components = {};
     this._initialized = false;
   };

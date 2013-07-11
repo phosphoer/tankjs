@@ -28,7 +28,13 @@
   // name - The name of the component type.
   TANK.Component = function (name)
   {
+    // ### Name of the component
+    // `const string Component.name`
     this.name = name;
+
+    // ### Parent Entity
+    // `const Entity Component.parent`
+    this.parent = null;
     this._functions = {};
     this._includes = [];
     this._interfaces = [];
