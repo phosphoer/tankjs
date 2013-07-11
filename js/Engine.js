@@ -233,6 +233,8 @@
 
     TANK.initialize();
 
+    TANK.log("TankJS has been started");
+
     update()
   };
 
