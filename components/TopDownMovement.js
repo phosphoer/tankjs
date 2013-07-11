@@ -10,7 +10,7 @@
     this.up = false;
     this.right = false;
     this.down = false;
-    this.movementSpeed = 50;
+    this.movementSpeed = 150;
   })
 
   .initialize(function ()
@@ -33,25 +33,25 @@
 
   function OnKeyPress(key)
   {
-    if (key == TANK.W)
+    if (key == TANK.Key.W)
       this.up = true;
-    else if (key == TANK.A)
+    else if (key == TANK.Key.A)
       this.left = true;
-    else if (key == TANK.S)
+    else if (key == TANK.Key.S)
       this.down = true;
-    else if (key == TANK.D)
+    else if (key == TANK.Key.D)
       this.right = true;
   };
 
   function OnKeyRelease(key)
   {
-    if (key == TANK.W)
+    if (key == TANK.Key.W)
       this.up = false;
-    else if (key == TANK.A)
+    else if (key == TANK.Key.A)
       this.left = false;
-    else if (key == TANK.S)
+    else if (key == TANK.Key.S)
       this.down = false;
-    else if (key == TANK.D)
+    else if (key == TANK.Key.D)
       this.right = false;
   };
 

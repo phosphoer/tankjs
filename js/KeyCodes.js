@@ -13,60 +13,63 @@
 // all copies or substantial portions of the Software.
 //
 //
-(function (TANK, undefined)
+(function (TANK)
 {
 
-  TANK.LEFT_MOUSE = 0;
-  TANK.MIDDLE_MOUSE = 1;
-  TANK.RIGHT_MOUSE = 2;
+  (function (Key)
+  {
+    Key.LEFT_MOUSE = 0;
+    Key.MIDDLE_MOUSE = 1;
+    Key.RIGHT_MOUSE = 2;
 
-  TANK.LEFT_ARROW = 37;
-  TANK.UP_ARROW = 38;
-  TANK.RIGHT_ARROW = 39;
-  TANK.DOWN_ARROW = 40;
-  TANK.SHIFT = 16;
-  TANK.BACKSPACE = 8;
-  TANK.ESCAPE = 27;
-  TANK.SPACE = 32;
-  TANK.CONTROL = 17;
-  TANK.ALT = 18;
-  TANK.SUPER = 91;
-  TANK.A = 65;
-  TANK.B = 66;
-  TANK.C = 67;
-  TANK.D = 68;
-  TANK.E = 69;
-  TANK.F = 70;
-  TANK.G = 71;
-  TANK.H = 72;
-  TANK.I = 73;
-  TANK.J = 74;
-  TANK.K = 75;
-  TANK.L = 76;
-  TANK.M = 77;
-  TANK.N = 78;
-  TANK.O = 79;
-  TANK.P = 80;
-  TANK.Q = 81;
-  TANK.R = 82;
-  TANK.S = 83;
-  TANK.T = 84;
-  TANK.U = 85;
-  TANK.V = 86;
-  TANK.W = 87;
-  TANK.X = 88;
-  TANK.Y = 89;
-  TANK.Z = 90;
-  TANK.NUM1 = 49;
-  TANK.NUM2 = 50;
-  TANK.NUM3 = 51;
-  TANK.NUM4 = 52;
-  TANK.NUM5 = 53;
-  TANK.NUM6 = 54;
-  TANK.NUM7 = 55;
-  TANK.NUM8 = 56;
-  TANK.NUM9 = 57;
-  TANK.NUM0 = 48;
+    Key.LEFT_ARROW = 37;
+    Key.UP_ARROW = 38;
+    Key.RIGHT_ARROW = 39;
+    Key.DOWN_ARROW = 40;
+    Key.SHIFT = 16;
+    Key.BACKSPACE = 8;
+    Key.ESCAPE = 27;
+    Key.SPACE = 32;
+    Key.CONTROL = 17;
+    Key.ALT = 18;
+    Key.SUPER = 91;
+    Key.A = 65;
+    Key.B = 66;
+    Key.C = 67;
+    Key.D = 68;
+    Key.E = 69;
+    Key.F = 70;
+    Key.G = 71;
+    Key.H = 72;
+    Key.I = 73;
+    Key.J = 74;
+    Key.K = 75;
+    Key.L = 76;
+    Key.M = 77;
+    Key.N = 78;
+    Key.O = 79;
+    Key.P = 80;
+    Key.Q = 81;
+    Key.R = 82;
+    Key.S = 83;
+    Key.T = 84;
+    Key.U = 85;
+    Key.V = 86;
+    Key.W = 87;
+    Key.X = 88;
+    Key.Y = 89;
+    Key.Z = 90;
+    Key.NUM1 = 49;
+    Key.NUM2 = 50;
+    Key.NUM3 = 51;
+    Key.NUM4 = 52;
+    Key.NUM5 = 53;
+    Key.NUM6 = 54;
+    Key.NUM7 = 55;
+    Key.NUM8 = 56;
+    Key.NUM9 = 57;
+    Key.NUM0 = 48;
+  }(TANK.Key = TANK.Key || {}));
 
 }(this.TANK = this.TANK ||
 {}));

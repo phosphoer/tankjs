@@ -1,35 +1,22 @@
 function main()
 {
   // Create the "engine" object with the main components
-  var space = TANK.createSpace("InputManager, CollisionManager, RenderManager, GameLogic");
-  TANK.addSpace(space, "Game");
+  TANK.addComponents("InputManager, CollisionManager, RenderManager, GameLogic");
 
   // Point the render manager's context to the canvas one
   // Would be nice not to require this somehow?
-  TANK.Game.RenderManager.context = document.getElementById("screen").getContext("2d");
-  TANK.Game.InputManager.context = document.getElementById("stage");
+  TANK.RenderManager.context = document.getElementById("screen").getContext("2d");
+  TANK.InputManager.context = document.getElementById("stage");
 
   // Create a bullet object prefab
-  TANK.addPrefab("Bullet",
+  TANK.addPrefab("Bullet", function()
   {
-    "ColoredBox":
-    {
-      width: 5,
-      height: 5
-    },
-    "Velocity":
-    {},
-    "Collider":
-    {
-      width: 5,
-      height: 5
-    },
-    "DeleteOnCollide":
-    {},
-    "DeleteOutOfBounds":
-    {},
-    "DamageOnCollide":
-    {}
+    var e = TANK.createEntity("ColoredBox, Velocity, Collider, DeleteOnCollide, DeleteOutOfBounds, DamageOnCollide");
+    e.ColoredBox.width = 5;
+    e.ColoredBox.height = 5;
+    e.Collider.width = e.ColoredBox.width;
+    e.Collider.height = e.ColoredBox.height;
+    return e;
   });
 
   // Create background object
@@ -39,10 +26,10 @@ function main()
   bg.ColoredBox.color = "#fff";
   bg.ColoredBox.zdepth = -1;
   bg.ColoredBox.centered = false;
-  TANK.Game.addEntity(bg);
+  TANK.addEntity(bg);
 
   // Create a player object
-  var player = TANK.createEntity("Text, Image, TopDownMovement, RotateController, ObjectSpawner, Collider, Health, HealthUpdater");
+  var player = TANK.createEntity("Text, Image, TopDownMovement, RotateController, Gun, Collider, Health, HealthUpdater");
   player.Pos2D.x = 150;
   player.Pos2D.y = 100;
   player.Image.imagePath = "res/BlueBall.png";
@@ -52,12 +39,12 @@ function main()
   player.Text.zdepth = 1;
   player.Text.offsetX = -5;
   player.Text.offsetY = 4;
-  player.ObjectSpawner.objectPrefab = "Bullet";
-  player.ObjectSpawner.triggerKey = TANK.SPACE;
-  TANK.Game.addEntity(player, "Player");
+  player.Gun.objectPrefab = "Bullet";
+  player.Gun.triggerKey = TANK.Key.SPACE;
+  TANK.addEntity(player, "Player");
 
   // Create AI object
-  var ai = TANK.createEntity("Text, Image, KlangAI, ObjectSpawner, Collider, Health, HealthUpdater");
+  var ai = TANK.createEntity("Text, Image, KlangAI, Gun, Collider, Health, HealthUpdater");
   ai.Pos2D.x = 450;
   ai.Pos2D.y = 400;
   ai.Image.imagePath = "res/RedBall.png";
@@ -67,8 +54,8 @@ function main()
   ai.Text.zdepth = 1;
   ai.Text.offsetX = -5;
   ai.Text.offsetY = 4;
-  ai.ObjectSpawner.objectPrefab = "Bullet";
-  TANK.Game.addEntity(ai, "AI");
+  ai.Gun.objectPrefab = "Bullet";
+  TANK.addEntity(ai, "AI");
 
   // Create walls around edges
   var obj;
@@ -77,76 +64,76 @@ function main()
   obj.Pos2D.y = -25;
   obj.Collider.isStatic = true;
   obj.Collider.width = 640;
-  TANK.Game.addEntity(obj);
+  TANK.addEntity(obj);
 
   obj = TANK.createEntity().addComponents("ColoredBox, Collider");
   obj.Pos2D.x = 640 / 2;
   obj.Pos2D.y = 480 + 25;
   obj.Collider.isStatic = true;
   obj.Collider.width = 640;
-  TANK.Game.addEntity(obj);
+  TANK.addEntity(obj);
 
   obj = TANK.createEntity().addComponents("ColoredBox, Collider");
   obj.Pos2D.x = -25;
   obj.Pos2D.y = 480 / 2;
   obj.Collider.isStatic = true;
   obj.Collider.height = 480;
-  TANK.Game.addEntity(obj);
+  TANK.addEntity(obj);
 
   obj = TANK.createEntity().addComponents("ColoredBox, Collider");
   obj.Pos2D.x = 640 + 25;
   obj.Pos2D.y = 480 / 2;
   obj.Collider.isStatic = true;
   obj.Collider.height = 480;
-  TANK.Game.addEntity(obj);
+  TANK.addEntity(obj);
 
   obj = TANK.createEntity().addComponents("ColoredBox, Collider");
   obj.Pos2D.x = 100;
   obj.Pos2D.y = 150;
   obj.Collider.isStatic = true;
-  TANK.Game.addEntity(obj);
+  TANK.addEntity(obj);
 
   obj = TANK.createEntity().addComponents("ColoredBox, Collider");
   obj.Pos2D.x = 150;
   obj.Pos2D.y = 150;
   obj.Collider.isStatic = true;
-  TANK.Game.addEntity(obj);
+  TANK.addEntity(obj);
 
   obj = TANK.createEntity().addComponents("ColoredBox, Collider");
   obj.Pos2D.x = 200;
   obj.Pos2D.y = 150;
   obj.Collider.isStatic = true;
-  TANK.Game.addEntity(obj);
+  TANK.addEntity(obj);
 
   obj = TANK.createEntity().addComponents("ColoredBox, Collider");
   obj.Pos2D.x = 200;
   obj.Pos2D.y = 100;
   obj.Collider.isStatic = true;
-  TANK.Game.addEntity(obj);
+  TANK.addEntity(obj);
 
   obj = TANK.createEntity().addComponents("ColoredBox, Collider");
   obj.Pos2D.x = 400;
   obj.Pos2D.y = 350;
   obj.Collider.isStatic = true;
-  TANK.Game.addEntity(obj);
+  TANK.addEntity(obj);
 
   obj = TANK.createEntity().addComponents("ColoredBox, Collider");
   obj.Pos2D.x = 450;
   obj.Pos2D.y = 350;
   obj.Collider.isStatic = true;
-  TANK.Game.addEntity(obj);
+  TANK.addEntity(obj);
 
   obj = TANK.createEntity().addComponents("ColoredBox, Collider");
   obj.Pos2D.x = 500;
   obj.Pos2D.y = 350;
   obj.Collider.isStatic = true;
-  TANK.Game.addEntity(obj);
+  TANK.addEntity(obj);
 
   obj = TANK.createEntity().addComponents("ColoredBox, Collider");
   obj.Pos2D.x = 500;
   obj.Pos2D.y = 400;
   obj.Collider.isStatic = true;
-  TANK.Game.addEntity(obj);
+  TANK.addEntity(obj);
 
   TANK.start();
 }
@@ -180,7 +167,7 @@ TANK.registerComponent("GameLogic")
 {
   this.OnEnterFrame = function (dt)
   {
-    if (!TANK.Game.getEntity("Player") || !TANK.Game.getEntity("AI"))
+    if (!TANK.getEntity("Player") || !TANK.getEntity("AI"))
     {
       TANK.reset();
     }
@@ -205,7 +192,7 @@ TANK.registerComponent("KlangAI")
   this._desiredAngle = 0;
   this._rotateTimer = 0;
   this._rotateAmount = 0.5;
-  this._movementSpeed = 50;
+  this._movementSpeed = 150;
   this._left = false;
   this._up = false;
   this._right = false;
@@ -215,13 +202,13 @@ TANK.registerComponent("KlangAI")
   {
     this._rotateTimer -= dt;
 
-    var player = TANK.Game.getEntity("Player");
+    var player = TANK.getEntity("Player");
     if (!player)
       return;
 
     var playerPos = player.Pos2D;
     var pos = this.parent.Pos2D;
-    var gun = this.parent.ObjectSpawner;
+    var gun = this.parent.Gun;
 
     // Shoot randomly
     if (Math.random() < 0.05)
@@ -276,5 +263,64 @@ TANK.registerComponent("KlangAI")
 
 .destruct(function ()
 {
+  this.removeEventListener("OnEnterFrame", this.OnEnterFrame);
+})
+
+// Custom component to allow shooting
+TANK.registerComponent("Gun")
+
+.requires("Pos2D")
+
+.construct(function ()
+{
+  this.objectPrefab = "";
+  this.spawnDelay = 0.5;
+  this.spawnVelocity = 300;
+  this.spawnDistance = 40;
+  this.triggerKey = null;
+
+  this._spawnTimer = 0;
+})
+
+.initialize(function ()
+{
+  this.OnKeyPress = function (key)
+  {
+    if (this.triggerKey === null)
+      return;
+
+    if (key == this.triggerKey)
+    {
+      this.spawn();
+    }
+  };
+
+  this.OnEnterFrame = function (dt)
+  {
+    this._spawnTimer += dt;
+  };
+
+  this.spawn = function (dt)
+  {
+    if (this._spawnTimer >= this.spawnDelay)
+    {
+      var t = this.parent.Pos2D;
+      var obj = TANK.createEntityFromPrefab(this.objectPrefab);
+      obj.Pos2D.x = t.x + Math.cos(t.rotation) * this.spawnDistance;
+      obj.Pos2D.y = t.y + Math.sin(t.rotation) * this.spawnDistance;
+      obj.Velocity.x = Math.cos(t.rotation) * this.spawnVelocity,
+      obj.Velocity.y = Math.sin(t.rotation) * this.spawnVelocity
+      this._spawnTimer = 0;
+      this.space.addEntity(obj);
+    }
+  };
+
+  this.addEventListener("OnKeyPress", this.OnKeyPress);
+  this.addEventListener("OnEnterFrame", this.OnEnterFrame);
+})
+
+.destruct(function ()
+{
+  this.removeEventListener("OnKeyPress", this.OnKeyPress);
   this.removeEventListener("OnEnterFrame", this.OnEnterFrame);
 })

@@ -13,17 +13,17 @@ TANK.registerComponent("RotateController")
 {
   this.OnKeyPress = function (key)
   {
-    if (key == TANK.Q)
+    if (key == TANK.Key.Q)
       this.left = true;
-    else if (key == TANK.E)
+    else if (key == TANK.Key.E)
       this.right = true;
   };
 
   this.OnKeyRelease = function (key)
   {
-    if (key == TANK.Q)
+    if (key == TANK.Key.Q)
       this.left = false;
-    else if (key == TANK.E)
+    else if (key == TANK.Key.E)
       this.right = false;
   };
 
