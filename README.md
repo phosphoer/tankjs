@@ -17,11 +17,8 @@ Rather than using an inheritance tree, TANK uses a component-based architecture.
 ### Entities
 An Entity at its heart is simply a container for components. Most things in your game will be an entity with some assortment of components attached to it.
 
-### Spaces
-Spaces can be thought of as little self-contained worlds. Entities are contained within Spaces, and Events are local to each Space. Spaces are *not* "scenes" or "levels".
-
 ### Events
-All Components can listen for Events that occur within their parent Space. For example, Spaces send out an `OnEnterFrame` event every frame that Components can listen to in order to be part of the main loop.
+All Components can listen for Events. For example, TANK send out an `OnEnterFrame` event every frame that Components can listen to in order to be part of the main loop.
 
 ### No Setup
 TANK doesn't require a node install, a local server, dependencies, or anything beyond double-clicking your HTML file to run it.
