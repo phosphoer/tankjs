@@ -174,12 +174,7 @@ TANK.registerComponent("GameLogic")
   };
 
   this.addEventListener("OnEnterFrame", this.OnEnterFrame);
-})
-
-.destruct(function ()
-{
-  this.removeEventListener("OnEnterFrame", this.OnEnterFrame);
-})
+});
 
 
 // Custom component to implement AI for the other player
@@ -259,12 +254,7 @@ TANK.registerComponent("KlangAI")
   };
 
   this.addEventListener("OnEnterFrame", this.OnEnterFrame);
-})
-
-.destruct(function ()
-{
-  this.removeEventListener("OnEnterFrame", this.OnEnterFrame);
-})
+});
 
 // Custom component to allow shooting
 TANK.registerComponent("Gun")
@@ -317,10 +307,4 @@ TANK.registerComponent("Gun")
 
   this.addEventListener("OnKeyPress", this.OnKeyPress);
   this.addEventListener("OnEnterFrame", this.OnEnterFrame);
-})
-
-.destruct(function ()
-{
-  this.removeEventListener("OnKeyPress", this.OnKeyPress);
-  this.removeEventListener("OnEnterFrame", this.OnEnterFrame);
-})
+});
