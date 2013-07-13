@@ -174,6 +174,7 @@
   TANK.dispatchEvent = TANK.Space.prototype.dispatchEvent;
 
   TANK.clearDeletedObjects = TANK.Space.prototype.clearDeletedObjects;
+  TANK.trackInterface = TANK.Entity.prototype.trackInterface;
   TANK.update = TANK.Space.prototype.update;
 
   // ### Register an object prefab

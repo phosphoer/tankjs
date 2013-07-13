@@ -98,6 +98,7 @@
     // sure to initialize them immediately
     if (this._initialized)
     {
+      this.trackInterface(componentName);
       component.initialize();
       this.space.dispatchEvent("OnComponentUninitialized", component);
     }
@@ -224,23 +225,10 @@
   TANK.Entity.prototype.initialize = function ()
   {
     // Track the components by their interfaces
-    var n, c, componentDef, i;
+    var n, c;
     for (n in this._components)
     {
-      c = this._components[n];
-      componentDef = TANK._registeredComponents[n];
-      for (i = 0; i < componentDef._interfaces.length; ++i)
-      {
-        // Get the list of components with this interface
-        var componentList = this.space._interfaceComponents[componentDef._interfaces[i]];
-        if (!componentList)
-        {
-          componentList = {};
-          this.space._interfaceComponents[componentDef._interfaces[i]] = componentList;
-        }
-
-        componentList[this.name + "." + componentDef.name] = c;
-      }
+      this.trackInterface(n);
     }
 
     // Initialize each component
@@ -280,6 +268,25 @@
 
     this._initialized = false;
     return this;
+  };
+
+  TANK.Entity.prototype.trackInterface = function(name)
+  {
+    var c = this[name];
+    var componentDef;
+    componentDef = TANK._registeredComponents[name];
+    for (var i = 0; i < componentDef._interfaces.length; ++i)
+    {
+      // Get the list of components with this interface
+      var componentList = this.space._interfaceComponents[componentDef._interfaces[i]];
+      if (!componentList)
+      {
+        componentList = {};
+        this.space._interfaceComponents[componentDef._interfaces[i]] = componentList;
+      }
+
+      componentList[this.name + "." + componentDef.name] = c;
+    }
   };
 
 }(this.TANK = this.TANK ||
