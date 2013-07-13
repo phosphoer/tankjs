@@ -278,6 +278,7 @@
       }
     }
 
+    this._initialized = false;
     return this;
   };
 
