@@ -1,10 +1,6 @@
 function main()
 {
   // Create the "engine" object with the main components
-  // var gameSpace = TANK.createSpace("InputManager, GameLogic, CollisionManager, RenderManager");
-  // var uiSpace = TANK.createSpace("InputManager, RenderManager");
-  // TANK.addSpace(gameSpace, "Game");
-  // TANK.addSpace(uiSpace, "UI");
   TANK.addComponents("InputManager, GameLogic, CollisionManager, RenderManager");
 
   // Point the render manager's context to the canvas one
@@ -76,36 +72,25 @@ TANK.registerComponent("GameLogic")
 
   this.OnEnterFrame = function (dt)
   {
-    // If no balls exist, spawn a new one and decrement lives
     if (this.numBalls === 0)
     {
       --this.lives;
       if (this.lives === 0)
-        TANK.reset(main);
-      else
       {
-        // Create a new ball
-        var ball = TANK.createEntityFromPrefab("Ball");
-        ball.Pos2D.x = 50;
-        ball.Pos2D.y = 200;
-        TANK.addEntity(ball);
-        TANK.dispatchEvent("OnLevelContinue");
+        TANK.reset(main);
+        return;
       }
+      this.addBall();
+      TANK.dispatchEvent("OnLevelContinue");
     }
 
-    // If no bricks exist, build the next level
     if (this.numBricks === 0)
     {
-      ++this.lives;
       ++this.level;
+      this.buildLevel();
       TANK.dispatchEvent("OnLevelComplete");
-
-      if (this.level === Breakout.levels.length)
-      {}
-      else
-      {
-        this.buildLevel();
-      }
+      this.addBall();
+      TANK.dispatchEvent("OnLevelContinue");
     }
   };
 
@@ -127,6 +112,14 @@ TANK.registerComponent("GameLogic")
       }
     }
   };
+
+  this.addBall = function()
+  {
+    var e = TANK.createEntityFromPrefab("Ball");
+    e.Pos2D.x = 50;
+    e.Pos2D.y = 200;
+    TANK.addEntity(e);
+  }
 
   this.OnLevelContinue = function ()
   {
@@ -150,6 +143,8 @@ TANK.registerComponent("GameLogic")
   this.addEventListener("OnLevelContinue", this.OnLevelContinue);
 
   this.buildLevel();
+  this.addBall();
+  this.OnLevelContinue();
 })
 
 
@@ -235,8 +230,8 @@ TANK.registerComponent("Ball")
 
   this.OnCountdownFinished = function ()
   {
-    this.parent.Velocity.x = 80;
-    this.parent.Velocity.y = 100;
+    this.parent.Velocity.x = 100;
+    this.parent.Velocity.y = 120;
   };
 
   this.OnEnterFrame = function (dt)
