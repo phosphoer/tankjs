@@ -222,6 +222,14 @@
     return this;
   };
 
+  // ### Initialize an entity
+  // Initializes each component in the entity.
+  // Rarely needed outside the engine, more commonly
+  // you will want to add the entity with `TANK.addEntity()`.
+
+  // `Entity.initialize()`
+
+  // `return`: The entity.
   TANK.Entity.prototype.initialize = function ()
   {
     // Track the components by their interfaces
@@ -245,6 +253,7 @@
     }
 
     this._initialized = true;
+    return this;
   }
 
   // ### Uninitialize an entity
