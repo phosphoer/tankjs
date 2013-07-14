@@ -94,7 +94,7 @@
 
   // `void TANK.removeEntity(arg)`
 
-  // `id`: The id of the object. (`Entity.id`)
+  // `arg`: The name, id, or reference to the entity.
   TANK.removeEntity = TANK.Space.prototype.removeEntity;
 
   // ### Remove all objects
