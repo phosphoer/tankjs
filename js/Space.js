@@ -177,7 +177,7 @@
 
   // `void Space.removeEntity(arg)`
 
-  // `arg`: The name, id, or reference to the entity.
+  // - `arg`: The name, id, or reference to the entity.
   TANK.Space.prototype.removeEntity = function (arg)
   {
     if (typeof arg === "string" || typeof arg === "number")
