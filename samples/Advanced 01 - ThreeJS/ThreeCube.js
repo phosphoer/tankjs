@@ -5,11 +5,11 @@ TANK.registerComponent("ThreeCube")
 .construct(function ()
 {
   this.geometry = new THREE.CubeGeometry(1, 1, 1);
-  this.mesh = new THREE.Mesh(this.geometry, new THREE.MeshBasicMaterial());
 })
 
 .initialize(function()
 {
+  this.mesh = new THREE.Mesh(this.geometry, this.parent.ThreeMaterial.material);
   this.parent.ThreePos.object3d.add(this.mesh);
 })
 

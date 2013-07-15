@@ -2,11 +2,10 @@ function main()
 {
   TANK.addComponents("InputManager, ThreeRenderer");
 
-  var camera = TANK.createEntity("ThreeCamera");
+  var camera = TANK.createEntity("ThreeCamera, ThreePointLight");
   TANK.addEntity(camera);
 
   var cube = TANK.createEntity("ThreeCube");
-  cube.ThreeMaterial.material.color = "#844";
   TANK.addEntity(cube);
 
   TANK.start();
