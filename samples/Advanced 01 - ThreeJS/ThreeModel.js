@@ -20,6 +20,7 @@ TANK.registerComponent("ThreeModel")
       }
     });
 
+    that.object = object;
     that.parent.ThreePos.object3d.add(object);
   };
 
@@ -38,5 +39,5 @@ TANK.registerComponent("ThreeModel")
 
 .destruct(function()
 {
-  this.mesh.parent.remove(this.mesh);
+  this.object.parent.remove(this.object);
 });
