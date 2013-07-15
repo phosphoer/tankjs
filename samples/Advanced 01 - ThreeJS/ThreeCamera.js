@@ -13,6 +13,8 @@ TANK.registerComponent("ThreeCamera")
 
   // Look at position
   this.targetPos = new THREE.Vector3(0, 0, 0);
+
+  this.et = 0;
 })
 
 .initialize(function()
@@ -26,8 +28,11 @@ TANK.registerComponent("ThreeCamera")
   this.addEventListener("OnEnterFrame", function(dt)
   {
     this.camera.lookAt(this.targetPos);
-    this.parent.ThreePos.position.z += dt;
-    this.parent.ThreePos.position.y += dt;
+
+    this.et += dt;
+    this.parent.ThreePos.position.x = Math.cos(this.et) * 3;
+    this.parent.ThreePos.position.z = Math.sin(this.et) * 3;
+    this.parent.ThreePos.position.y = 3;
   });
 })
 

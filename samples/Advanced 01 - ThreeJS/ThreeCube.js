@@ -1,6 +1,6 @@
 TANK.registerComponent("ThreeCube")
 
-.requires("ThreePos")
+.requires("ThreePos, ThreeMaterial")
 
 .construct(function ()
 {
