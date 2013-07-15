@@ -103,7 +103,7 @@
 
       for (j = 0; j < includes.length; ++j)
       {
-        this._includes.push(includes[i]);
+        this._includes.push(includes[j]);
       }
     }
 
