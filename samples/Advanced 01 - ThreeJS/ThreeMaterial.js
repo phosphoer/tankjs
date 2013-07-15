@@ -2,7 +2,7 @@ TANK.registerComponent("ThreeMaterial")
 
 .construct(function ()
 {
-  this.material = new THREE.MeshLambertMaterial({color: "#fff"});
+  this.material = new THREE.MeshLambertMaterial({color: "#fff", shading: THREE.FlatShading});
 })
 
 .initialize(function()

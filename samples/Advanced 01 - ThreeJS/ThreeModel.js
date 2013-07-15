@@ -5,6 +5,8 @@ TANK.registerComponent("ThreeModel")
 .construct(function ()
 {
   this.url = "";
+  this.castShadow = false;
+  this.receiveShadow = false;
 })
 
 .initialize(function()
@@ -17,6 +19,8 @@ TANK.registerComponent("ThreeModel")
       if (child instanceof THREE.Mesh)
       {
         child.material = that.parent.ThreeMaterial.material;
+        child.receiveShadow = that.receiveShadow;
+        child.castShadow = that.castShadow;
       }
     });
 

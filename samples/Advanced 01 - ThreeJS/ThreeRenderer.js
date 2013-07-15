@@ -10,6 +10,7 @@ TANK.registerComponent("ThreeRenderer")
   {
     antialias: true
   });
+  this.renderer.shadowMapEnabled = true;
 
   // Create canvas
   this.container = document.createElement("div");
