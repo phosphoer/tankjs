@@ -282,6 +282,15 @@
     if (this.paused)
       return;
 
+    // Update each "system"
+    for (var i in this._components)
+    {
+      var c = this._components[i];
+      if (c.update)
+        c.update(dt);
+      this.dispatchEvent(i + "PostUpdate", dt);
+    }
+
     this.dispatchEvent("OnEnterFrame", dt);
   }
 

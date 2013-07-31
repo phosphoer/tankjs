@@ -173,7 +173,7 @@ TANK.registerComponent("GameLogic")
     }
   };
 
-  this.addEventListener("OnEnterFrame", this.OnEnterFrame);
+  this.update = this.OnEnterFrame;
 });
 
 

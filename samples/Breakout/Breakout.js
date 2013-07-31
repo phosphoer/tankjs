@@ -135,7 +135,7 @@ TANK.registerComponent("GameLogic")
     };
   };
 
-  this.addEventListener("OnEnterFrame", this.OnEnterFrame);
+  this.update = this.OnEnterFrame;
   this.addEventListener("OnBallAdded", this.OnBallAdded);
   this.addEventListener("OnBallRemoved", this.OnBallRemoved);
   this.addEventListener("OnBrickAdded", this.OnBrickAdded);

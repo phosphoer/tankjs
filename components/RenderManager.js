@@ -25,7 +25,7 @@ TANK.registerComponent("RenderManager")
     this._drawables[existing[i].name + existing[i].parent.id] = existing[i];
   this.sort();
 
-  this.addEventListener("OnEnterFrame", function (dt)
+  this.update = function (dt)
   {
     if (!this.context)
       return;
@@ -34,7 +34,7 @@ TANK.registerComponent("RenderManager")
     {
       this._drawablesSorted[i].draw(this.context);
     }
-  });
+  };
 
   this.addEventListener("OnComponentInitialized", function (c)
   {

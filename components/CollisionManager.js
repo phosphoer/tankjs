@@ -8,7 +8,7 @@ TANK.registerComponent("CollisionManager")
   for (var i in existing)
     this._colliders[existing[i].parent.id] = existing[i];
 
-  this.addEventListener("OnEnterFrame", function (dt)
+  this.update = function (dt)
   {
     for (var i in this._colliders)
     {
@@ -25,11 +25,9 @@ TANK.registerComponent("CollisionManager")
         {
           c.parent.invoke("OnCollide", this._colliders[j].parent);
         }
-        else
-        {}
       }
     }
-  });
+  };
 
   this.addEventListener("OnComponentInitialized", function (c)
   {

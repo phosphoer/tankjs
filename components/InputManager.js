@@ -203,7 +203,7 @@
   {
     addEventListener("keydown", this.keydown);
     addEventListener("keyup", this.keyup);
-    this.addEventListener("OnEnterFrame", OnEnterFrame);
+    this.update = OnEnterFrame;
   })
 
   .destruct(function ()
@@ -226,8 +226,6 @@
       removeEventListener("mousewheel", this.mousewheel);
       removeEventListener("contextmenu", this.contextmenu);
     }
-
-    this.removeEventListener("OnEnterFrame", OnEnterFrame);
   });
 
   var OnEnterFrame = function (dt)
