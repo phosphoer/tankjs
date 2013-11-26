@@ -100,7 +100,7 @@
     {
       this.trackInterface(componentName);
       component.initialize();
-      this.space.dispatchEvent("OnComponentUninitialized", component);
+      this.space.dispatchEvent("OnComponentInitialized", component);
     }
 
     return this;
@@ -141,7 +141,7 @@
 
   // - `componentName`: The name of the component to remove.
   // - `return`: The entity.
-  TANK.Entity.prototype.removeComponent = function (componentName)
+  TANK.Entity.prototype.removeComponent = function (componentName, keepInMap)
   {
     // If we don't have the component then just return
     var c = this[componentName];
@@ -186,8 +186,11 @@
     }
 
     // Remove component
-    delete this._components[componentName];
-    delete this[componentName];
+    if (!keepInMap)
+    {
+      delete this._components[componentName];
+      delete this[componentName];
+    }
   };
 
   // ### Invoke a method on the entity.
@@ -271,7 +274,7 @@
     {
       if (this._components.hasOwnProperty(i))
       {
-        this.removeComponent(i);
+        this.removeComponent(i, true);
       }
     }
 

@@ -272,7 +272,6 @@
       delete this._objects[obj.id];
       delete this._objectsNamed[obj.name];
       obj.id = -1;
-      obj.name = "Deleted";
     }
     this._objectsDeleted = [];
   }
