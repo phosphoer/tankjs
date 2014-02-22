@@ -49,6 +49,8 @@
     // Components for the space
     // Used by entity functions
     this._components = {};
+    this._orderedComponents = [];
+    this._numComponents = 0;
 
     // Map of existing component instances sorted by tag names
     // Key is the name of the tag
@@ -282,12 +284,12 @@
       return;
 
     // Update each "system"
-    for (var i in this._components)
+    for (var i = 0; i < this._orderedComponents.length; ++i)
     {
-      var c = this._components[i];
+      var c = this._orderedComponents[i];
       if (c.update)
         c.update(dt);
-      this.dispatchEvent(i + "PostUpdate", dt);
+      this.dispatchEvent(c.name + "PostUpdate", dt);
     }
 
     this.dispatchEvent("OnEnterFrame", dt);

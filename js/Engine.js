@@ -411,6 +411,8 @@
   // Components for the space
   // Used by entity functions
   TANK._components = {};
+  TANK._orderedComponents = [];
+  TANK._numComponents = 0;
 
   // Map of existing component instances sorted by tag names
   // Key is the name of the tag

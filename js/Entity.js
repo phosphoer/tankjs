@@ -45,7 +45,9 @@
     this.space = null;
 
     this._components = {};
+    this._orderedComponents = [];
     this._initialized = false;
+    this._numComponents = 0;
   };
 
   // ### Add a component
@@ -87,9 +89,11 @@
     // Clone the component into our list of components
     var component = componentDef.clone();
     this[componentName] = component;
+    this._orderedComponents.push(component);
     this._components[componentName] = component;
     component.construct();
     component._constructed = true;
+    component._order = this._numComponents++;
     component.parent = this;
     component.space = this.space;
 
@@ -188,6 +192,7 @@
     // Remove component
     if (!keepInMap)
     {
+      this._orderedComponents.splice(c._order, 1);
       delete this._components[componentName];
       delete this[componentName];
     }
