@@ -267,7 +267,7 @@
   TANK.Space.prototype.clearDeletedObjects = function ()
   {
     // Delete pending objects
-    for (var i in this._objectsDeleted)
+    for (var i = 0; i < this._objectsDeleted.length; ++i)
     {
       var obj = this._objectsDeleted[i];
       obj.destruct();
