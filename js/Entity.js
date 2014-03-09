@@ -248,15 +248,15 @@
     }
 
     // Initialize each component
-    for (n in this._components)
+    for (n = 0; n < this._orderedComponents.length; ++n)
     {
-      c = this._components[n];
+      c = this._orderedComponents[n];
       c.space = this.space;
       c.initialize();
     }
-    for (n in this._components)
+    for (n = 0; n < this._orderedComponents.length; ++n)
     {
-      c = this._components[n];
+      c = this._orderedComponents[n];
       this.space.dispatchEvent("OnComponentInitialized", c);
     }
 
@@ -275,12 +275,9 @@
   TANK.Entity.prototype.destruct = function ()
   {
     var i;
-    for (i in this._components)
+    for (i = this._orderedComponents.length - 1; i >= 0; --i)
     {
-      if (this._components.hasOwnProperty(i))
-      {
-        this.removeComponent(i, true);
-      }
+      this.removeComponent(this._orderedComponents[i].name, true);
     }
 
     this._initialized = false;
