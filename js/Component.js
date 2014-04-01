@@ -131,7 +131,7 @@
 
       for (j = 0; j < interfaces.length; ++j)
       {
-        this._interfaces.push(interfaces[i]);
+        this._interfaces.push(interfaces[j]);
       }
     }
 
