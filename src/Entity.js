@@ -28,118 +28,117 @@
     this._children = {};
     this._pendingRemove = [];
     this._initialized = false;
+    this._listeners = {};
   };
 
-    TANK.Entity.prototype.addComponent = function(componentNames)
+  TANK.Entity.prototype.addComponent = function(componentNames)
+  {
+  };
+
+  TANK.Entity.prototype.removeComponent = function(componentNames)
+  {
+  };
+
+  TANK.Entity.prototype.initialize = function()
+  {
+    // Initialize every component
+    for (var i = 0; i < this._componentsOrdered.length; ++i)
     {
-    };
+      var c = this._componentsOrdered[i];
+      c.initialize();
+    }
 
-    TANK.Entity.prototype.removeComponent = function(componentNames)
+    this._initialized = true;
+
+    return this;
+  };
+
+  TANK.Entity.prototype.uninitialize = function()
+  {
+    // Uninitialize every component
+    for (var i = this._componentsOrdered.length - 1; i >= 0; --i)
     {
-    };
+      var c = this._componentsOrdered[i];
+      c.uninitialize();
+    }
 
-    TANK.Entity.prototype.initialize = function()
+    this._initialized = false;
+
+    return this;
+  };
+
+  TANK.Entity.prototype.update = function(dt)
+  {
+    // Remove deleted children
+    for (var i = 0; i < this._pendingRemove.length; ++i)
     {
-      // Initialize every component
-      for (var i = 0; i < this._componentsOrdered.length; ++i)
-      {
-        var c = this._componentsOrdered[i];
-        c.initialize();
-      }
+      var id = this._pendingRemove[i].getId();
+      var child = this._children[id];
+      child.uninitialize();
+      delete this._children[id];
+    }
+    this._pendingRemove = [];
 
-      this._initialized = true;
+    // Update every component
+    for (i = 0; i < this._componentsOrdered.length; ++i)
+    {
+      this._componentsOrdered[i].update(dt);
+    }
 
+    // Update children
+    for (i = 0; i < this._children.length; ++i)
+    {
+      this._children[i].update(dt);
+    }
+
+    return this;
+  };
+
+  TANK.Entity.prototype.addChild = function(childEntity)
+  {
+    // Check if entity is already a child of us
+    if (childEntity.getParent() === this)
+    {
+      console.error("An Entity was added to another Entity twice");
       return this;
-    };
+    }
 
-    TANK.Entity.prototype.uninitialize = function()
+    // Initialize the child
+    childEntity.initialize();
+
+    // Add entity as a child
+    this._children[childEntity._id] = childEntity;
+    childEntity._parent = this;
+
+    this.dispatchShallowEvent("OnChildAdded", childEntity);
+
+    return this;
+  };
+
+  TANK.Entity.prototype.removeChild = function(childEntity)
+  {
+    // Check if entity is a child
+    if (this._children[childEntity._id])
     {
-      // Uninitialize every component
-      for (var i = this._componentsOrdered.length - 1; i >= 0; --i)
-      {
-        var c = this._componentsOrdered[i];
-        c.uninitialize();
-      }
-
-      this._initialized = false;
-
+      // Uninitialize and remove child
+      childEntity.uninitialize();
+      delete this._children[childEntity._id];
+      childEntity._parent = null;
+    }
+    // Error otherwise
+    else
+    {
+      console.error("The Entity being removed is not a child of the calling Entity");
       return this;
-    };
+    }
+  };
 
-    TANK.Entity.prototype.update = function(dt)
-    {
-      // Remove deleted children
-      for (var i = 0; i < this._pendingRemove.length; ++i)
-      {
-        var id = this._pendingRemove[i].getId();
-        var child = this._children[id];
-        child.uninitialize();
-        delete this._children[id];
-      }
-      this._pendingRemove = [];
+  TANK.Entity.prototype.dispatchEvent = function(eventName)
+  {
+  };
 
-      // Update every component
-      for (i = 0; i < this._componentsOrdered.length; ++i)
-      {
-        this._componentsOrdered[i].update(dt);
-      }
-
-      // Update children
-      for (i = 0; i < this._children.length; ++i)
-      {
-        this._children[i].update(dt);
-      }
-
-      return this;
-    };
-
-    TANK.Entity.prototype.addChild = function(childEntity)
-    {
-      // Check if entity is already a child of us
-      if (childEntity.getParent() === this)
-      {
-        console.error("An Entity was added to another Entity twice");
-        return this;
-      }
-
-      // Error if entity isn't initialized
-      if (!childEntity._initialized)
-      {
-        console.error("An Entity was added to another Entity before being initialized");
-        return this;
-      }
-
-      // Add entity as a child
-      this._children[childEntity._id] = childEntity;
-      childEntity._parent = this;
-
-      this.dispatchShallowEvent("OnChildAdded", childEntity);
-
-      return this;
-    };
-
-    TANK.Entity.prototype.removeChild = function(childEntity)
-    {
-      // Check if entity is a child
-      if (this._children[childEntity._id])
-      {
-        delete this._children[childEntity._id];
-        childEntity._parent = null;
-      }
-      // Error otherwise
-      else
-      {
-        console.error("The Entity being removed is not a child of the calling Entity");
-        return this;
-      }
-    };
-
-    TANK.Entity.prototype.dispatchEvent = function(eventName)
-    {
-    };
-
-    TANK.Entity.prototype.dispatchShallowEvent = function(eventName)
-    {
-    };
+  TANK.Entity.prototype.dispatchShallowEvent = function(eventName)
+  {
+  };
   
 })(this.TANK = this.TANK || {});
