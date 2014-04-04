@@ -1,0 +1,25 @@
+{
+  "name": "TankJS",
+  "version": "0.0.1",
+  "description": "A lightweight Javascript game engine framework.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/phosphoer/TankJS.git"
+  },
+  "keywords": [
+    "html5",
+    "game",
+    "framework",
+    "engine"
+  ],
+  "author": "David Evans",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/phosphoer/TankJS/issues"
+  },
+  "homepage": "https://github.com/phosphoer/TankJS"
+}
