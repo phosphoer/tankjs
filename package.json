@@ -2,10 +2,6 @@
   "name": "TankJS",
   "version": "0.0.1",
   "description": "A lightweight Javascript game engine framework.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git://github.com/phosphoer/TankJS.git"
@@ -24,6 +20,8 @@
   "homepage": "https://github.com/phosphoer/TankJS",
   "devDependencies": {
     "mocha": "~1.18.2",
-    "chai": "~1.9.1"
+    "chai": "~1.9.1",
+    "gulp": "~3.6.0",
+    "gulp-concat": "~2.2.0"
   }
 }

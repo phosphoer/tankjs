@@ -15,5 +15,36 @@
 (function(TANK)
 {
   "use strict";
-  
+
+  // Main engine entity
+  TANK.createEngine = function()
+  {
+    TANK.main = new TANK.Entity();
+  };
+
+  // Start the main loop
+  TANK.start = function()
+  {
+    window.requestAnimationFrame(update);
+  };
+
+  // Internal update loop
+  function update()
+  {
+    // Get dt
+    var newTime = new Date();
+    var dt = (newTime - _lastTime) / 1000.0;
+    _lastTime = newTime;
+    if (dt > 0.05)
+      dt = 0.05;
+
+    // Update main entity
+    TANK.main.update(dt);
+
+    // Request next frame
+    window.requestAnimationFrame(update);
+  }
+
+  var _lastTime = 0;
+
 })(this.TANK = this.TANK || {});
