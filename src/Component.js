@@ -15,8 +15,69 @@
 (function(TANK)
 {
   "use strict";
-  
-  TANK.Component = function()
+
+  TANK.Component = function(name)
+  {
+    this._name = name;
+    this._includes = [];
+    this._construct = function() {};
+    this._initialize = function() {};
+    this._uninitialize = function() {};
+  };
+
+  TANK.Component.prototype.includes = function(componentNames)
+  {
+    var includes = [componentNames];
+    if (Array.isArray(componentNames))
+      includes = componentNames;
+
+    // Copy the array
+    this._includes = includes.slice();
+
+    return this;
+  };
+
+  TANK.Component.prototype.construct = function(func)
+  {
+    this._construct = func;
+    return this;
+  };
+
+  TANK.Component.prototype.initialize = function(func)
+  {
+    this._initialize = func;
+    return this;
+  };
+
+  TANK.Component.prototype.uninitialize = function(func)
+  {
+    this._uninitialize = func;
+    return this;
+  };
+
+  TANK.Component.prototype.clone = function()
+  {
+    var c = {};
+
+    // Set functions on component
+    c.construct = this._construct;
+    c.initialize = this._initialize;
+    c.uninitialize = this._uninitialize;
+    c.addEventListener = this.addEventListener;
+    c.removeEventListener = this.removeEventListener;
+
+    // Add properties on component
+    c._name = this._name;
+    c._parent = null;
+    c._entity = null;
+    c._listeners = [];
+  };
+
+  TANK.Component.prototype.addEventListener = function(eventName, func)
+  {
+  };
+
+  TANK.Component.prototype.removeEventListener = function(eventName, func)
   {
   };
 

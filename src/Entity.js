@@ -28,7 +28,7 @@
     this._children = {};
     this._pendingRemove = [];
     this._initialized = false;
-    this._listeners = {};
+    this._events = {};
   };
 
   TANK.Entity.prototype.addComponent = function(componentNames)
@@ -140,5 +140,5 @@
   TANK.Entity.prototype.dispatchShallowEvent = function(eventName)
   {
   };
-  
+
 })(this.TANK = this.TANK || {});
