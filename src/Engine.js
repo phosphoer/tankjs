@@ -26,6 +26,28 @@
   TANK.start = function()
   {
     window.requestAnimationFrame(update);
+    _running = true;
+  };
+
+  // Stop the main loop
+  TANK.stop = function()
+  {
+    _running = false;
+  };
+
+  // Register a component type
+  TANK.registerComponent = function(componentName)
+  {
+    // Check that component name is a valid identifier
+    if ((componentName[0] >= 0 && componentName[0] <= 9) || componentName.search(" ") >= 0)
+    {
+      TANK.error(componentName + " is an invalid identifier and won't be accessible without [] operator");
+      return this;
+    }
+
+    var c = new TANK.Component(componentName);
+    TANK._registeredComponents[componentName] = c;
+    return c;
   };
 
   // Internal update loop
@@ -42,9 +64,12 @@
     TANK.main.update(dt);
 
     // Request next frame
-    window.requestAnimationFrame(update);
+    if (_running)
+      window.requestAnimationFrame(update);
   }
 
   var _lastTime = 0;
+  var _running = false;
+  TANK._registeredComponents = {};
 
 })(this.TANK = this.TANK || {});

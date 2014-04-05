@@ -27,12 +27,11 @@
 
   TANK.Component.prototype.includes = function(componentNames)
   {
-    var includes = [componentNames];
-    if (Array.isArray(componentNames))
-      includes = componentNames;
+    if (!Array.isArray(componentNames))
+      componentNames = [componentNames];
 
     // Copy the array
-    this._includes = includes.slice();
+    this._includes = componentNames.slice();
 
     return this;
   };
@@ -63,19 +62,45 @@
     c.construct = this._construct;
     c.initialize = this._initialize;
     c.uninitialize = this._uninitialize;
-    c.listenTo = this.listenTo;
-    c.stopListeningTo = this.stopListeningTo;
+    c._uninitializeBase = uninitializeBase;
+    c.listenTo = listenTo;
+    c.stopListeningTo = stopListeningTo;
 
     // Add properties on component
     c._name = this._name;
-    c._parent = null;
     c._entity = null;
+    c._constructed = false;
+    c._initialized = false;
     c._listeners = [];
 
     return c;
   };
 
-  TANK.Component.prototype.listenTo = function(entity, eventName, func)
+  var uninitializeBase = function()
+  {
+    // Remove all listeners
+    for (var i = 0; i < this._listeners.length; ++i)
+    {
+      var evt = this._listeners[i];
+      var entityListeners = evt.entity._events[evt.eventName];
+      if (!entityListeners)
+        continue;
+
+      for (var j = 0; j < entityListeners.length; ++j)
+      {
+        var entityEvt = entityListeners[j];
+        if (entityEvt.self === this)
+        {
+          entityListeners.splice(j, 1);
+          j = entityListeners.length;
+        }
+      }
+    }
+
+    this._listeners = [];
+  };
+
+  var listenTo = function(entity, eventName, func)
   {
     var evt = {self: this, eventName: eventName, func: func, entity: entity};
 
@@ -88,9 +113,9 @@
     return this;
   };
 
-  TANK.Component.prototype.stopListeningTo = function(entity, eventName)
+  var stopListeningTo = function(entity, eventName)
   {
-    var entityListeners = entityListeners._events[eventName];
+    var entityListeners = entity._events[eventName];
     if (!entityListeners)
     {
       console.warn("A component tried to stop listening to an event it was not listening to");
@@ -112,7 +137,7 @@
     for (i = 0; i < entityListeners.length; ++i)
     {
       var entityEvt = entityListeners[i];
-      if (entityEvt.eventName === eventName && entityEvt.self === this)
+      if (entityEvt.self === this)
       {
         entityListeners.splice(i, 1);
         break;
