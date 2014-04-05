@@ -63,22 +63,61 @@
     c.construct = this._construct;
     c.initialize = this._initialize;
     c.uninitialize = this._uninitialize;
-    c.addEventListener = this.addEventListener;
-    c.removeEventListener = this.removeEventListener;
+    c.listenTo = this.listenTo;
+    c.stopListeningTo = this.stopListeningTo;
 
     // Add properties on component
     c._name = this._name;
     c._parent = null;
     c._entity = null;
     c._listeners = [];
+
+    return c;
   };
 
-  TANK.Component.prototype.addEventListener = function(eventName, func)
+  TANK.Component.prototype.listenTo = function(entity, eventName, func)
   {
+    var evt = {self: this, eventName: eventName, func: func, entity: entity};
+
+    var entityListeners = entity._events[eventName] || [];
+    entity._events[eventName] = entityListeners;
+
+    entityListeners.push(evt);
+    this._listeners.push(evt);
+
+    return this;
   };
 
-  TANK.Component.prototype.removeEventListener = function(eventName, func)
+  TANK.Component.prototype.stopListeningTo = function(entity, eventName)
   {
+    var entityListeners = entityListeners._events[eventName];
+    if (!entityListeners)
+    {
+      console.warn("A component tried to stop listening to an event it was not listening to");
+      return this;
+    }
+
+    // Remove local listener
+    for (var i = 0; i < this._listeners.length; ++i)
+    {
+      var evt = this._listeners[i];
+      if (evt.eventName === eventName && evt.entity === entity)
+      {
+        this._listeners.splice(i, 1);
+        break;
+      }
+    }
+
+    // Remove listener on entity
+    for (i = 0; i < entityListeners.length; ++i)
+    {
+      var entityEvt = entityListeners[i];
+      if (entityEvt.eventName === eventName && entityEvt.self === this)
+      {
+        entityListeners.splice(i, 1);
+        break;
+      }
+    }
   };
 
 })(this.TANK = this.TANK || {});

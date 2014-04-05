@@ -135,10 +135,26 @@
 
   TANK.Entity.prototype.dispatchEvent = function(eventName)
   {
+    // Copy arguments and pop off the event name
+    var args = arguments.slice(1, arguments.length);
+
+    // Dispatch the event to listeners
+    var listeners = this._events[eventName];
+    for (var i = 0; i < this.listeners.length; ++i)
+    {
+      var evt = listeners[i];
+      evt.func.apply(evt.self, args);
+    }
   };
 
-  TANK.Entity.prototype.dispatchShallowEvent = function(eventName)
+  TANK.Entity.prototype.dispatchDeepEvent = function(eventName)
   {
+    // Dispatch the event normally
+    this.dispatchEvent(eventName);
+
+    // Also tell children to dispatch the event
+    for (var i in this._children)
+      this._children[i].dispatchDeepEvent(eventName);
   };
 
 })(this.TANK = this.TANK || {});
