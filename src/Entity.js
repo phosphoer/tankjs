@@ -18,17 +18,22 @@
 
   var _nextId = 0;
 
-  TANK.Entity = function(name)
+  TANK.Entity = function(componentNames)
   {
-    this._name = name;
+    this._name = null;
     this._id = _nextId++;
     this._parent = null;
     this._components = {};
     this._componentsOrdered = [];
     this._children = {};
+    this._namedChildren = {};
+    this._childComponents = {};
     this._pendingRemove = [];
     this._initialized = false;
     this._events = {};
+
+    if (componentNames)
+      this.addComponent(componentNames);
   };
 
   TANK.Entity.prototype.addComponent = function(componentNames)
@@ -75,7 +80,15 @@
       // Initialize the component immediately if the entity is already initialized
       if (this._initialized)
       {
+        if (this._parent)
+        {
+          if (!this._parent._childComponents[componentName])
+            this._parent._childComponents[componentName] = {};
+          var objectsWithComponent = this._parent._childComponents[componentName];
+          objectsWithComponent[this._id] = c;
+        }
         c.initialize();
+        c._initialized = true;
         var space = this._parent || this;
         space.dispatchEvent("OnComponentAdded", c);
       }
@@ -101,9 +114,17 @@
       var space = this._parent || this;
       space.dispatchEvent("OnComponentRemoved", c);
 
+      // Remove component from tracking
+      if (this._parent)
+      {
+        var objectsWithComponent = this._parent._childComponents[componentName];
+        delete objectsWithComponent[this._id];
+      }
+
       // Uninitialize the component
       c._uninitializeBase();
       c.uninitialize();
+      c._initialized = false;
 
       // Remove from map
       delete this[componentName];
@@ -116,11 +137,25 @@
 
   TANK.Entity.prototype.initialize = function()
   {
+    var i;
+    // Track all components on the entity
+    if (this._parent)
+    {
+      for (i in this._components)
+      {
+        if (!this._parent._childComponents[i])
+          this._parent._childComponents[i] = {};
+        var objectsWithComponent = this._parent._childComponents[i];
+        objectsWithComponent[this._id] = this;
+      }
+    }
+
     // Initialize every component
-    for (var i = 0; i < this._componentsOrdered.length; ++i)
+    for (i = 0; i < this._componentsOrdered.length; ++i)
     {
       var c = this._componentsOrdered[i];
       c.initialize();
+      c._initialized = true;
     }
 
     this._initialized = true;
@@ -130,8 +165,19 @@
 
   TANK.Entity.prototype.uninitialize = function()
   {
+    var i;
+    // Stop tracking all components in the entity
+    if (this._parent)
+    {
+      for (i in this._components)
+      {
+        var objectsWithComponent = this._parent._childComponents[i];
+        delete objectsWithComponent[this._id];
+      }
+    }
+
     // Uninitialize every component
-    for (var i = this._componentsOrdered.length - 1; i >= 0; --i)
+    for (i = this._componentsOrdered.length - 1; i >= 0; --i)
     {
       var c = this._componentsOrdered[i];
       c.uninitialize();
@@ -152,6 +198,7 @@
       child.uninitialize();
       child._parent = null;
       delete this._children[id];
+      delete this._namedChildren[child._name];
     }
     this._pendingRemove = [];
 
@@ -171,7 +218,15 @@
     return this;
   };
 
-  TANK.Entity.prototype.addChild = function(childEntity)
+  TANK.Entity.prototype.getChild = function(nameOrId)
+  {
+    if (nameOrId.substr)
+      return this._namedChildren[nameOrId];
+    else if (!isNaN(nameOrId))
+      return this._children[nameOrId];
+  };
+
+  TANK.Entity.prototype.addChild = function(childEntity, name)
   {
     // Check if entity is already a child of us
     if (childEntity._parent === this)
@@ -180,12 +235,18 @@
       return this;
     }
 
-    // Initialize the child
-    childEntity.initialize();
+    // Set name if provided
+    if (name)
+      childEntity._name = name;
 
     // Add entity as a child
     this._children[childEntity._id] = childEntity;
+    if (childEntity._name)
+      this._namedChildren[childEntity._name] = childEntity;
     childEntity._parent = this;
+
+    // Initialize the child
+    childEntity.initialize();
 
     this.dispatchEvent("OnChildAdded", childEntity);
 
