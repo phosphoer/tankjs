@@ -7,6 +7,7 @@
   .includes(["Velocity", "Collider2D"])
   .construct(function()
   {
+    this.zdepth = 0;
     this.life = 5;
   })
   .initialize(function()

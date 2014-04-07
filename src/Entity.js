@@ -180,6 +180,8 @@
     for (i = this._componentsOrdered.length - 1; i >= 0; --i)
     {
       var c = this._componentsOrdered[i];
+      var space = this._parent || this;
+      space.dispatchEvent("OnComponentRemoved", c);
       c.uninitialize();
     }
 
