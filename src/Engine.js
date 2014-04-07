@@ -17,14 +17,15 @@
   "use strict";
 
   // Main engine entity
-  TANK.createEngine = function()
+  TANK.createEngine = function(componentNames)
   {
-    TANK.main = new TANK.Entity();
+    TANK.main = new TANK.Entity(componentNames);
   };
 
   // Start the main loop
   TANK.start = function()
   {
+    TANK.main.initialize();
     window.requestAnimationFrame(update);
     _running = true;
   };

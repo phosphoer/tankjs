@@ -195,6 +195,7 @@
     {
       var id = this._pendingRemove[i]._id;
       var child = this._children[id];
+      this.dispatchEvent("OnChildRemoved", child);
       child.uninitialize();
       child._parent = null;
       delete this._children[id];
@@ -210,12 +211,17 @@
     }
 
     // Update children
-    for (i = 0; i < this._children.length; ++i)
+    for (i in this._children)
     {
       this._children[i].update(dt);
     }
 
     return this;
+  };
+
+  TANK.Entity.prototype.getChildrenWithComponent = function(componentName)
+  {
+    return this._childComponents[componentName];
   };
 
   TANK.Entity.prototype.getChild = function(nameOrId)
@@ -259,7 +265,6 @@
     if (this._children[childEntity._id])
     {
       this._pendingRemove.push(childEntity);
-      this.dispatchEvent("OnChildRemoved", childEntity);
     }
     // Error otherwise
     else
