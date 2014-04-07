@@ -19,6 +19,11 @@
     // Add a component to be drawn
     this.add = function(component)
     {
+      if (component.zdepth === undefined)
+      {
+        console.warn("A component was added to Renderer2D with an undefined zdepth");
+        component.zdepth = 0;
+      }
       this._drawables[component._name + component._entity._id] = component;
       this._sort();
     };
@@ -72,11 +77,10 @@
       this.context.restore();
     };
 
-    // Listen to Entities being removed
-    this.listenTo(this._entity, "OnChildRemoved", function(child)
+    // Listen to Components being removed
+    this.listenTo(this._entity, "OnComponentRemoved", function(component)
     {
-      for (var i in child._components)
-        delete this._drawables[i + child._id];
+      delete this._drawables[component._name + component._entity._id];
       this._sort();
     });
   });
