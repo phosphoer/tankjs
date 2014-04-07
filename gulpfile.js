@@ -13,9 +13,16 @@
     .pipe(gulp.dest("bin/"));
   });
 
+  gulp.task("components", function()
+  {
+    gulp.src("components/*.js")
+    .pipe(concat("components.js"))
+    .pipe(gulp.dest("bin/"));
+  });
+
   // Rerun the task when a file changes
   gulp.task("watch", function() {
-    gulp.watch("src/*.js", ["default"]);
+    gulp.watch(["src/*.js", "components/*.js"], ["default", "components"]);
   });
 
 })();
