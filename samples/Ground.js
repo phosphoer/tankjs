@@ -5,6 +5,7 @@
   TANK.registerComponent("Ground")
   .construct(function()
   {
+    this.zdepth = 1;
     this.heightMap = [];
     this.currentHeight = 0;
     this.currentPos = 0;
