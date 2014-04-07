@@ -19,14 +19,14 @@
     // Add a component to be drawn
     this.add = function(component)
     {
-      this._drawables[component._name + component._id] = component;
+      this._drawables[component._name + component._entity._id] = component;
       this._sort();
     };
 
     // Remove a component from drawing
     this.remove = function(component)
     {
-      delete this._drawables[component._name + component._id];
+      delete this._drawables[component._name + component._entity._id];
       this._sort();
     };
 

@@ -6,6 +6,7 @@
   .includes("Pos2D")
   .construct(function ()
   {
+    this.zdepth = 0;
     this.image = new Image();
     this.scale = 1;
     this.pivotPoint = [0, 0];
