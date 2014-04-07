@@ -102,6 +102,7 @@
 
   var listenTo = function(entity, eventName, func)
   {
+    eventName = eventName.toLowerCase();
     var evt = {self: this, eventName: eventName, func: func, entity: entity};
 
     var entityListeners = entity._events[eventName] || [];
@@ -115,6 +116,7 @@
 
   var stopListeningTo = function(entity, eventName)
   {
+    eventName = eventName.toLowerCase();
     var entityListeners = entity._events[eventName];
     if (!entityListeners)
     {

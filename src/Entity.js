@@ -278,6 +278,8 @@
 
   TANK.Entity.prototype.dispatchEvent = function(eventName)
   {
+    eventName = eventName.toLowerCase();
+
     // Copy arguments and pop off the event name
     var args = Array.prototype.slice.call(arguments, 1, arguments.length);
 
