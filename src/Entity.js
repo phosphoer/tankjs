@@ -90,7 +90,7 @@
         c.initialize();
         c._initialized = true;
         var space = this._parent || this;
-        space.dispatchEvent("OnComponentAdded", c);
+        space.dispatchEvent("componentadded", c);
       }
     }
 
@@ -112,7 +112,7 @@
 
       // Send out remove event
       var space = this._parent || this;
-      space.dispatchEvent("OnComponentRemoved", c);
+      space.dispatchEvent("componentremoved", c);
 
       // Remove component from tracking
       if (this._parent)
@@ -181,7 +181,7 @@
     {
       var c = this._componentsOrdered[i];
       var space = this._parent || this;
-      space.dispatchEvent("OnComponentRemoved", c);
+      space.dispatchEvent("componentremoved", c);
       c.uninitialize();
     }
 
@@ -197,7 +197,7 @@
     {
       var id = this._pendingRemove[i]._id;
       var child = this._children[id];
-      this.dispatchEvent("OnChildRemoved", child);
+      this.dispatchEvent("childremoved", child);
       child.uninitialize();
       child._parent = null;
       delete this._children[id];
@@ -256,7 +256,7 @@
     // Initialize the child
     childEntity.initialize();
 
-    this.dispatchEvent("OnChildAdded", childEntity);
+    this.dispatchEvent("childadded", childEntity);
 
     return this;
   };

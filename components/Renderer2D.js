@@ -78,7 +78,7 @@
     };
 
     // Listen to Components being removed
-    this.listenTo(this._entity, "OnComponentRemoved", function(component)
+    this.listenTo(this._entity, "componentremoved", function(component)
     {
       delete this._drawables[component._name + component._entity._id];
       this._sort();
