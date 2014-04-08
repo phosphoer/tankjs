@@ -12,12 +12,26 @@
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
 
+// ## Entity
+// An Entity represents a single game object or container. It contains Components
+// and children Entities, and can also dispatch events. An Entity's functionality
+// is defined by the set of Components it has, and can be used to represent the player,
+// an object spawner, a trigger zone, or really just about anything. Since Entities can
+// contain child Entities, they can be used to create hierachical structures, or to separate
+// portions of your game that have separate behavior, since different Entities can send separate
+// events and be paused individually.
 (function(TANK)
 {
   "use strict";
 
   var _nextId = 0;
 
+  // ## Entity Constructor
+  // Construct a new Entity object. Takes a Component name
+  // or array of Component names to add to the Entity.
+  //
+  // `componentNames` - Either an Array of Component names or a single
+  // string Component name.
   TANK.Entity = function(componentNames)
   {
     this._name = null;
@@ -37,6 +51,14 @@
       this.addComponent(componentNames);
   };
 
+  // ## Add Component
+  // Add a Component to the Entity. This will initialize the Component
+  // if the Entity is already initialized, otherwise it will only
+  // construct the Component. It will also add Components included by
+  // the Component first.
+  //
+  // `componentNames` - Either an Array of Component names or a single
+  // string Component name.
   TANK.Entity.prototype.addComponent = function(componentNames)
   {
     if (!Array.isArray(componentNames))
@@ -98,6 +120,11 @@
     return this;
   };
 
+  // ## Remove Component
+  // Remove a Component from the Entity. This will uninitialize the Component.
+  //
+  // `componentNames` - Either an Array of Component names or a single
+  // string Component name.
   TANK.Entity.prototype.removeComponent = function(componentNames)
   {
     if (!Array.isArray(componentNames))
@@ -136,6 +163,12 @@
     return this;
   };
 
+  // ## Initialize
+  // Initialize the Entity. This will call initialize on each
+  // Component and child currently added to the Entity, in the order in which
+  // they were added. Note that adding an Entity as a child to another
+  // initialized Entity will call initialize already, so usually it is not
+  // necessary to call this method manually.
   TANK.Entity.prototype.initialize = function()
   {
     var i;
@@ -164,6 +197,9 @@
     return this;
   };
 
+  // ## Uninitialize
+  // Uninitializes every component and child within
+  // the Entity.
   TANK.Entity.prototype.uninitialize = function()
   {
     var i;
@@ -191,6 +227,13 @@
     return this;
   };
 
+  // ## Update
+  // Runs the update loop on the Entity one time, with the specified
+  // dt. This will call update on every Component and child Entity.
+  // Calling this method manually could be useful for stepping the update
+  // loop once frame at a time.
+  //
+  // `dt` - The elapsed time, in seconds
   TANK.Entity.prototype.update = function(dt)
   {
     var i;
@@ -238,11 +281,24 @@
     return this;
   };
 
+  // ## Get all children with a Component
+  // Get every child Entity with a give component. Runs in O(1) time
+  // as this information is collected as children are added and removed.
+  //
+  // `componentName` - Name of the component to match Entities with
+  //
+  // `return` - An object with Entity IDs mapped to Entities
   TANK.Entity.prototype.getChildrenWithComponent = function(componentName)
   {
     return this._childComponents[componentName];
   };
 
+  // ## Get a child Entity
+  // Gets a child Entity with the given name or ID.
+  //
+  // `nameOrId` - Either the name of the Entity to get, or the ID.
+  //
+  // `return` - The Entity with the given name or ID, or undefined.
   TANK.Entity.prototype.getChild = function(nameOrId)
   {
     if (nameOrId.substr)
@@ -251,6 +307,13 @@
       return this._children[nameOrId];
   };
 
+  // ## Add a child Entity
+  // Add an Entity as a child to this one. The child will be initialized
+  // if this Entity is already initialized.
+  //
+  // `childEntity` - The Entity to add as a child of this one
+  //
+  // `name` - [Optional] A name to give the added child
   TANK.Entity.prototype.addChild = function(childEntity, name)
   {
     // Check if entity is already a child of us
@@ -278,6 +341,12 @@
     return this;
   };
 
+  // ## Remove a child Entity
+  // Remove a child form the Entity. The removal of the child
+  // will be deferred to the next frame, at which point the child
+  // will be uninitialized.
+  //
+  // `childEntity` - The child to remove.
   TANK.Entity.prototype.removeChild = function(childEntity)
   {
     // Check if entity is a child
@@ -295,6 +364,12 @@
     return this;
   };
 
+  // ## Dispatch an event to listeners
+  // Dispatches an event to all listening Components.
+  //
+  // `eventName` - The name of the event to dispatch
+  //
+  // `...args` - Any number of arguments to pass with the event
   TANK.Entity.prototype.dispatch = function(eventName)
   {
     eventName = eventName.toLowerCase();
@@ -313,6 +388,13 @@
     }
   };
 
+  // ## Dispatch a deferred event
+  // Schedules an event to be dispatched to all listening
+  // Components on the next frame.
+  //
+  // `eventName` - The name of the event to dispatch
+  //
+  // `...args` - Any number of arguments to pass with the event
   TANK.Entity.prototype.dispatchNextFrame = function(eventName)
   {
     var args = Array.prototype.slice.call(arguments);
@@ -320,23 +402,21 @@
     this._pendingEvents.push(pendingEvent);
   };
 
+  // ## Dispatch a timed event
+  // Schedules an event to be dispatched to all listening
+  // Components after a specified amount of time.
+  //
+  // `time` - The time, in seconds, to wait before dispatching
+  // the event
+  //
+  // `eventName` - The name of the event to dispatch
+  //
+  // `...args` - Any number of arguments to pass with the event
   TANK.Entity.prototype.dispatchTimed = function(time, eventName)
   {
     var args = Array.prototype.slice.call(arguments, 1, arguments.length);
     var pendingEvent = {eventName: eventName, args: args, time: time};
     this._pendingEvents.push(pendingEvent);
-  };
-
-  TANK.Entity.prototype.dispatchDeep = function(eventName)
-  {
-    // Dispatch the event normally
-    this.dispatch(eventName);
-
-    // Also tell children to dispatch the event
-    for (var i in this._children)
-      this._children[i].dispatchDeep(eventName);
-
-    return this;
   };
 
 })(this.TANK = this.TANK || {});
