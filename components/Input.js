@@ -28,8 +28,6 @@
       "gestureend",
       "gesturechange"
     ];
-
-    this._pendingEvents = {};
   })
   .initialize(function()
   {
@@ -61,7 +59,7 @@
       }
 
       if (shouldAdd)
-        that._pendingEvents[e.type].push(e);
+        that._entity.dispatchNextFrame(e.type, e);
     };
 
     this.addListeners = function()
@@ -74,21 +72,6 @@
     {
       for (var i = 0; i < this._events.length; ++i)
         context.removeEventListener(this._events[i], eventHandler);
-    };
-
-    this.update = function(dt)
-    {
-      // Dispatch all pending events
-      for (var i in this._pendingEvents)
-      {
-        var eventList = this._pendingEvents[i];
-        for (var j = 0; eventList && j < eventList.length; ++j)
-        {
-          var e = eventList[j];
-          this._entity.dispatchEvent(e.type, e);
-        }
-        this._pendingEvents[i] = [];
-      }
     };
 
     this.addListeners();

@@ -219,7 +219,7 @@
         var e = new TANK.Entity();
         e.addComponent("ListenToTest");
         TANK.main.addChild(e);
-        TANK.main.dispatchEvent("TestEvent", done, 5);
+        TANK.main.dispatch("TestEvent", done, 5);
         TANK.main.removeChild(e);
       });
     });
@@ -241,7 +241,7 @@
         var e = new TANK.Entity();
         e.addComponent("StopListeningToTest");
         TANK.main.addChild(e);
-        TANK.main.dispatchEvent("TestEvent2");
+        TANK.main.dispatch("TestEvent2");
         TANK.main.removeChild(e);
       });
     });

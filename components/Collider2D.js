@@ -22,7 +22,7 @@
         var collider = colliders[i].Collider2D;
         if (collider !== this && this.collide(collider))
         {
-          this._entity.dispatchEvent("collide", collider._entity);
+          this._entity.dispatch("collide", collider._entity);
         }
       }
     };

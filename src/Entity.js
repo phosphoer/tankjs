@@ -31,6 +31,7 @@
     this._pendingRemove = [];
     this._initialized = false;
     this._events = {};
+    this._pendingEvents = [];
 
     if (componentNames)
       this.addComponent(componentNames);
@@ -90,7 +91,7 @@
         c.initialize();
         c._initialized = true;
         var space = this._parent || this;
-        space.dispatchEvent("componentadded", c);
+        space.dispatch("componentadded", c);
       }
     }
 
@@ -112,7 +113,7 @@
 
       // Send out remove event
       var space = this._parent || this;
-      space.dispatchEvent("componentremoved", c);
+      space.dispatch("componentremoved", c);
 
       // Remove component from tracking
       if (this._parent)
@@ -181,7 +182,7 @@
     {
       var c = this._componentsOrdered[i];
       var space = this._parent || this;
-      space.dispatchEvent("componentremoved", c);
+      space.dispatch("componentremoved", c);
       c.uninitialize();
     }
 
@@ -192,18 +193,34 @@
 
   TANK.Entity.prototype.update = function(dt)
   {
+    var i;
     // Remove deleted children
-    for (var i = 0; i < this._pendingRemove.length; ++i)
+    for (i = 0; i < this._pendingRemove.length; ++i)
     {
       var id = this._pendingRemove[i]._id;
       var child = this._children[id];
-      this.dispatchEvent("childremoved", child);
+      this.dispatch("childremoved", child);
       child.uninitialize();
       child._parent = null;
       delete this._children[id];
       delete this._namedChildren[child._name];
     }
     this._pendingRemove = [];
+
+    // Dispatch pending events
+    for (i = 0; i < this._pendingEvents.length; ++i)
+    {
+      // Dispatch the event if it's timer has reached 0
+      var pendingEvent = this._pendingEvents[i];
+      if (pendingEvent.time <= 0)
+      {
+        this.dispatch.apply(this, pendingEvent.args);
+        this._pendingEvents.splice(i, 1);
+        --i;
+      }
+      else
+        pendingEvent.time -= dt;
+    }
 
     // Update every component
     for (i = 0; i < this._componentsOrdered.length; ++i)
@@ -256,7 +273,7 @@
     // Initialize the child
     childEntity.initialize();
 
-    this.dispatchEvent("childadded", childEntity);
+    this.dispatch("childadded", childEntity);
 
     return this;
   };
@@ -278,7 +295,7 @@
     return this;
   };
 
-  TANK.Entity.prototype.dispatchEvent = function(eventName)
+  TANK.Entity.prototype.dispatch = function(eventName)
   {
     eventName = eventName.toLowerCase();
 
@@ -296,14 +313,28 @@
     }
   };
 
-  TANK.Entity.prototype.dispatchDeepEvent = function(eventName)
+  TANK.Entity.prototype.dispatchNextFrame = function(eventName)
+  {
+    var args = Array.prototype.slice.call(arguments);
+    var pendingEvent = {eventName: eventName, args: args, time: 0};
+    this._pendingEvents.push(pendingEvent);
+  };
+
+  TANK.Entity.prototype.dispatchTimed = function(time, eventName)
+  {
+    var args = Array.prototype.slice.call(arguments, 1, arguments.length);
+    var pendingEvent = {eventName: eventName, args: args, time: time};
+    this._pendingEvents.push(pendingEvent);
+  };
+
+  TANK.Entity.prototype.dispatchDeep = function(eventName)
   {
     // Dispatch the event normally
-    this.dispatchEvent(eventName);
+    this.dispatch(eventName);
 
     // Also tell children to dispatch the event
     for (var i in this._children)
-      this._children[i].dispatchDeepEvent(eventName);
+      this._children[i].dispatchDeep(eventName);
 
     return this;
   };
