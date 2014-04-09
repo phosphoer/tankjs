@@ -4,12 +4,12 @@
 
   TANK.Key = {};
 
-  // Mouse buttons treated as "key"
+  // ## Mouse buttons
   TANK.Key.LEFT_MOUSE = 0;
   TANK.Key.MIDDLE_MOUSE = 1;
   TANK.Key.RIGHT_MOUSE = 2;
 
-  // Special keys
+  // ## Special keys
   TANK.Key.LEFT_ARROW = 37;
   TANK.Key.UP_ARROW = 38;
   TANK.Key.RIGHT_ARROW = 39;
@@ -23,7 +23,7 @@
   TANK.Key.SUPER = 91;
   TANK.Key.TILDE = 192;
 
-  // Letters
+  // ## Letters
   TANK.Key.A = 65;
   TANK.Key.B = 66;
   TANK.Key.C = 67;
@@ -51,7 +51,7 @@
   TANK.Key.Y = 89;
   TANK.Key.Z = 90;
 
-  // Number keys (not numpad)
+  // ## Number keys (not numpad)
   TANK.Key.NUM1 = 49;
   TANK.Key.NUM2 = 50;
   TANK.Key.NUM3 = 51;

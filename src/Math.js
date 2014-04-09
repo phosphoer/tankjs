@@ -4,6 +4,16 @@
 
   TANK.Math = TANK.Math || {};
 
+  // ## Test a point against an AABB
+  // Test if a given point is inside a rectangle
+  //
+  // `point` - An array in the form [x, y]
+  //
+  // `center` - The center point of the rectangle in the form [x, y]
+  //
+  // `size` - The size of the rectangle in the form [width, height]
+  //
+  // `return` - True if the point is inside the AABB
   TANK.Math.pointInAABB = function(point, center, size)
   {
     var halfSize = [size[0] / 2, size[1] / 2];
@@ -14,6 +24,18 @@
     return true;
   };
 
+  // ## Test an AABB against an AABB
+  // Test if a given rectangle is intersecting another rectangle
+  //
+  // `centerA` - The center point of the first rectangle in the form [x, y]
+  //
+  // `sizeA` - The size of the first rectangle in the form [width, height]
+  //
+  // `centerB` - The center point of the second rectangle in the form [x, y]
+  //
+  // `sizeB` - The size of the second rectangle in the form [width, height]
+  //
+  // `return` - True if there is an intersection
   TANK.Math.AABBInAABB = function(centerA, sizeA, centerB, sizeB)
   {
     // Right side is left of left side
@@ -35,6 +57,18 @@
     return true;
   };
 
+  // ## Test a point against an OBB
+  // Test if a given point is inside an oriented box.
+  //
+  // `point` - An array in the form [x, y]
+  //
+  // `center` - The center point of the box in the form [x, y]
+  //
+  // `size` - The size of the box in the form [width, height]
+  //
+  // `angle` - The rotation of the box, in radians
+  //
+  // `return` - True if the point is inside the OBB
   TANK.Math.pointInOBB = function(point, center, size, angle)
   {
     var pointRot = [];
@@ -43,6 +77,18 @@
     return TANK.Math.pointInAABB(pointRot, center, size);
   };
 
+  // ## Line intersecting
+  // Get the point of intersection, if any, between two line segments.
+  //
+  // `line1A` - Point A on the first line, in the form [x, y]
+  //
+  // `line1B` - Point B on the first line, in the form [x, y]
+  //
+  // `line2A` - Point A on the second line, in the form [x, y]
+  //
+  // `line2B` - Point B on the second line, in the form [x, y]
+  //
+  // `return` - A point in the form [x, y]
   TANK.Math.lineIntersection = function(line1A, line1B, line2A, line2B)
   {
     var r = [line1B[0] - line1A[0], line1B[1] - line1A[1]];
@@ -69,6 +115,19 @@
     return null;
   };
 
+  // ## Get direction to point
+  // Check if a point is to the left or right of a vector using
+  // the cross product.
+  //
+  // `posA` - The first point in the form [x, y]
+  //
+  // `rotationA` - The angle of the vector, in radians
+  //
+  // `posB` - The point to get the direction to, in form [x, y]
+  //
+  // `return` - A negative value if the direction is left, and a positive
+  // value if the direction is right. The return will be 0 if the vector
+  // is facing directly at `posB`.
   TANK.Math.getDirectionToPoint = function(posA, rotationA, posB)
   {
     var dir = [Math.cos(rotationA), Math.sin(rotationA)];
