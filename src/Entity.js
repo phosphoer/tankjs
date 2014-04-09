@@ -192,6 +192,10 @@
       c._initialized = true;
     }
 
+    // Initialize children
+    for (i in this._children)
+      this._children[i].initialize();
+
     this._initialized = true;
 
     return this;
@@ -221,6 +225,10 @@
       space.dispatch("componentremoved", c);
       c.uninitialize();
     }
+
+    // Uninitialize children
+    for (i in this._children)
+      this._children[i].uninitialize();
 
     this._initialized = false;
 
@@ -319,7 +327,21 @@
     // Check if entity is already a child of us
     if (childEntity._parent === this)
     {
-      console.error("An Entity was added to another Entity twice");
+      console.error("An Entity cannot have duplicate children");
+      return this;
+    }
+
+    // The parent of a child must be initialized
+    if (!this._initialized && childEntity._initialized)
+    {
+      console.error("An initialized Entity cannot have an uninitialized parent");
+      return this;
+    }
+
+    // It is invalid to add a child that already has a parent
+    if (childEntity._parent)
+    {
+      console.error("An Entity cannot be given multiple parents");
       return this;
     }
 

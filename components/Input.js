@@ -39,8 +39,6 @@
       e.preventDefault();
 
       var shouldAdd = true;
-      if (!that._pendingEvents[e.type])
-        that._pendingEvents[e.type] = [];
 
       if (e.type === "keydown")
       {

@@ -12,34 +12,64 @@
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
 
+// ## TANK
+// The main namespace from which all the features of the engine
+// are accessed.
 (function(TANK)
 {
   "use strict";
 
-  // Main engine entity
+  // ## Create the engine
+  // Creates the main engine Entity that receives the
+  // animation frame callback when `TANK.start()` is called.
+  // In a simple project, systems would be attached to this entity,
+  // and game objects added as direct children of it. The parameter is
+  // passed directly to the constructor of Entity.
+  //
+  // `componentNames` - Either an Array of Component names or a single
+  // string Component name.
   TANK.createEngine = function(componentNames)
   {
     TANK.main = new TANK.Entity(componentNames);
+    return TANK;
   };
 
-  // Start the main loop
+  // ## Start game loop
+  // Begins the main game loop using `requestAnimationFrame`.
+  // This also initializes the main engine entity.
   TANK.start = function()
   {
     TANK.main.initialize();
     window.requestAnimationFrame(update);
     _running = true;
+    return TANK;
   };
 
-  // Stop the main loop
+  // ## Stop game loop
+  // Sets a flag to not request another animation frame at
+  // the end of the next update loop. Note that this is different
+  // than pausing an individual entity, as it actually stops the
+  // request animation frame loop, whereas pausing simply skips the
+  // relevant entity's update call.
   TANK.stop = function()
   {
     _running = false;
   };
 
-  // Register a component type
+  // ## Register a compoennt
+  // This is the entry point to defining a new type of component.
+  // This method should be used over manually instantiating a Component
+  // as it performs additional logic to store information about the Component type.
+  // The new component is returned, to enable a return value chained style of defining
+  // components.
+  //
+  // `componentName` - A string containing a valid identifier to be used as the name of the
+  // new Component type.
+  //
+  // `return` - A new Component.
   TANK.registerComponent = function(componentName)
   {
-    // Check that component name is a valid identifier
+    // Component name must be a valid identifier
     if ((componentName[0] >= 0 && componentName[0] <= 9) || componentName.search(" ") >= 0)
     {
       TANK.error(componentName + " is an invalid identifier and won't be accessible without [] operator");
@@ -51,7 +81,7 @@
     return c;
   };
 
-  // Internal update loop
+  // ## Internal update loop
   function update()
   {
     // Get dt

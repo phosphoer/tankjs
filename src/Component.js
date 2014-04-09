@@ -12,10 +12,18 @@
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
 
+// ## Component
+// Components are used to add functionality to Entities.
+// Components are defined using `TANK.registerComponent`, not by
+// instantiating a Component.
 (function(TANK)
 {
   "use strict";
 
+  // ## Constructor
+  // Never needs to be called externally.
+  //
+  // `name` - The name of the Component.
   TANK.Component = function(name)
   {
     this._name = name;
@@ -25,6 +33,15 @@
     this._uninitialize = function() {};
   };
 
+  // ## Include other Components
+  // Use this to mark other components that will automatically
+  // be added to an Entity that this component is added to.
+  // For example a Sprite component would probably include a
+  // transform / position component. This method is designed to be
+  // chained off of a call to `TANK.registerComponent`
+  //
+  // `componentNames` - Either an Array of Component names or a single
+  // string Component name.
   TANK.Component.prototype.includes = function(componentNames)
   {
     if (!Array.isArray(componentNames))
@@ -36,24 +53,59 @@
     return this;
   };
 
+  // ## Define a constructor
+  // Define a function that will be called when an instance of
+  // the component type is created, such as when it is added to an
+  // Entity. This is usually where fields on the component are given
+  // default values. This method is designed to be chained off of a call to
+  // `TANK.registerComponent`.
+  //
+  // `func` - A function that will be used to construct the component.
+  // The function is invoked with `this` pointing at the component
+  // instance.
   TANK.Component.prototype.construct = function(func)
   {
     this._construct = func;
     return this;
   };
 
+  // ## Define an initialize function
+  // Define a function that will be called when the entity this component
+  // is a part of is initialized. Initialize is usually where custom methods are
+  // defined and is where event listeners should be added. This method is designed
+  // to be chained off of a call to `TANK.registerComponent`.
+  //
+  // `func` - A function that will be used to initialize the component.
+  // The function is invoked with `this` pointing at the component
+  // instance.
   TANK.Component.prototype.initialize = function(func)
   {
     this._initialize = func;
     return this;
   };
 
+  // ## Define an initialize function
+  // Define a function that will be called when the entity this component
+  // is a part of is initialized. This is where anything done in `initialize`
+  // can be undone, if necessary. Note that listeners are already automatically
+  // removed when a component is uninitialized. This method is designed to be
+  // chained off of a call to `TANK.registerComponent`
+  //
+  // `func` - A function that will be used to initialize the component.
+  // The function is invoked with `this` pointing at the component
+  // instance.
   TANK.Component.prototype.uninitialize = function(func)
   {
     this._uninitialize = func;
     return this;
   };
 
+  // ## Clone a component definition.
+  // Create a new object representing an instance of the component
+  // definition. This never needs to be called externally, as adding
+  // a component to an Entity does this internally.
+  //
+  // `return` - An instance of a component.
   TANK.Component.prototype.clone = function()
   {
     var c = {};
@@ -76,6 +128,7 @@
     return c;
   };
 
+  // Base uninitialize function, not called externally.
   var uninitializeBase = function()
   {
     // Remove all listeners
@@ -100,6 +153,19 @@
     this._listeners = [];
   };
 
+  // ## Listen to an event
+  // Register a function to be called when a particular event
+  // is disaptched by the given entity. This function is added to
+  // each component instance in `clone`.
+  //
+  // `entity` - The entity to listen for events from. In many cases
+  // this will be the `TANK.main` entity.
+  //
+  // `eventName` - The string name of the event to listen for. All events
+  // are case insensitive.
+  //
+  // `func` - The function to act as the callback for the event. In the callback
+  // `this` is set to point at the component instance.
   var listenTo = function(entity, eventName, func)
   {
     eventName = eventName.toLowerCase();
@@ -114,6 +180,14 @@
     return this;
   };
 
+  // ## Stop listening to an event
+  // Stop listening to an entity for a particular event.
+  // Note that events are automatically removed when a component
+  // is uninitialized.
+  //
+  // `entity` - The entity to stop listening to.
+  //
+  // `eventName` - The name of the event to stop listening to.
   var stopListeningTo = function(entity, eventName)
   {
     eventName = eventName.toLowerCase();
