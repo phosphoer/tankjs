@@ -1,64 +1,50 @@
-TANK.registerComponent("Image")
-
-.interfaces("Drawable")
-
-.requires("Pos2D")
-
-.construct(function ()
+(function()
 {
-  this.zdepth = 0;
-  this.centered = true;
-  this.subRectOrigin = undefined;
-  this.subRectCorner = undefined;
-  this._image = new Image();
+  "use strict";
 
-  addProperty(this, "imagePath", function ()
+  TANK.registerComponent("Image")
+  .includes("Pos2D")
+  .construct(function ()
   {
-    return this._image.src;
-  }, function (val)
+    this.zdepth = 0;
+    this.image = new Image();
+    this.scale = 1;
+    this.pivotPoint = [0, 0];
+  })
+  .initialize(function()
   {
-    this._image.src = val;
+    // Store some components
+    var t = this._entity.Pos2D;
+
+    // Check if we can find a render manager to register with
+    if (!this._entity._parent)
+    {
+      console.error("The Entity the Image component was added to has no parent");
+      return;
+    }
+    else if (!this._entity._parent.Renderer2D)
+    {
+      console.error("The Image component couldn't find a Renderer2D to register with");
+      return;
+    }
+
+    // Add ourselves to render manager
+    this._entity._parent.Renderer2D.add(this);
+
+    // Draw function
+    this.draw = function(ctx, camera)
+    {
+      if (!this.image)
+        return;
+
+      ctx.save();
+      ctx.translate(t.x - camera.x, t.y - camera.y);
+      ctx.rotate(t.rotation);
+      ctx.scale(this.scale, this.scale);
+      ctx.translate(this.image.width / -2 + this.pivotPoint[0], this.image.height / -2 + this.pivotPoint[1]);
+      ctx.drawImage(this.image, 0, 0);
+      ctx.restore();
+    };
   });
 
-  addProperty(this, "width", function ()
-  {
-    if (!this.subRectOrigin)
-      return this._image.width;
-    return this.subRectCorner[0] - this.subRectOrigin[0];
-  }, function (val)
-  {
-    if (this.subRectOrigin)
-      this.subRectCorner[0] = this.subRectOrigin[0] + val;
-  });
-
-  addProperty(this, "height", function ()
-  {
-    if (!this.subRectOrigin)
-      return this._image.height;
-    return this.subRectCorner[1] - this.subRectOrigin[1];
-  }, function (val)
-  {
-    if (this.subRectOrigin)
-      this.subRectCorner[1] = this.subRectOrigin[1] + val;
-  });
-})
-
-.initialize(function ()
-{
-  this.draw = function (ctx)
-  {
-    var t = this.parent.Pos2D;
-    ctx.save();
-    ctx.translate(t.x, t.y);
-    ctx.rotate(t.rotation)
-    if (this.centered)
-      ctx.translate(-this.width / 2, -this.height / 2);
-
-    if (this.subRectOrigin)
-      ctx.drawImage(this._image, this.subRectOrigin[0], this.subRectOrigin[1], this.width, this.height, 0, 0, this.width, this.height);
-    else
-      ctx.drawImage(this._image, 0, 0);
-
-    ctx.restore();
-  };
-});
+})();

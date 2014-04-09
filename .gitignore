@@ -1,3 +1,9 @@
+<<<<<<< HEAD
 site/*
 lib/*
 bin/*
+=======
+node_modules/
+bin/
+*.sublime-workspace
+>>>>>>> tankjs2
