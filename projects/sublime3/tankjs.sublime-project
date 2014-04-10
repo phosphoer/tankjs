@@ -4,7 +4,7 @@
 		{
 			"follow_symlinks": true,
 			"path": "../../",
-      "file_exclude_patterns": ["bin/**/*", "node_modules/**/*"]
+      "file_exclude_patterns": ["bin/**/*", "bin/*", "node_modules/**/*", "docs/**/*", "docs/*"]
 		}
 	]
 }
