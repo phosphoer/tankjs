@@ -1,3 +1,4 @@
+// Defines for popular keycodes
 (function(TANK)
 {
   "use strict";

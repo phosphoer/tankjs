@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Math.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="Component.html">
+                Component.js
+              </a>
+            
+              
+              <a class="source" href="Engine.html">
+                Engine.js
+              </a>
+            
+              
+              <a class="source" href="Entity.html">
+                Entity.js
+              </a>
+            
+              
+              <a class="source" href="Events.html">
+                Events.js
+              </a>
+            
+              
+              <a class="source" href="Keys.html">
+                Keys.js
+              </a>
+            
+              
+              <a class="source" href="Math.html">
+                Math.js
+              </a>
+            
+              
+              <a class="source" href="index.html">
+                index.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>Math.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(TANK)</span>
+{</span>
+<span class="hljs-pi">  "use strict"</span>;
+
+  TANK.Math = TANK.Math || {};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <h2 id="test-a-point-against-an-aabb">Test a point against an AABB</h2>
+<p>Test if a given point is inside a rectangle</p>
+<p><code>point</code> - An array in the form [x, y]</p>
+<p><code>center</code> - The center point of the rectangle in the form [x, y]</p>
+<p><code>size</code> - The size of the rectangle in the form [width, height]</p>
+<p><code>return</code> - True if the point is inside the AABB</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  TANK.Math.pointInAABB = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(point, center, size)</span>
+  {</span>
+    <span class="hljs-keyword">var</span> halfSize = [size[<span class="hljs-number">0</span>] / <span class="hljs-number">2</span>, size[<span class="hljs-number">1</span>] / <span class="hljs-number">2</span>];
+    <span class="hljs-keyword">if</span> (point[<span class="hljs-number">0</span>] &lt; center[<span class="hljs-number">0</span>] - halfSize[<span class="hljs-number">0</span>] || point[<span class="hljs-number">1</span>] &lt; center[<span class="hljs-number">1</span>] - halfSize[<span class="hljs-number">1</span>])
+      <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">if</span> (point[<span class="hljs-number">0</span>] &gt; center[<span class="hljs-number">0</span>] + halfSize[<span class="hljs-number">0</span>] || point[<span class="hljs-number">1</span>] &gt; center[<span class="hljs-number">1</span>] + halfSize[<span class="hljs-number">1</span>])
+      <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <h2 id="test-an-aabb-against-an-aabb">Test an AABB against an AABB</h2>
+<p>Test if a given rectangle is intersecting another rectangle</p>
+<p><code>centerA</code> - The center point of the first rectangle in the form [x, y]</p>
+<p><code>sizeA</code> - The size of the first rectangle in the form [width, height]</p>
+<p><code>centerB</code> - The center point of the second rectangle in the form [x, y]</p>
+<p><code>sizeB</code> - The size of the second rectangle in the form [width, height]</p>
+<p><code>return</code> - True if there is an intersection</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  TANK.Math.AABBInAABB = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(centerA, sizeA, centerB, sizeB)</span>
+  {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Right side is left of left side</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (centerA[<span class="hljs-number">0</span>] + sizeA[<span class="hljs-number">0</span>] / <span class="hljs-number">2</span> &lt; centerB[<span class="hljs-number">0</span>] - sizeB[<span class="hljs-number">0</span>] / <span class="hljs-number">2</span>)
+      <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Bottom side is above top side</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (centerA[<span class="hljs-number">1</span>] + sizeA[<span class="hljs-number">1</span>] / <span class="hljs-number">2</span> &lt; centerB[<span class="hljs-number">1</span>] - sizeB[<span class="hljs-number">1</span>] / <span class="hljs-number">2</span>)
+      <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Left side is right of right side</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (centerA[<span class="hljs-number">0</span>] - sizeA[<span class="hljs-number">0</span>] / <span class="hljs-number">2</span> &gt; centerB[<span class="hljs-number">0</span>] + sizeB[<span class="hljs-number">0</span>] / <span class="hljs-number">2</span>)
+      <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Top side is below bottom side</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (centerA[<span class="hljs-number">1</span>] - sizeA[<span class="hljs-number">1</span>] / <span class="hljs-number">2</span> &gt; centerB[<span class="hljs-number">1</span>] + sizeB[<span class="hljs-number">1</span>] / <span class="hljs-number">2</span>)
+      <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <h2 id="test-a-point-against-an-obb">Test a point against an OBB</h2>
+<p>Test if a given point is inside an oriented box.</p>
+<p><code>point</code> - An array in the form [x, y]</p>
+<p><code>center</code> - The center point of the box in the form [x, y]</p>
+<p><code>size</code> - The size of the box in the form [width, height]</p>
+<p><code>angle</code> - The rotation of the box, in radians</p>
+<p><code>return</code> - True if the point is inside the OBB</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  TANK.Math.pointInOBB = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(point, center, size, angle)</span>
+  {</span>
+    <span class="hljs-keyword">var</span> pointRot = [];
+    pointRot[<span class="hljs-number">0</span>] = (point[<span class="hljs-number">0</span>] - center[<span class="hljs-number">0</span>]) * <span class="hljs-built_in">Math</span>.cos(-angle) - (point[<span class="hljs-number">1</span>] - center[<span class="hljs-number">1</span>]) * <span class="hljs-built_in">Math</span>.sin(-angle) + center[<span class="hljs-number">0</span>];
+    pointRot[<span class="hljs-number">1</span>] = (point[<span class="hljs-number">0</span>] - center[<span class="hljs-number">0</span>]) * <span class="hljs-built_in">Math</span>.sin(-angle) + (point[<span class="hljs-number">1</span>] - center[<span class="hljs-number">1</span>]) * <span class="hljs-built_in">Math</span>.cos(-angle) + center[<span class="hljs-number">1</span>];
+    <span class="hljs-keyword">return</span> TANK.Math.pointInAABB(pointRot, center, size);
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <h2 id="line-intersecting">Line intersecting</h2>
+<p>Get the point of intersection, if any, between two line segments.</p>
+<p><code>line1A</code> - Point A on the first line, in the form [x, y]</p>
+<p><code>line1B</code> - Point B on the first line, in the form [x, y]</p>
+<p><code>line2A</code> - Point A on the second line, in the form [x, y]</p>
+<p><code>line2B</code> - Point B on the second line, in the form [x, y]</p>
+<p><code>return</code> - A point in the form [x, y]</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  TANK.Math.lineIntersection = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(line1A, line1B, line2A, line2B)</span>
+  {</span>
+    <span class="hljs-keyword">var</span> r = [line1B[<span class="hljs-number">0</span>] - line1A[<span class="hljs-number">0</span>], line1B[<span class="hljs-number">1</span>] - line1A[<span class="hljs-number">1</span>]];
+    <span class="hljs-keyword">var</span> rlen = TANK.Math.pointDistancePoint(line1A, line1B);
+    r[<span class="hljs-number">0</span>] /= rlen;
+    r[<span class="hljs-number">1</span>] /= rlen;
+
+    <span class="hljs-keyword">var</span> s = [line2B[<span class="hljs-number">0</span>] - line2A[<span class="hljs-number">0</span>], line2B[<span class="hljs-number">1</span>] - line2A[<span class="hljs-number">1</span>]];
+    <span class="hljs-keyword">var</span> slen = TANK.Math.pointDistancePoint(line2A, line2B);
+    s[<span class="hljs-number">0</span>] /= slen;
+    s[<span class="hljs-number">1</span>] /= slen;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Solve for
+line2A + s <em> u = line1A + r </em> t;
+t = (line1A - line2A) x s / (r x s);
+u = (line1A - line2A) x r / (r x s);</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> vec = [line2A[<span class="hljs-number">0</span>] - line1A[<span class="hljs-number">0</span>], line2A[<span class="hljs-number">1</span>] - line1A[<span class="hljs-number">1</span>]];
+    <span class="hljs-keyword">var</span> t = (vec[<span class="hljs-number">0</span>] * s[<span class="hljs-number">1</span>] - vec[<span class="hljs-number">1</span>] * s[<span class="hljs-number">0</span>]) / (r[<span class="hljs-number">0</span>] * s[<span class="hljs-number">1</span>] - r[<span class="hljs-number">1</span>] * s[<span class="hljs-number">0</span>]);
+    <span class="hljs-keyword">var</span> u = (vec[<span class="hljs-number">0</span>] * r[<span class="hljs-number">1</span>] - vec[<span class="hljs-number">1</span>] * r[<span class="hljs-number">0</span>]) / (r[<span class="hljs-number">0</span>] * s[<span class="hljs-number">1</span>] - r[<span class="hljs-number">1</span>] * s[<span class="hljs-number">0</span>]);
+
+    <span class="hljs-keyword">if</span> (t &gt;= <span class="hljs-number">0</span> &amp;&amp; t &lt;= rlen &amp;&amp; u &gt;= <span class="hljs-number">0</span> &amp;&amp; u &lt;= slen)
+      <span class="hljs-keyword">return</span> [line1A[<span class="hljs-number">0</span>] + r[<span class="hljs-number">0</span>] * t, line1A[<span class="hljs-number">1</span>] + r[<span class="hljs-number">1</span>] * t];
+
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <h2 id="get-direction-to-point">Get direction to point</h2>
+<p>Check if a point is to the left or right of a vector using
+the cross product.</p>
+<p><code>posA</code> - The first point in the form [x, y]</p>
+<p><code>rotationA</code> - The angle of the vector, in radians</p>
+<p><code>posB</code> - The point to get the direction to, in form [x, y]</p>
+<p><code>return</code> - A negative value if the direction is left, and a positive
+value if the direction is right. The return will be 0 if the vector
+is facing directly at <code>posB</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  TANK.Math.getDirectionToPoint = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(posA, rotationA, posB)</span>
+  {</span>
+    <span class="hljs-keyword">var</span> dir = [<span class="hljs-built_in">Math</span>.cos(rotationA), <span class="hljs-built_in">Math</span>.sin(rotationA)];
+    <span class="hljs-keyword">var</span> targetAngle = <span class="hljs-built_in">Math</span>.atan2(posB[<span class="hljs-number">1</span>] - posA[<span class="hljs-number">1</span>], posB[<span class="hljs-number">0</span>] - posA[<span class="hljs-number">0</span>]);
+    <span class="hljs-keyword">var</span> targetDir = [<span class="hljs-built_in">Math</span>.cos(targetAngle), <span class="hljs-built_in">Math</span>.sin(targetAngle)];
+    <span class="hljs-keyword">return</span> dir[<span class="hljs-number">0</span>] * targetDir[<span class="hljs-number">1</span>] - dir[<span class="hljs-number">1</span>] * targetDir[<span class="hljs-number">0</span>];
+  };
+
+})(<span class="hljs-keyword">this</span>.TANK = <span class="hljs-keyword">this</span>.TANK || {});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
