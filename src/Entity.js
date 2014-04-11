@@ -24,18 +24,16 @@
 {
   "use strict";
 
-  var _nextId = 0;
-
   // ## Entity Constructor
   // Construct a new Entity object. Takes a Component name
   // or array of Component names to add to the Entity.
   //
-  // `componentNames` - Either an Array of Component names or a single
+  // `[Array<string>, string] componentNames` - Either an Array of Component names or a single
   // string Component name.
   TANK.Entity = function(componentNames)
   {
     this._name = null;
-    this._id = _nextId++;
+    this._id = -1;
     this._parent = null;
     this._components = {};
     this._componentsOrdered = [];
@@ -91,12 +89,10 @@
       }
 
       // Clone the component
-      var c = componentDef.clone();
+      var c = new TANK.Component(componentDef);
       this._components[componentName] = c;
       this[componentName] = c;
       this._componentsOrdered.push(c);
-      c.construct();
-      c._constructed = true;
       c._order = this._componentsOrdered.length - 1;
       c._entity = this;
 
@@ -111,7 +107,6 @@
           objectsWithComponent[this._id] = c;
         }
         c.initialize();
-        c._initialized = true;
         var space = this._parent || this;
         space.dispatch("componentadded", c);
       }
@@ -150,9 +145,7 @@
       }
 
       // Uninitialize the component
-      c._uninitializeBase();
       c.uninitialize();
-      c._initialized = false;
 
       // Remove from map
       delete this[componentName];
@@ -189,7 +182,6 @@
     {
       var c = this._componentsOrdered[i];
       c.initialize();
-      c._initialized = true;
     }
 
     // Initialize children

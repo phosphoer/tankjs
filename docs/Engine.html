@@ -24,6 +24,11 @@
               </a>
             
               
+              <a class="source" href="ComponentDef.html">
+                ComponentDef.js
+              </a>
+            
+              
               <a class="source" href="Engine.html">
                 Engine.js
               </a>
@@ -186,20 +191,24 @@ relevant entity’s update call.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <h2 id="register-a-compoennt">Register a compoennt</h2>
+              <h2 id="register-a-component-definition">Register a component definition</h2>
 <p>This is the entry point to defining a new type of component.
-This method should be used over manually instantiating a Component
-as it performs additional logic to store information about the Component type.
-The new component is returned, to enable a return value chained style of defining
+This method should be used over manually instantiating a <code>ComponentDef</code>
+as it performs additional logic to store the definition.
+The new <code>ComponentDef</code> is returned, to enable a return value chained style of defining
 components.</p>
-<p><code>componentName</code> - A string containing a valid identifier to be used as the name of the
+<p><code>string componentName</code> - A string containing a valid identifier to be used as the name of the
 new Component type.</p>
-<p><code>return</code> - A new Component.</p>
+<p><code>return</code> - A new <code>ComponentDef</code>.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>  TANK.registerComponent = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(componentName)</span>
-  {</span></pre></div></div>
+  {</span>
+    <span class="hljs-keyword">var</span> c = <span class="hljs-keyword">new</span> TANK.ComponentDef(componentName);
+    TANK._registeredComponents[componentName] = c;
+    <span class="hljs-keyword">return</span> c;
+  };</pre></div></div>
             
         </li>
         
@@ -210,19 +219,19 @@ new Component type.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>Component name must be a valid identifier</p>
+              <h2 id="create-an-entity">Create an entity</h2>
+<p>Constructs a new <code>Entity</code> and adds the given components
+to it.</p>
+<p><code>[Array&lt;string&gt;, string] componentNames</code> - Either an Array of Component names or a single
+string Component name.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> ((componentName[<span class="hljs-number">0</span>] &gt;= <span class="hljs-number">0</span> &amp;&amp; componentName[<span class="hljs-number">0</span>] &lt;= <span class="hljs-number">9</span>) || componentName.search(<span class="hljs-string">" "</span>) &gt;= <span class="hljs-number">0</span>)
-    {
-      TANK.error(componentName + <span class="hljs-string">" is an invalid identifier and won't be accessible without [] operator"</span>);
-      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-    }
-
-    <span class="hljs-keyword">var</span> c = <span class="hljs-keyword">new</span> TANK.Component(componentName);
-    TANK._registeredComponents[componentName] = c;
-    <span class="hljs-keyword">return</span> c;
+            <div class="content"><div class='highlight'><pre>  TANK.createEntity = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(componentNames)</span>
+  {</span>
+    <span class="hljs-keyword">var</span> e = <span class="hljs-keyword">new</span> TANK.Entity(componentNames);
+    e._id = _nextId++;
+    <span class="hljs-keyword">return</span> e;
   };</pre></div></div>
             
         </li>
@@ -292,6 +301,7 @@ new Component type.</p>
       window.requestAnimationFrame(update);
   }
 
+  <span class="hljs-keyword">var</span> _nextId = <span class="hljs-number">0</span>;
   <span class="hljs-keyword">var</span> _lastTime = <span class="hljs-number">0</span>;
   <span class="hljs-keyword">var</span> _running = <span class="hljs-literal">false</span>;
   TANK._registeredComponents = {};

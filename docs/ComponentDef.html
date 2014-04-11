@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>ComponentDef.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="Component.html">
+                Component.js
+              </a>
+            
+              
+              <a class="source" href="ComponentDef.html">
+                ComponentDef.js
+              </a>
+            
+              
+              <a class="source" href="Engine.html">
+                Engine.js
+              </a>
+            
+              
+              <a class="source" href="Entity.html">
+                Entity.js
+              </a>
+            
+              
+              <a class="source" href="Events.html">
+                Events.js
+              </a>
+            
+              
+              <a class="source" href="Keys.html">
+                Keys.js
+              </a>
+            
+              
+              <a class="source" href="Math.html">
+                Math.js
+              </a>
+            
+              
+              <a class="source" href="index.html">
+                index.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>ComponentDef.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>The MIT License (MIT)</p>
+<p>Copyright (c) 2013 David Evans</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the “Software”), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <h2 id="component-definition">Component Definition</h2>
+<p>A component definition defines the functionality of a type
+of component.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(TANK)</span>
+{</span>
+<span class="hljs-pi">  "use strict"</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <h2 id="constructor">Constructor</h2>
+<p>Construct a new component definition object.</p>
+<p><code>string name</code> - The name of the component definition, e.g., “Pos2D”.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  TANK.ComponentDef = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name)</span>
+  {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Component name must be a valid identifier</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> ((name[<span class="hljs-number">0</span>] &gt;= <span class="hljs-number">0</span> &amp;&amp; name[<span class="hljs-number">0</span>] &lt;= <span class="hljs-number">9</span>) || name.search(<span class="hljs-string">" "</span>) &gt;= <span class="hljs-number">0</span>)
+    {
+      TANK.error(name + <span class="hljs-string">" is an invalid identifier and won't be accessible without [] operator"</span>);
+    }
+
+    <span class="hljs-keyword">this</span>._name = name;
+    <span class="hljs-keyword">this</span>._includes = [];
+    <span class="hljs-keyword">this</span>._construct = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>};
+    <span class="hljs-keyword">this</span>._initialize = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>};
+    <span class="hljs-keyword">this</span>._uninitialize = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>};
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <h2 id="include-other-components">Include other Components</h2>
+<p>Use this to mark other components that will automatically
+be added to an Entity that this component is added to.
+For example a Sprite component would probably include a
+transform / position component. This method is designed to be
+chained off of a call to <code>TANK.registerComponent</code></p>
+<p><code>componentNames</code> - Either an Array of Component names or a single
+string Component name.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  TANK.ComponentDef.prototype.includes = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(componentNames)</span>
+  {</span>
+    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Array</span>.isArray(componentNames))
+      componentNames = [componentNames];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Copy the array</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>._includes = componentNames.slice();
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <h2 id="define-a-constructor">Define a constructor</h2>
+<p>Define a function that will be called when an instance of
+the component type is created, such as when it is added to an
+Entity. This is usually where fields on the component are given
+default values. This method is designed to be chained off of a call to
+<code>TANK.registerComponent</code>.</p>
+<p><code>func</code> - A function that will be used to construct the component.
+The function is invoked with <code>this</code> pointing at the component
+instance.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  TANK.ComponentDef.prototype.construct = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(func)</span>
+  {</span>
+    <span class="hljs-keyword">this</span>._construct = func;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <h2 id="define-an-initialize-function">Define an initialize function</h2>
+<p>Define a function that will be called when the entity this component
+is a part of is initialized. Initialize is usually where custom methods are
+defined and is where event listeners should be added. This method is designed
+to be chained off of a call to <code>TANK.registerComponent</code>.</p>
+<p><code>func</code> - A function that will be used to initialize the component.
+The function is invoked with <code>this</code> pointing at the component
+instance.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  TANK.ComponentDef.prototype.initialize = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(func)</span>
+  {</span>
+    <span class="hljs-keyword">this</span>._initialize = func;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <h2 id="define-an-initialize-function">Define an initialize function</h2>
+<p>Define a function that will be called when the entity this component
+is a part of is initialized. This is where anything done in <code>initialize</code>
+can be undone, if necessary. Note that listeners are already automatically
+removed when a component is uninitialized. This method is designed to be
+chained off of a call to <code>TANK.registerComponent</code></p>
+<p><code>func</code> - A function that will be used to initialize the component.
+The function is invoked with <code>this</code> pointing at the component
+instance.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  TANK.ComponentDef.prototype.uninitialize = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(func)</span>
+  {</span>
+    <span class="hljs-keyword">this</span>._uninitialize = func;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+  };
+
+})(<span class="hljs-keyword">this</span>.TANK = <span class="hljs-keyword">this</span>.TANK || {});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

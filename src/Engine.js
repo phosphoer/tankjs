@@ -56,29 +56,35 @@
     _running = false;
   };
 
-  // ## Register a compoennt
+  // ## Register a component definition
   // This is the entry point to defining a new type of component.
-  // This method should be used over manually instantiating a Component
-  // as it performs additional logic to store information about the Component type.
-  // The new component is returned, to enable a return value chained style of defining
+  // This method should be used over manually instantiating a `ComponentDef`
+  // as it performs additional logic to store the definition.
+  // The new `ComponentDef` is returned, to enable a return value chained style of defining
   // components.
   //
-  // `componentName` - A string containing a valid identifier to be used as the name of the
+  // `string componentName` - A string containing a valid identifier to be used as the name of the
   // new Component type.
   //
-  // `return` - A new Component.
+  // `return` - A new `ComponentDef`.
   TANK.registerComponent = function(componentName)
   {
-    // Component name must be a valid identifier
-    if ((componentName[0] >= 0 && componentName[0] <= 9) || componentName.search(" ") >= 0)
-    {
-      TANK.error(componentName + " is an invalid identifier and won't be accessible without [] operator");
-      return this;
-    }
-
-    var c = new TANK.Component(componentName);
+    var c = new TANK.ComponentDef(componentName);
     TANK._registeredComponents[componentName] = c;
     return c;
+  };
+
+  // ## Create an entity
+  // Constructs a new `Entity` and adds the given components
+  // to it.
+  //
+  // `[Array<string>, string] componentNames` - Either an Array of Component names or a single
+  // string Component name.
+  TANK.createEntity = function(componentNames)
+  {
+    var e = new TANK.Entity(componentNames);
+    e._id = _nextId++;
+    return e;
   };
 
   // ## Internal update loop
@@ -99,6 +105,7 @@
       window.requestAnimationFrame(update);
   }
 
+  var _nextId = 0;
   var _lastTime = 0;
   var _running = false;
   TANK._registeredComponents = {};

@@ -24,6 +24,11 @@
               </a>
             
               
+              <a class="source" href="ComponentDef.html">
+                ComponentDef.js
+              </a>
+            
+              
               <a class="source" href="Engine.html">
                 Engine.js
               </a>
@@ -108,9 +113,7 @@ events and be paused individually.</p>
             
             <div class="content"><div class='highlight'><pre>(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(TANK)</span>
 {</span>
-<span class="hljs-pi">  "use strict"</span>;
-
-  <span class="hljs-keyword">var</span> _nextId = <span class="hljs-number">0</span>;</pre></div></div>
+<span class="hljs-pi">  "use strict"</span>;</pre></div></div>
             
         </li>
         
@@ -124,7 +127,7 @@ events and be paused individually.</p>
               <h2 id="entity-constructor">Entity Constructor</h2>
 <p>Construct a new Entity object. Takes a Component name
 or array of Component names to add to the Entity.</p>
-<p><code>componentNames</code> - Either an Array of Component names or a single
+<p><code>[Array&lt;string&gt;, string] componentNames</code> - Either an Array of Component names or a single
 string Component name.</p>
 
             </div>
@@ -132,7 +135,7 @@ string Component name.</p>
             <div class="content"><div class='highlight'><pre>  TANK.Entity = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(componentNames)</span>
   {</span>
     <span class="hljs-keyword">this</span>._name = <span class="hljs-literal">null</span>;
-    <span class="hljs-keyword">this</span>._id = _nextId++;
+    <span class="hljs-keyword">this</span>._id = -<span class="hljs-number">1</span>;
     <span class="hljs-keyword">this</span>._parent = <span class="hljs-literal">null</span>;
     <span class="hljs-keyword">this</span>._components = {};
     <span class="hljs-keyword">this</span>._componentsOrdered = [];
@@ -260,12 +263,10 @@ dependencies</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> c = componentDef.clone();
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> c = <span class="hljs-keyword">new</span> TANK.Component(componentDef);
       <span class="hljs-keyword">this</span>._components[componentName] = c;
       <span class="hljs-keyword">this</span>[componentName] = c;
       <span class="hljs-keyword">this</span>._componentsOrdered.push(c);
-      c.construct();
-      c._constructed = <span class="hljs-literal">true</span>;
       c._order = <span class="hljs-keyword">this</span>._componentsOrdered.length - <span class="hljs-number">1</span>;
       c._entity = <span class="hljs-keyword">this</span>;</pre></div></div>
             
@@ -292,7 +293,6 @@ dependencies</p>
           objectsWithComponent[<span class="hljs-keyword">this</span>._id] = c;
         }
         c.initialize();
-        c._initialized = <span class="hljs-literal">true</span>;
         <span class="hljs-keyword">var</span> space = <span class="hljs-keyword">this</span>._parent || <span class="hljs-keyword">this</span>;
         space.dispatch(<span class="hljs-string">"componentadded"</span>, c);
       }
@@ -391,9 +391,7 @@ string Component name.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      c._uninitializeBase();
-      c.uninitialize();
-      c._initialized = <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      c.uninitialize();</pre></div></div>
             
         </li>
         
@@ -479,7 +477,6 @@ necessary to call this method manually.</p>
     {
       <span class="hljs-keyword">var</span> c = <span class="hljs-keyword">this</span>._componentsOrdered[i];
       c.initialize();
-      c._initialized = <span class="hljs-literal">true</span>;
     }</pre></div></div>
             
         </li>
