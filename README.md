@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/phosphoer/TankJS.svg)](https://travis-ci.org/phosphoer/TankJS)
+
 TANK is a lightweight Javascript engine framework focused on the following ideas:
 
 - Modular
