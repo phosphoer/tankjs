@@ -202,7 +202,7 @@
         });
         expect(this._listeners[0]).to.not.be.undefined;
         expect(this._listeners[0].self).to.equal(this);
-        expect(this._listeners[0].eventName).to.equal("TestEvent");
+        expect(this._listeners[0].eventName).to.equal("testevent");
         expect(this._listeners[0].entity).to.equal(TANK.main);
       });
 
