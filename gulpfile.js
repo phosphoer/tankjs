@@ -16,11 +16,7 @@
     .pipe(uglify())
     .pipe(rename("tank.min.js"))
     .pipe(gulp.dest("bin/"));
-  });
 
-  // Component build task
-  gulp.task("components", function()
-  {
     gulp.src("components/*.js")
     .pipe(concat("components.js"))
     .pipe(gulp.dest("bin/"))
@@ -31,7 +27,7 @@
 
   // Rerun the task when a file changes
   gulp.task("watch", function() {
-    gulp.watch(["src/*.js", "components/*.js"], ["default", "components"]);
+    gulp.watch(["src/*.js", "components/*.js"], ["default"]);
   });
 
 })();
