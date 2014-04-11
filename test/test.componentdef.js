@@ -1,6 +1,8 @@
 (function()
 {
   "use strict";
+  var TANK = require("../bin/tank.js");
+  var chai = require("chai");
   var expect = chai.expect;
 
   describe("TANK.ComponentDef", function()

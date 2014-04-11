@@ -136,4 +136,4 @@
     return dir[0] * targetDir[1] - dir[1] * targetDir[0];
   };
 
-})(this.TANK = this.TANK || {});
+})(typeof exports === "undefined" ? (this.TANK = this.TANK || {}) : exports);

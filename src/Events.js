@@ -26,4 +26,4 @@
   // The component instance is passed as a parameter.
   TANK.Event.componentRemoved = "componentremoved";
 
-})(this.TANK = this.TANK || {});
+})(typeof exports === "undefined" ? (this.TANK = this.TANK || {}) : exports);

@@ -64,4 +64,4 @@
   TANK.Key.NUM9 = 57;
   TANK.Key.NUM0 = 48;
 
-})(this.TANK = this.TANK || {});
+})(typeof exports === "undefined" ? (this.TANK = this.TANK || {}) : exports);

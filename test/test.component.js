@@ -1,6 +1,8 @@
 (function()
 {
   "use strict";
+  var TANK = require("../bin/tank.js");
+  var chai = require("chai");
   var expect = chai.expect;
 
   describe("TANK.Component", function()
@@ -48,11 +50,12 @@
       var c = TANK.registerComponent("ListenToTest")
       .initialize(function()
       {
-        this.listenTo(TANK.main, "TestEvent", function(done, arg)
+        this.listener = function(arg)
         {
           expect(arg).to.equal(5);
-          done();
-        });
+        };
+
+        this.listenTo(TANK.main, "TestEvent", this.listener);
         expect(this._listeners[0]).to.not.be.undefined;
         expect(this._listeners[0].self).to.equal(this);
         expect(this._listeners[0].eventName).to.equal("testevent");
@@ -67,12 +70,13 @@
         TANK.main.removeChild(e);
       });
 
-      it("should correctly get the listener invoked", function(done)
+      it("should correctly get the listener invoked", function()
       {
         var e = new TANK.Entity();
         e.addComponent("ListenToTest");
         TANK.main.addChild(e);
-        TANK.main.dispatch("TestEvent", done, 5);
+        TANK.main.dispatch("TestEvent", 5);
+        expect(e.ListenToTest.listener).to.be.called;
         TANK.main.removeChild(e);
       });
     });

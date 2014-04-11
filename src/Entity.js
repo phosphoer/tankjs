@@ -108,7 +108,7 @@
         }
         c.initialize();
         var space = this._parent || this;
-        space.dispatch("componentadded", c);
+        space.dispatch(TANK.Event.componentAdded, c);
       }
     }
 
@@ -135,7 +135,7 @@
 
       // Send out remove event
       var space = this._parent || this;
-      space.dispatch("componentremoved", c);
+      space.dispatch(TANK.Event.componentRemoved, c);
 
       // Remove component from tracking
       if (this._parent)
@@ -182,6 +182,8 @@
     {
       var c = this._componentsOrdered[i];
       c.initialize();
+      var space = this._parent || this;
+      space.dispatch(TANK.Event.componentAdded, c);
     }
 
     // Initialize children
@@ -214,7 +216,7 @@
     {
       var c = this._componentsOrdered[i];
       var space = this._parent || this;
-      space.dispatch("componentremoved", c);
+      space.dispatch(TANK.Event.componentRemoved, c);
       c.uninitialize();
     }
 
@@ -242,7 +244,7 @@
     {
       var id = this._pendingRemove[i]._id;
       var child = this._children[id];
-      this.dispatch("childremoved", child);
+      this.dispatch(TANK.Event.childRemoved, child);
       child.uninitialize();
       child._parent = null;
       delete this._children[id];
@@ -350,7 +352,7 @@
     // Initialize the child
     childEntity.initialize();
 
-    this.dispatch("childadded", childEntity);
+    this.dispatch(TANK.Event.childAdded, childEntity);
 
     return this;
   };
@@ -433,4 +435,4 @@
     this._pendingEvents.push(pendingEvent);
   };
 
-})(this.TANK = this.TANK || {});
+})(typeof exports === "undefined" ? (this.TANK = this.TANK || {}) : exports);

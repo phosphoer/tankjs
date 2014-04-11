@@ -40,8 +40,8 @@
   TANK.start = function()
   {
     TANK.main.initialize();
-    window.requestAnimationFrame(update);
     _running = true;
+    update();
     return TANK;
   };
 
@@ -102,7 +102,13 @@
 
     // Request next frame
     if (_running)
-      window.requestAnimationFrame(update);
+    {
+      // Use RAF in browser
+      if (typeof window == "undefined")
+        setTimeout(update, 16);
+      else
+        window.requestAnimationFrame(update);
+    }
   }
 
   var _nextId = 0;
@@ -110,4 +116,4 @@
   var _running = false;
   TANK._registeredComponents = {};
 
-})(this.TANK = this.TANK || {});
+})(typeof exports === "undefined" ? (this.TANK = this.TANK || {}) : exports);

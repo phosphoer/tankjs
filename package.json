@@ -6,6 +6,9 @@
     "type": "git",
     "url": "git://github.com/phosphoer/TankJS.git"
   },
+  "scripts": {
+    "test": "./node_modules/.bin/mocha"
+  },
   "keywords": [
     "html5",
     "game",

@@ -144,4 +144,4 @@
     this._initialized = false;
   };
 
-})(this.TANK = this.TANK || {});
+})(typeof exports === "undefined" ? (this.TANK = this.TANK || {}) : exports);
