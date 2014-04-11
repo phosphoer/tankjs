@@ -18,12 +18,12 @@ function main()
   TANK.start();
 
   // Create the player entity using the Player component
-  var e = new TANK.Entity("Player");
+  var e = TANK.createEntity("Player");
   TANK.main.addChild(e);
 
   // Create the ground entity, and name it Level so we
   // can find it later
-  e = new TANK.Entity("Ground");
+  e = TANK.createEntity("Ground");
   TANK.main.addChild(e, "Level");
 }
 
@@ -52,7 +52,7 @@ TANK.registerComponent("EnemySpawner")
       // on its components.
       // Note that the Pos2D component was included even though not specified
       // because the Enemy component requires it
-      var e = new TANK.Entity("Enemy");
+      var e = TANK.createEntity("Enemy");
       e.Pos2D.x = TANK.main.Renderer2D.camera.x + window.innerWidth / 2;
       e.Pos2D.y = -250 - Math.random() * 200;
       TANK.main.addChild(e);

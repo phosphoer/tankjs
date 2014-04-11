@@ -9,10 +9,10 @@
     TANK.main.initialize();
     describe("constructor()", function()
     {
-      it("should set the Entity ID to be >= 0", function()
+      it("should set the Entity ID to be -1", function()
       {
         var e = new TANK.Entity();
-        expect(e._id).to.be.greaterThan(-1);
+        expect(e._id).to.equal(-1);
       });
     });
 

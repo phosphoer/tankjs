@@ -43,7 +43,7 @@
     {
       // Create a new entity using the Bullet component and position it
       // accordingly
-      var e = new TANK.Entity("Bullet");
+      var e = TANK.createEntity("Bullet");
       e.Pos2D.x = t.x + Math.cos(this.gunAngle + t.rotation) * 50;
       e.Pos2D.y = t.y - 40 + Math.sin(this.gunAngle + t.rotation) * 50;
       e.Velocity.x = Math.cos(this.gunAngle + t.rotation) * 700;

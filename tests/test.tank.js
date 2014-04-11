@@ -16,12 +16,29 @@
 
     describe("registerComponent()", function()
     {
+      var def = null;
       it("should add a Component defintion", function()
       {
         TANK.registerComponent("TestComponent");
-        var def = TANK._registeredComponents.TestComponent;
+        def = TANK._registeredComponents.TestComponent;
         expect(TANK._registeredComponents).to.have.property("TestComponent");
         expect(def).to.be.a.instanceOf(TANK.ComponentDef);
+      });
+      it("should name the Component definition", function()
+      {
+        expect(def).to.have.property("_name");
+        expect(def._name).to.equal("TestComponent");
+      });
+
+    });
+
+    describe("createEntity()", function()
+    {
+      it("should construct an Entity and set its ID", function()
+      {
+        var e = TANK.createEntity();
+        expect(e).to.be.a.instanceOf(TANK.Entity);
+        expect(e._id).to.be.greaterThan(-1);
       });
     });
 
