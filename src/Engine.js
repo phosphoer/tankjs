@@ -30,7 +30,7 @@
   // string Component name.
   TANK.createEngine = function(componentNames)
   {
-    TANK.main = new TANK.Entity(componentNames);
+    TANK.main = TANK.createEntity(componentNames);
     return TANK;
   };
 

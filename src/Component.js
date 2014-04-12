@@ -111,6 +111,15 @@
   // defined by the `ComponentDef`.
   TANK.Component.prototype.initialize = function()
   {
+    // Track all components on the entity
+    if (this._entity && this._entity._parent)
+    {
+      if (!this._entity._parent._childComponents[this._name])
+        this._entity._parent._childComponents[this._name] = {};
+      var objectsWithComponent = this._entity._parent._childComponents[this._name];
+      objectsWithComponent[this._entity._id] = this._entity;
+    }
+
     this._initialize();
     this._initialized = true;
   };
@@ -120,6 +129,13 @@
   // defined by the `ComponentDef`. This removes all listeners previous added.
   TANK.Component.prototype.uninitialize = function()
   {
+    // Remove component from tracking
+    if (this._entity && this._entity._parent)
+    {
+      var objectsWithComponent = this._entity._parent._childComponents[this._name];
+      delete objectsWithComponent[this._entity._id];
+    }
+
     // Remove all listeners
     for (var i = 0; i < this._listeners.length; ++i)
     {

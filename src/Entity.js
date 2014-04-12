@@ -137,13 +137,6 @@
       var space = this._parent || this;
       space.dispatch(TANK.Event.componentRemoved, c);
 
-      // Remove component from tracking
-      if (this._parent)
-      {
-        var objectsWithComponent = this._parent._childComponents[componentName];
-        delete objectsWithComponent[this._id];
-      }
-
       // Uninitialize the component
       c.uninitialize();
 
@@ -164,20 +157,8 @@
   // necessary to call this method manually.
   TANK.Entity.prototype.initialize = function()
   {
-    var i;
-    // Track all components on the entity
-    if (this._parent)
-    {
-      for (i in this._components)
-      {
-        if (!this._parent._childComponents[i])
-          this._parent._childComponents[i] = {};
-        var objectsWithComponent = this._parent._childComponents[i];
-        objectsWithComponent[this._id] = this;
-      }
-    }
-
     // Initialize every component
+    var i;
     for (i = 0; i < this._componentsOrdered.length; ++i)
     {
       var c = this._componentsOrdered[i];
@@ -200,18 +181,8 @@
   // the Entity.
   TANK.Entity.prototype.uninitialize = function()
   {
-    var i;
-    // Stop tracking all components in the entity
-    if (this._parent)
-    {
-      for (i in this._components)
-      {
-        var objectsWithComponent = this._parent._childComponents[i];
-        delete objectsWithComponent[this._id];
-      }
-    }
-
     // Uninitialize every component
+    var i;
     for (i = this._componentsOrdered.length - 1; i >= 0; --i)
     {
       var c = this._componentsOrdered[i];

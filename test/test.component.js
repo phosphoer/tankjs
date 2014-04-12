@@ -73,7 +73,7 @@
     {
       it("should add a listener to _listeners", function()
       {
-        var e = new TANK.Entity();
+        var e = TANK.createEntity();
         e.addComponent("ComponentTest");
         TANK.main.addChild(e);
         expect(e.ComponentTest._listeners[0]).to.not.be.undefined;
@@ -85,7 +85,7 @@
 
       it("should correctly get the listener invoked", function()
       {
-        var e = new TANK.Entity();
+        var e = TANK.createEntity();
         e.addComponent("ComponentTest");
         TANK.main.addChild(e);
         TANK.main.dispatch("TestEvent", 42);
@@ -108,7 +108,7 @@
 
       it("should stop listener from being called", function()
       {
-        var e = new TANK.Entity();
+        var e = TANK.createEntity();
         e.addComponent("ComponentTest");
         TANK.main.addChild(e);
         e.ComponentTest.stopListeningTo(TANK.main, "TestEvent2");
