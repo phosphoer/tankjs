@@ -7,13 +7,27 @@
 
   describe("TANK.Component", function()
   {
+    var def = TANK.registerComponent("ComponentTest")
+    .construct(function() {this.blah = 5;})
+    .initialize(function()
+    {
+      this.listener = function(arg)
+      {
+        expect(arg).to.equal(42);
+      };
+
+      this.otherListener = function()
+      {
+      };
+
+      this.listenTo(TANK.main, "TestEvent", this.listener);
+      this.listenTo(TANK.main, "TestEvent2", this.otherListener);
+      this.blah = 6;
+    })
+    .uninitialize(function() {this.blah = 7;});
+
     describe("constructor()", function()
     {
-      var def = TANK.registerComponent("ComponentTest")
-      .construct(function() {this.blah = 5;})
-      .initialize(function() {this.blah = 6;})
-      .uninitialize(function() {this.blah = 7;});
-
       it("should take functions from TANK.ComponentDef", function()
       {
         var c = new TANK.Component(def);
@@ -45,38 +59,37 @@
       });
     });
 
+    describe("initialize()", function()
+    {
+      it("should call internal initialize function", function()
+      {
+        var c = new TANK.Component(def);
+        c.initialize();
+        expect(c._initialize).to.be.called;
+      });
+    });
+
     describe("listenTo()", function()
     {
-      var c = TANK.registerComponent("ListenToTest")
-      .initialize(function()
-      {
-        this.listener = function(arg)
-        {
-          expect(arg).to.equal(5);
-        };
-
-        this.listenTo(TANK.main, "TestEvent", this.listener);
-        expect(this._listeners[0]).to.not.be.undefined;
-        expect(this._listeners[0].self).to.equal(this);
-        expect(this._listeners[0].eventName).to.equal("testevent");
-        expect(this._listeners[0].entity).to.equal(TANK.main);
-      });
-
       it("should add a listener to _listeners", function()
       {
         var e = new TANK.Entity();
-        e.addComponent("ListenToTest");
+        e.addComponent("ComponentTest");
         TANK.main.addChild(e);
+        expect(e.ComponentTest._listeners[0]).to.not.be.undefined;
+        expect(e.ComponentTest._listeners[0].self).to.equal(e.ComponentTest);
+        expect(e.ComponentTest._listeners[0].eventName).to.equal("testevent");
+        expect(e.ComponentTest._listeners[0].entity).to.equal(TANK.main);
         TANK.main.removeChild(e);
       });
 
       it("should correctly get the listener invoked", function()
       {
         var e = new TANK.Entity();
-        e.addComponent("ListenToTest");
+        e.addComponent("ComponentTest");
         TANK.main.addChild(e);
-        TANK.main.dispatch("TestEvent", 5);
-        expect(e.ListenToTest.listener).to.be.called;
+        TANK.main.dispatch("TestEvent", 42);
+        expect(e.ComponentTest.listener).to.be.called;
         TANK.main.removeChild(e);
       });
     });
@@ -96,9 +109,11 @@
       it("should stop listener from being called", function()
       {
         var e = new TANK.Entity();
-        e.addComponent("StopListeningToTest");
+        e.addComponent("ComponentTest");
         TANK.main.addChild(e);
+        e.ComponentTest.stopListeningTo(TANK.main, "TestEvent2");
         TANK.main.dispatch("TestEvent2");
+        expect(e.ComponentTest.otherListener).to.not.be.called;
         TANK.main.removeChild(e);
       });
     });
