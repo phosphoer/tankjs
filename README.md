@@ -1,12 +1,14 @@
 [![Build Status](https://travis-ci.org/phosphoer/TankJS.svg)](https://travis-ci.org/phosphoer/TankJS)
 
-TANK is a lightweight Javascript engine framework focused on the following ideas:
+#TANK
+
+A lightweight Javascript engine framework focused on the following ideas:
 
 - Modular
 - Small
 - Made for programmers
 
-TANK is still in early development, but it is already usable! To get started, pull the repository and take a look at the `samples/` directory, or read the [docs](http://phosphoer.github.io/TankJS). More documentation will be written as the framework matures. TANK is similar to [Crafty](http://craftyjs.com/) but strives to be more flexible, and is more of a *framework* than an engine.
+TANK is still in early development, but it is already usable! To get started, pull the repository and take a look at the `samples/` directory, or read the [docs](http://phosphoer.github.io/TankJS). More documentation will be written as the framework matures. 
 
 #Features
 
