@@ -44,6 +44,7 @@
     this._initialized = false;
     this._events = {};
     this._pendingEvents = [];
+    this._paused = false;
 
     if (componentNames)
       this.addComponent(componentNames);
@@ -200,6 +201,18 @@
     return this;
   };
 
+  // ## Pause the entity
+  TANK.Entity.prototype.pause = function()
+  {
+    this._paused = true;
+  };
+
+  // ## Unpause the entity
+  TANK.Entity.prototype.unpause = function()
+  {
+    this._paused = false;
+  };
+
   // ## Update
   // Runs the update loop on the Entity one time, with the specified
   // dt. This will call update on every Component and child Entity.
@@ -209,6 +222,9 @@
   // `dt` - The elapsed time, in seconds
   TANK.Entity.prototype.update = function(dt)
   {
+    if (this._paused)
+      return;
+
     var i;
     // Remove deleted children
     for (i = 0; i < this._pendingRemove.length; ++i)
