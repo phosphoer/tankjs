@@ -2,7 +2,41 @@
 {
   "use strict";
 
-  TANK.Math = TANK.Math || {};
+  TANK.Math2D = TANK.Math2D || {};
+
+  // ## Get the length of a vector
+  //
+  // `v` - An array in the form [x, y]
+  //
+  // `return` - The length of the vector
+  TANK.Math2D.length = function(v)
+  {
+    return Math.sqrt(v[0] * v[0] + v[1] * v[1]);
+  };
+
+  // ## Dot two vectors
+  //
+  // `v1` - An array in the form [x, y]
+  //
+  // `v2` - An array in the form [x, y]
+  //
+  // `return` - A scalar representing the dot product
+  TANK.Math2D.dot = function(v1, v2)
+  {
+    return v1[0] * v2[0] + v1[1] * v2[1];
+  };
+
+  // ## Cross two vectors
+  //
+  // `v1` - An array in the form [x, y]
+  //
+  // `v2` - An array in the form [x, y]
+  //
+  // `return` - The magnitude of the cross product of v1*v2
+  TANK.Math2D.cross = function(v1, v2)
+  {
+    return v1[0] * v2[1] - v1[1] * v2[0];
+  };
 
   // ## Test a point against an AABB
   // Test if a given point is inside a rectangle
@@ -14,7 +48,7 @@
   // `size` - The size of the rectangle in the form [width, height]
   //
   // `return` - True if the point is inside the AABB
-  TANK.Math.pointInAABB = function(point, center, size)
+  TANK.Math2D.pointInAABB = function(point, center, size)
   {
     var halfSize = [size[0] / 2, size[1] / 2];
     if (point[0] < center[0] - halfSize[0] || point[1] < center[1] - halfSize[1])
@@ -22,6 +56,26 @@
     if (point[0] > center[0] + halfSize[0] || point[1] > center[1] + halfSize[1])
       return false;
     return true;
+  };
+
+  // ## Test a point against an OBB
+  // Test if a given point is inside an oriented box.
+  //
+  // `point` - An array in the form [x, y]
+  //
+  // `center` - The center point of the box in the form [x, y]
+  //
+  // `size` - The size of the box in the form [width, height]
+  //
+  // `angle` - The rotation of the box, in radians
+  //
+  // `return` - True if the point is inside the OBB
+  TANK.Math2D.pointInOBB = function(point, center, size, angle)
+  {
+    var pointRot = [];
+    pointRot[0] = (point[0] - center[0]) * Math.cos(-angle) - (point[1] - center[1]) * Math.sin(-angle) + center[0];
+    pointRot[1] = (point[0] - center[0]) * Math.sin(-angle) + (point[1] - center[1]) * Math.cos(-angle) + center[1];
+    return TANK.Math2D.pointInAABB(pointRot, center, size);
   };
 
   // ## Test an AABB against an AABB
@@ -36,7 +90,7 @@
   // `sizeB` - The size of the second rectangle in the form [width, height]
   //
   // `return` - True if there is an intersection
-  TANK.Math.AABBInAABB = function(centerA, sizeA, centerB, sizeB)
+  TANK.Math2D.AABBInAABB = function(centerA, sizeA, centerB, sizeB)
   {
     // Right side is left of left side
     if (centerA[0] + sizeA[0] / 2 < centerB[0] - sizeB[0] / 2)
@@ -57,26 +111,6 @@
     return true;
   };
 
-  // ## Test a point against an OBB
-  // Test if a given point is inside an oriented box.
-  //
-  // `point` - An array in the form [x, y]
-  //
-  // `center` - The center point of the box in the form [x, y]
-  //
-  // `size` - The size of the box in the form [width, height]
-  //
-  // `angle` - The rotation of the box, in radians
-  //
-  // `return` - True if the point is inside the OBB
-  TANK.Math.pointInOBB = function(point, center, size, angle)
-  {
-    var pointRot = [];
-    pointRot[0] = (point[0] - center[0]) * Math.cos(-angle) - (point[1] - center[1]) * Math.sin(-angle) + center[0];
-    pointRot[1] = (point[0] - center[0]) * Math.sin(-angle) + (point[1] - center[1]) * Math.cos(-angle) + center[1];
-    return TANK.Math.pointInAABB(pointRot, center, size);
-  };
-
   // ## Line intersecting
   // Get the point of intersection, if any, between two line segments.
   //
@@ -89,15 +123,15 @@
   // `line2B` - Point B on the second line, in the form [x, y]
   //
   // `return` - A point in the form [x, y]
-  TANK.Math.lineIntersection = function(line1A, line1B, line2A, line2B)
+  TANK.Math2D.lineIntersection = function(line1A, line1B, line2A, line2B)
   {
     var r = [line1B[0] - line1A[0], line1B[1] - line1A[1]];
-    var rlen = TANK.Math.pointDistancePoint(line1A, line1B);
+    var rlen = TANK.Math2D.pointDistancePoint(line1A, line1B);
     r[0] /= rlen;
     r[1] /= rlen;
 
     var s = [line2B[0] - line2A[0], line2B[1] - line2A[1]];
-    var slen = TANK.Math.pointDistancePoint(line2A, line2B);
+    var slen = TANK.Math2D.pointDistancePoint(line2A, line2B);
     s[0] /= slen;
     s[1] /= slen;
 
@@ -128,7 +162,7 @@
   // `return` - A negative value if the direction is left, and a positive
   // value if the direction is right. The return will be 0 if the vector
   // is facing directly at `posB`.
-  TANK.Math.getDirectionToPoint = function(posA, rotationA, posB)
+  TANK.Math2D.getDirectionToPoint = function(posA, rotationA, posB)
   {
     var dir = [Math.cos(rotationA), Math.sin(rotationA)];
     var targetAngle = Math.atan2(posB[1] - posA[1], posB[0] - posA[0]);

@@ -31,19 +31,19 @@
     {
       if (this.width === 0 || this.height === 0)
       {
-        return TANK.Math.pointInOBB([this._entity.Pos2D.x, this._entity.Pos2D.y],
+        return TANK.Math2D.pointInOBB([this._entity.Pos2D.x, this._entity.Pos2D.y],
                                [other._entity.Pos2D.x, other._entity.Pos2D.y], [other.width, other.height],
                                other._entity.Pos2D.rotation);
       }
       else if (other.width === 0 || other.height === 0)
       {
-        return TANK.Math.pointInOBB([other._entity.Pos2D.x, other._entity.Pos2D.y],
+        return TANK.Math2D.pointInOBB([other._entity.Pos2D.x, other._entity.Pos2D.y],
                                [this._entity.Pos2D.x, this._entity.Pos2D.y], [this.width, this.height],
                                this._entity.Pos2D.rotation);
       }
       else
       {
-        return TANK.Math.AABBInAABB([this._entity.Pos2D.x, this._entity.Pos2D.y], [this.width, this.height],
+        return TANK.Math2D.AABBInAABB([this._entity.Pos2D.x, this._entity.Pos2D.y], [this.width, this.height],
                                [other._entity.Pos2D.x, other._entity.Pos2D.y], [other.width, other.height]);
       }
       return false;

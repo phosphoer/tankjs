@@ -294,7 +294,7 @@ dependencies</p>
         }
         c.initialize();
         <span class="hljs-keyword">var</span> space = <span class="hljs-keyword">this</span>._parent || <span class="hljs-keyword">this</span>;
-        space.dispatch(<span class="hljs-string">"componentadded"</span>, c);
+        space.dispatch(TANK.Event.componentAdded, c);
       }
     }
 
@@ -357,7 +357,7 @@ string Component name.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> space = <span class="hljs-keyword">this</span>._parent || <span class="hljs-keyword">this</span>;
-      space.dispatch(<span class="hljs-string">"componentremoved"</span>, c);</pre></div></div>
+      space.dispatch(TANK.Event.componentRemoved, c);</pre></div></div>
             
         </li>
         
@@ -368,25 +368,6 @@ string Component name.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>Remove component from tracking</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>._parent)
-      {
-        <span class="hljs-keyword">var</span> objectsWithComponent = <span class="hljs-keyword">this</span>._parent._childComponents[componentName];
-        <span class="hljs-keyword">delete</span> objectsWithComponent[<span class="hljs-keyword">this</span>._id];
-      }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
-              </div>
               <p>Uninitialize the component</p>
 
             </div>
@@ -396,11 +377,11 @@ string Component name.</p>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>Remove from map</p>
 
@@ -417,11 +398,11 @@ string Component name.</p>
         </li>
         
         
-        <li id="section-17">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <h2 id="initialize">Initialize</h2>
 <p>Initialize the Entity. This will call initialize on each
@@ -433,8 +414,29 @@ necessary to call this method manually.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  TANK.Entity.prototype.initialize = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span>
-  {</span>
-    <span class="hljs-keyword">var</span> i;</pre></div></div>
+  {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Initialize every component</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> i;
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">this</span>._componentsOrdered.length; ++i)
+    {
+      <span class="hljs-keyword">var</span> c = <span class="hljs-keyword">this</span>._componentsOrdered[i];
+      c.initialize();
+      <span class="hljs-keyword">var</span> space = <span class="hljs-keyword">this</span>._parent || <span class="hljs-keyword">this</span>;
+      space.dispatch(TANK.Event.componentAdded, c);
+    }</pre></div></div>
             
         </li>
         
@@ -444,49 +446,6 @@ necessary to call this method manually.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
-              </div>
-              <p>Track all components on the entity</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>._parent)
-    {
-      <span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> <span class="hljs-keyword">this</span>._components)
-      {
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>._parent._childComponents[i])
-          <span class="hljs-keyword">this</span>._parent._childComponents[i] = {};
-        <span class="hljs-keyword">var</span> objectsWithComponent = <span class="hljs-keyword">this</span>._parent._childComponents[i];
-        objectsWithComponent[<span class="hljs-keyword">this</span>._id] = <span class="hljs-keyword">this</span>;
-      }
-    }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
-              </div>
-              <p>Initialize every component</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">this</span>._componentsOrdered.length; ++i)
-    {
-      <span class="hljs-keyword">var</span> c = <span class="hljs-keyword">this</span>._componentsOrdered[i];
-      c.initialize();
-    }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>Initialize children</p>
 
@@ -503,11 +462,11 @@ necessary to call this method manually.</p>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <h2 id="uninitialize">Uninitialize</h2>
 <p>Uninitializes every component and child within
@@ -516,60 +475,38 @@ the Entity.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  TANK.Entity.prototype.uninitialize = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span>
-  {</span>
-    <span class="hljs-keyword">var</span> i;</pre></div></div>
+  {</span></pre></div></div>
             
         </li>
         
         
-        <li id="section-22">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
-              </div>
-              <p>Stop tracking all components in the entity</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>._parent)
-    {
-      <span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> <span class="hljs-keyword">this</span>._components)
-      {
-        <span class="hljs-keyword">var</span> objectsWithComponent = <span class="hljs-keyword">this</span>._parent._childComponents[i];
-        <span class="hljs-keyword">delete</span> objectsWithComponent[<span class="hljs-keyword">this</span>._id];
-      }
-    }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>Uninitialize every component</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">for</span> (i = <span class="hljs-keyword">this</span>._componentsOrdered.length - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; --i)
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> i;
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-keyword">this</span>._componentsOrdered.length - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; --i)
     {
       <span class="hljs-keyword">var</span> c = <span class="hljs-keyword">this</span>._componentsOrdered[i];
       <span class="hljs-keyword">var</span> space = <span class="hljs-keyword">this</span>._parent || <span class="hljs-keyword">this</span>;
-      space.dispatch(<span class="hljs-string">"componentremoved"</span>, c);
+      space.dispatch(TANK.Event.componentRemoved, c);
       c.uninitialize();
     }</pre></div></div>
             
         </li>
         
         
-        <li id="section-24">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>Uninitialize children</p>
 
@@ -586,11 +523,11 @@ the Entity.</p>
         </li>
         
         
-        <li id="section-25">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <h2 id="update">Update</h2>
 <p>Runs the update loop on the Entity one time, with the specified
@@ -608,11 +545,11 @@ loop once frame at a time.</p>
         </li>
         
         
-        <li id="section-26">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>Remove deleted children</p>
 
@@ -622,7 +559,7 @@ loop once frame at a time.</p>
     {
       <span class="hljs-keyword">var</span> id = <span class="hljs-keyword">this</span>._pendingRemove[i]._id;
       <span class="hljs-keyword">var</span> child = <span class="hljs-keyword">this</span>._children[id];
-      <span class="hljs-keyword">this</span>.dispatch(<span class="hljs-string">"childremoved"</span>, child);
+      <span class="hljs-keyword">this</span>.dispatch(TANK.Event.childRemoved, child);
       child.uninitialize();
       child._parent = <span class="hljs-literal">null</span>;
       <span class="hljs-keyword">delete</span> <span class="hljs-keyword">this</span>._children[id];
@@ -633,11 +570,11 @@ loop once frame at a time.</p>
         </li>
         
         
-        <li id="section-27">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>Dispatch pending events</p>
 
@@ -649,11 +586,11 @@ loop once frame at a time.</p>
         </li>
         
         
-        <li id="section-28">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>Dispatch the event if it’s timer has reached 0</p>
 
@@ -673,11 +610,11 @@ loop once frame at a time.</p>
         </li>
         
         
-        <li id="section-29">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>Update every component</p>
 
@@ -692,11 +629,11 @@ loop once frame at a time.</p>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>Update children</p>
 
@@ -713,11 +650,11 @@ loop once frame at a time.</p>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <h2 id="get-all-children-with-a-component">Get all children with a Component</h2>
 <p>Get every child Entity with a give component. Runs in O(1) time
@@ -735,11 +672,11 @@ as this information is collected as children are added and removed.</p>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <h2 id="get-a-child-entity">Get a child Entity</h2>
 <p>Gets a child Entity with the given name or ID.</p>
@@ -759,11 +696,11 @@ as this information is collected as children are added and removed.</p>
         </li>
         
         
-        <li id="section-33">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <h2 id="add-a-child-entity">Add a child Entity</h2>
 <p>Add an Entity as a child to this one. The child will be initialized
@@ -779,11 +716,11 @@ if this Entity is already initialized.</p>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>Check if entity is already a child of us</p>
 
@@ -798,11 +735,11 @@ if this Entity is already initialized.</p>
         </li>
         
         
-        <li id="section-35">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>The parent of a child must be initialized</p>
 
@@ -817,11 +754,11 @@ if this Entity is already initialized.</p>
         </li>
         
         
-        <li id="section-36">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p>It is invalid to add a child that already has a parent</p>
 
@@ -836,11 +773,11 @@ if this Entity is already initialized.</p>
         </li>
         
         
-        <li id="section-37">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p>Set name if provided</p>
 
@@ -852,11 +789,11 @@ if this Entity is already initialized.</p>
         </li>
         
         
-        <li id="section-38">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>Add entity as a child</p>
 
@@ -870,11 +807,11 @@ if this Entity is already initialized.</p>
         </li>
         
         
-        <li id="section-39">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>Initialize the child</p>
 
@@ -882,7 +819,7 @@ if this Entity is already initialized.</p>
             
             <div class="content"><div class='highlight'><pre>    childEntity.initialize();
 
-    <span class="hljs-keyword">this</span>.dispatch(<span class="hljs-string">"childadded"</span>, childEntity);
+    <span class="hljs-keyword">this</span>.dispatch(TANK.Event.childAdded, childEntity);
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
   };</pre></div></div>
@@ -890,11 +827,11 @@ if this Entity is already initialized.</p>
         </li>
         
         
-        <li id="section-40">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <h2 id="remove-a-child-entity">Remove a child Entity</h2>
 <p>Remove a child form the Entity. The removal of the child
@@ -910,11 +847,11 @@ will be uninitialized.</p>
         </li>
         
         
-        <li id="section-41">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p>Check if entity is a child</p>
 
@@ -928,11 +865,11 @@ will be uninitialized.</p>
         </li>
         
         
-        <li id="section-42">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p>Error otherwise</p>
 
@@ -950,11 +887,11 @@ will be uninitialized.</p>
         </li>
         
         
-        <li id="section-43">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <h2 id="dispatch-an-event-to-listeners">Dispatch an event to listeners</h2>
 <p>Dispatches an event to all listening Components.</p>
@@ -970,11 +907,11 @@ will be uninitialized.</p>
         </li>
         
         
-        <li id="section-44">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p>Copy arguments and pop off the event name</p>
 
@@ -985,11 +922,11 @@ will be uninitialized.</p>
         </li>
         
         
-        <li id="section-45">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p>Dispatch the event to listeners</p>
 
@@ -1008,11 +945,11 @@ will be uninitialized.</p>
         </li>
         
         
-        <li id="section-46">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
               <h2 id="dispatch-a-deferred-event">Dispatch a deferred event</h2>
 <p>Schedules an event to be dispatched to all listening
@@ -1032,11 +969,11 @@ Components on the next frame.</p>
         </li>
         
         
-        <li id="section-47">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <h2 id="dispatch-a-timed-event">Dispatch a timed event</h2>
 <p>Schedules an event to be dispatched to all listening
@@ -1055,7 +992,7 @@ the event</p>
     <span class="hljs-keyword">this</span>._pendingEvents.push(pendingEvent);
   };
 
-})(<span class="hljs-keyword">this</span>.TANK = <span class="hljs-keyword">this</span>.TANK || {});</pre></div></div>
+})(<span class="hljs-keyword">typeof</span> exports === <span class="hljs-string">"undefined"</span> ? (<span class="hljs-keyword">this</span>.TANK = <span class="hljs-keyword">this</span>.TANK || {}) : exports);</pre></div></div>
             
         </li>
         

@@ -132,7 +132,7 @@ string Component name.</p>
             
             <div class="content"><div class='highlight'><pre>  TANK.createEngine = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(componentNames)</span>
   {</span>
-    TANK.main = <span class="hljs-keyword">new</span> TANK.Entity(componentNames);
+    TANK.main = TANK.createEntity(componentNames);
     <span class="hljs-keyword">return</span> TANK;
   };</pre></div></div>
             
@@ -154,8 +154,8 @@ This also initializes the main engine entity.</p>
             <div class="content"><div class='highlight'><pre>  TANK.start = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span>
   {</span>
     TANK.main.initialize();
-    window.requestAnimationFrame(update);
     _running = <span class="hljs-literal">true</span>;
+    update();
     <span class="hljs-keyword">return</span> TANK;
   };</pre></div></div>
             
@@ -298,7 +298,26 @@ string Component name.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (_running)
-      window.requestAnimationFrame(update);
+    {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Use RAF in browser</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> window == <span class="hljs-string">"undefined"</span>)
+        setTimeout(update, <span class="hljs-number">16</span>);
+      <span class="hljs-keyword">else</span>
+        window.requestAnimationFrame(update);
+    }
   }
 
   <span class="hljs-keyword">var</span> _nextId = <span class="hljs-number">0</span>;
@@ -306,7 +325,7 @@ string Component name.</p>
   <span class="hljs-keyword">var</span> _running = <span class="hljs-literal">false</span>;
   TANK._registeredComponents = {};
 
-})(<span class="hljs-keyword">this</span>.TANK = <span class="hljs-keyword">this</span>.TANK || {});</pre></div></div>
+})(<span class="hljs-keyword">typeof</span> exports === <span class="hljs-string">"undefined"</span> ? (<span class="hljs-keyword">this</span>.TANK = <span class="hljs-keyword">this</span>.TANK || {}) : exports);</pre></div></div>
             
         </li>
         

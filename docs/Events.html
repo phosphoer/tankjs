@@ -168,7 +168,7 @@ The component instance is passed as a parameter.</p>
             
             <div class="content"><div class='highlight'><pre>  TANK.Event.componentRemoved = <span class="hljs-string">"componentremoved"</span>;
 
-})(<span class="hljs-keyword">this</span>.TANK = <span class="hljs-keyword">this</span>.TANK || {});</pre></div></div>
+})(<span class="hljs-keyword">typeof</span> exports === <span class="hljs-string">"undefined"</span> ? (<span class="hljs-keyword">this</span>.TANK = <span class="hljs-keyword">this</span>.TANK || {}) : exports);</pre></div></div>
             
         </li>
         

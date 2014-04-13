@@ -267,10 +267,7 @@ defined by the <code>ComponentDef</code>.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  TANK.Component.prototype.initialize = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span>
-  {</span>
-    <span class="hljs-keyword">this</span>._initialize();
-    <span class="hljs-keyword">this</span>._initialized = <span class="hljs-literal">true</span>;
-  };</pre></div></div>
+  {</span></pre></div></div>
             
         </li>
         
@@ -280,6 +277,31 @@ defined by the <code>ComponentDef</code>.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Track all components on the entity</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>._entity &amp;&amp; <span class="hljs-keyword">this</span>._entity._parent)
+    {
+      <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>._entity._parent._childComponents[<span class="hljs-keyword">this</span>._name])
+        <span class="hljs-keyword">this</span>._entity._parent._childComponents[<span class="hljs-keyword">this</span>._name] = {};
+      <span class="hljs-keyword">var</span> objectsWithComponent = <span class="hljs-keyword">this</span>._entity._parent._childComponents[<span class="hljs-keyword">this</span>._name];
+      objectsWithComponent[<span class="hljs-keyword">this</span>._entity._id] = <span class="hljs-keyword">this</span>._entity;
+    }
+
+    <span class="hljs-keyword">this</span>._initialize();
+    <span class="hljs-keyword">this</span>._initialized = <span class="hljs-literal">true</span>;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <h2 id="uninitialize">Uninitialize</h2>
 <p>Uninitializes the component, and calls the <code>uninitialize</code> method
@@ -293,11 +315,30 @@ defined by the <code>ComponentDef</code>. This removes all listeners previous ad
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Remove component from tracking</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>._entity &amp;&amp; <span class="hljs-keyword">this</span>._entity._parent)
+    {
+      <span class="hljs-keyword">var</span> objectsWithComponent = <span class="hljs-keyword">this</span>._entity._parent._childComponents[<span class="hljs-keyword">this</span>._name];
+      <span class="hljs-keyword">delete</span> objectsWithComponent[<span class="hljs-keyword">this</span>._entity._id];
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <p>Remove all listeners</p>
 
@@ -326,7 +367,7 @@ defined by the <code>ComponentDef</code>. This removes all listeners previous ad
     <span class="hljs-keyword">this</span>._initialized = <span class="hljs-literal">false</span>;
   };
 
-})(<span class="hljs-keyword">this</span>.TANK = <span class="hljs-keyword">this</span>.TANK || {});</pre></div></div>
+})(<span class="hljs-keyword">typeof</span> exports === <span class="hljs-string">"undefined"</span> ? (<span class="hljs-keyword">this</span>.TANK = <span class="hljs-keyword">this</span>.TANK || {}) : exports);</pre></div></div>
             
         </li>
         
