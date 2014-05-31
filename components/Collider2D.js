@@ -20,7 +20,13 @@
       for (var i in colliders)
       {
         var collider = colliders[i].Collider2D;
-        if (collider !== this && this.collide(collider))
+        if (collider === this)
+          continue;
+
+        if (this.collidesWith.length > 0 && this.collidesWith.indexOf(collider.collisionLayer) < 0)
+          continue;
+
+        if (this.collide(collider))
         {
           this._entity.dispatch("collide", collider._entity);
         }

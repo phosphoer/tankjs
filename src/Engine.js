@@ -40,6 +40,7 @@
   TANK.start = function()
   {
     TANK.main.initialize();
+    TANK.main.dispatch("start");
     _running = true;
     update();
     return TANK;

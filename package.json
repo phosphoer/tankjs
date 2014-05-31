@@ -1,5 +1,5 @@
 {
-  "name": "TankJS",
+  "name": "tankjs",
   "version": "0.0.1",
   "description": "A lightweight Javascript game engine framework.",
   "repository": {
@@ -14,6 +14,10 @@
     "game",
     "framework",
     "engine"
+  ],
+  "files": [
+    "src/",
+    "components/"
   ],
   "author": "David Evans",
   "license": "MIT",

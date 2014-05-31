@@ -45,6 +45,7 @@
     this._events = {};
     this._pendingEvents = [];
     this._paused = false;
+    this._deleted = false;
 
     if (componentNames)
       this.addComponent(componentNames);
@@ -335,9 +336,11 @@
     if (childEntity._name)
       this._namedChildren[childEntity._name] = childEntity;
     childEntity._parent = this;
+    childEntity._deleted = false;
 
-    // Initialize the child
-    childEntity.initialize();
+    // Initialize the child if we are initialized
+    if (this._initialized)
+      childEntity.initialize();
 
     this.dispatch(TANK.Event.childAdded, childEntity);
 
@@ -355,7 +358,13 @@
     // Check if entity is a child
     if (this._children[childEntity._id])
     {
+      // Error on double delete
+      if (childEntity._deleted)
+      {
+        console.error("An Entity was deleted twice");
+      }
       this._pendingRemove.push(childEntity);
+      childEntity._deleted = true;
     }
     // Error otherwise
     else

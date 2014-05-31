@@ -14,6 +14,16 @@
     return Math.sqrt(v[0] * v[0] + v[1] * v[1]);
   };
 
+  // ## Get the squared length of a vector (faster)
+  //
+  // `v` - An array in the form [x, y]
+  //
+  // `return` - The squared length of the vector
+  TANK.Math2D.lengthSquared = function(v)
+  {
+    return v[0] * v[0] + v[1] * v[1];
+  };
+
   // ## Dot two vectors
   //
   // `v1` - An array in the form [x, y]
@@ -36,6 +46,78 @@
   TANK.Math2D.cross = function(v1, v2)
   {
     return v1[0] * v2[1] - v1[1] * v2[0];
+  };
+
+  // ## Add two vectors
+  //
+  // `v1` - An array in the form [x, y]
+  //
+  // `v2` - An array in the form [x, y]
+  //
+  // `return` - The resulting vector [x, y]
+  TANK.Math2D.add = function(v1, v2)
+  {
+    return [v1[0] + v2[0], v1[1] + v2[1]];
+  };
+
+  // ## Subtract two vectors
+  //
+  // `v1` - An array in the form [x, y]
+  //
+  // `v2` - An array in the form [x, y]
+  //
+  // `return` - The resulting vector v1 - v2 = [x, y]
+  TANK.Math2D.subtract = function(v1, v2)
+  {
+    return [v1[0] - v2[0], v1[1] - v2[1]];
+  };
+
+  // ## Scale a vector
+  //
+  // `v` - An array in the form [x, y]
+  //
+  // `s` - The scalar to multiply with the vector
+  //
+  // `return` - The resulting vector [x, y]
+  TANK.Math2D.scale = function(v, s)
+  {
+    return [v[0] * s, v[1] * s];
+  };
+
+  // ## Rotate a vector
+  //
+  // `v` - An array in the form [x, y]
+  //
+  // `r` - Amount in radians to rotate the vector
+  //
+  // `return` - The resulting vector [x, y]
+  TANK.Math2D.rotate = function(p, r)
+  {
+    return [p[0] * Math.cos(r) - p[1] * Math.sin(r), p[1] * Math.cos(r) + p[0] * Math.sin(r)];
+  };
+
+  // ## Project a vector
+  //
+  // `v1` - Vector to project onto v2
+  //
+  // `v2` - Vector to project v1 onto
+  //
+  // `return` - The resulting vector [x, y]
+  TANK.Math2D.project = function(v1, v2)
+  {
+    return TANK.Math2D.scale(v2, TANK.Math2D.dot(v2, v1) / TANK.Math2D.lengthSquared(v2));
+  };
+
+  // ## Get distance between two points
+  //
+  // `p1` - An array in the form [x, y]
+  //
+  // `p2` - An array in the form [x, y]
+  //
+  // `return` - The scalar distance
+  TANK.Math2D.pointDistancePoint = function(p1, p2)
+  {
+    return Math.sqrt((p1[0] - p2[0]) * (p1[0] - p2[0]) + (p1[1] - p2[1]) * (p1[1] - p2[1]));
   };
 
   // ## Test a point against an AABB

@@ -12,7 +12,12 @@
   })
   .initialize(function()
   {
-    this.update = function (dt)
+    this.getSpeed = function()
+    {
+      return Math.sqrt(this.x * this.x + this.y * this.y);
+    };
+
+    this.update = function(dt)
     {
       var t = this._entity.Pos2D;
       t.x += this.x * dt;
