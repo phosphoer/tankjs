@@ -147,6 +147,7 @@ string Component name.</p>
     <span class="hljs-keyword">this</span>._events = {};
     <span class="hljs-keyword">this</span>._pendingEvents = [];
     <span class="hljs-keyword">this</span>._paused = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">this</span>._deleted = <span class="hljs-literal">false</span>;
 
     <span class="hljs-keyword">if</span> (componentNames)
       <span class="hljs-keyword">this</span>.addComponent(componentNames);
@@ -842,7 +843,8 @@ if this Entity is already initialized.</p>
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>._children[childEntity._id] = childEntity;
     <span class="hljs-keyword">if</span> (childEntity._name)
       <span class="hljs-keyword">this</span>._namedChildren[childEntity._name] = childEntity;
-    childEntity._parent = <span class="hljs-keyword">this</span>;</pre></div></div>
+    childEntity._parent = <span class="hljs-keyword">this</span>;
+    childEntity._deleted = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -853,11 +855,12 @@ if this Entity is already initialized.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
-              <p>Initialize the child</p>
+              <p>Initialize the child if we are initialized</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    childEntity.initialize();
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>._initialized)
+      childEntity.initialize();
 
     <span class="hljs-keyword">this</span>.dispatch(TANK.Event.childAdded, childEntity);
 
@@ -898,9 +901,7 @@ will be uninitialized.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>._children[childEntity._id])
-    {
-      <span class="hljs-keyword">this</span>._pendingRemove.push(childEntity);
-    }</pre></div></div>
+    {</pre></div></div>
             
         </li>
         
@@ -910,6 +911,27 @@ will be uninitialized.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p>Error on double delete</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (childEntity._deleted)
+      {
+        console.error(<span class="hljs-string">"An Entity was deleted twice"</span>);
+      }
+      <span class="hljs-keyword">this</span>._pendingRemove.push(childEntity);
+      childEntity._deleted = <span class="hljs-literal">true</span>;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p>Error otherwise</p>
 
@@ -927,11 +949,11 @@ will be uninitialized.</p>
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
               <h2 id="dispatch-an-event-to-listeners">Dispatch an event to listeners</h2>
 <p>Dispatches an event to all listening Components.</p>
@@ -947,11 +969,11 @@ will be uninitialized.</p>
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <p>Copy arguments and pop off the event name</p>
 
@@ -962,11 +984,11 @@ will be uninitialized.</p>
         </li>
         
         
-        <li id="section-44">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <p>Dispatch the event to listeners</p>
 
@@ -985,11 +1007,11 @@ will be uninitialized.</p>
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
               <h2 id="dispatch-a-deferred-event">Dispatch a deferred event</h2>
 <p>Schedules an event to be dispatched to all listening
@@ -1009,11 +1031,11 @@ Components on the next frame.</p>
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
               <h2 id="dispatch-a-timed-event">Dispatch a timed event</h2>
 <p>Schedules an event to be dispatched to all listening
