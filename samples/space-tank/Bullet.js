@@ -4,7 +4,7 @@
 
   // Register the Bullet component
   TANK.registerComponent("Bullet")
-  .includes(["Velocity", "Collider2D"])
+  .includes(["Velocity", "Collider2D", "ParticleEmitter"])
   .construct(function()
   {
     this.zdepth = 0;
@@ -14,6 +14,14 @@
   {
     var t = this._entity.Pos2D;
     var v = this._entity.Velocity;
+
+    // Set up particle emitter properties
+    var emitter = this._entity.ParticleEmitter;
+    emitter.particleDrawFunc = function(p, ctx, camera)
+    {
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(-5, -5, 10, 10);
+    };
 
     // Add ourselves to the renderer so we can perform custom drawing
     // on the context
