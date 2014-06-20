@@ -8,7 +8,7 @@ A lightweight Javascript engine framework focused on the following ideas:
 - Small
 - Made for programmers
 
-TANK is still in early development, but it is already usable! To get started, pull the repository and take a look at the `samples/` directory, or read the [docs](http://phosphoer.github.io/TankJS). More documentation will be written as the framework matures. 
+TANK is still in early development, but it is already usable! To get started, pull the repository and take a look at the `samples/` directory, or read the [docs](https://github.com/phosphoer/TankJS/wiki). More documentation will be written as the framework matures. 
 
 #Features
 
