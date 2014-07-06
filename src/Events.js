@@ -4,6 +4,12 @@
   "use strict";
   TANK.Event = TANK.Event || {};
 
+  // ## Main events
+
+  // ## Start
+  // Dispatched when `TANK.start()` is called, after the main entity is initialized.
+  TANK.Event.start = "start";
+
   // ## Entity events
 
   // ## Child added

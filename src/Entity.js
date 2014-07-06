@@ -95,7 +95,6 @@
       this._components[componentName] = c;
       this[componentName] = c;
       this._componentsOrdered.push(c);
-      c._order = this._componentsOrdered.length - 1;
       c._entity = this;
 
       // Initialize the component immediately if the entity is already initialized
@@ -145,7 +144,15 @@
       // Remove from map
       delete this[componentName];
       delete this._components[componentName];
-      this._componentsOrdered.splice(c._order, 1);
+      for (var j = 0; j < this._componentsOrdered.length; ++j)
+      {
+        if (this._componentsOrdered[j] === c)
+        {
+          this._componentsOrdered.splice(j, 1);
+          break;
+        }
+      }
+
     }
 
     return this;

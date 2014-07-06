@@ -33,7 +33,6 @@
     this._entity = null;
     this._constructed = false;
     this._initialized = false;
-    this._order = 0;
     this._listeners = [];
     this._construct();
     this._constructed = true;
