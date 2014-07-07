@@ -31,7 +31,15 @@ $ npm install
 $ gulp
 ```
 
+If you don't wish to install `gulp` globally, you should also be able to install it locally and run it from the `node_modules/` directory.
+
+```
+$ cd TankJS
+$ npm install
+$ node_modules/.bin/gulp
+```
+
 # Run tests
 ```
-$ gulp test
+$ npm test
 ```
