@@ -22,7 +22,7 @@ An Entity is a generic object whose behavior is defined by the collection of com
 All Components can listen to Entities for events. For example, each Entity will dispatch the 'childadded' event when a child is added to it. Events can be dispatched immediately, next frame, or after a certain timeout. 
 
 # Building
-Before you can run the sample projects, you'll need to build TankJS.
+Before you can run the sample projects, you'll need to build TankJS. Building requires [NodeJS](http://nodejs.org/).
 ```
 $ git clone http://github.com/phosphoer/TankJS.git
 $ cd TankJS
