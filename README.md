@@ -26,7 +26,7 @@ Before you can run the sample projects, you'll need to build TankJS. Building re
 ```
 $ git clone http://github.com/phosphoer/TankJS.git
 $ cd TankJS
-$ npm install -g gulp
+$ sudo npm install -g gulp
 $ npm install
 $ gulp
 ```
