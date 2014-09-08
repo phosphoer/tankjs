@@ -10,6 +10,12 @@
     this.y = 0;
     this.r = 0;
   })
+  .serialize(function(serializer)
+  {
+    serializer.property(this, 'x', 0);
+    serializer.property(this, 'y', 0);
+    serializer.property(this, 'r', 0);
+  })
   .initialize(function()
   {
     this.getSpeed = function()

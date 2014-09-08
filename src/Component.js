@@ -28,6 +28,7 @@
   {
     this._name = componentDef._name;
     this._construct = componentDef._construct;
+    this._serialize = componentDef._serialize;
     this._initialize = componentDef._initialize;
     this._uninitialize = componentDef._uninitialize;
     this._entity = null;
@@ -121,6 +122,14 @@
 
     this._initialize();
     this._initialized = true;
+  };
+
+  // ## Serialize
+  // Serializes the component by calling the `serialize` method defined by the
+  // `ComponentDef`.
+  TANK.Component.prototype.serialize = function(serializer)
+  {
+    this._serialize(serializer);
   };
 
   // ## Uninitialize

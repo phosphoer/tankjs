@@ -24,6 +24,16 @@
     return v[0] * v[0] + v[1] * v[1];
   };
 
+  // ## Get the normalized form of a vector
+  //
+  // `v` - The vector to normalize
+  //
+  // `return` - The normalized vector
+  TANK.Math2D.normalize = function(v)
+  {
+    return TANK.Math2D.scale(v, 1 / TANK.Math2D.length(v));
+  };
+
   // ## Dot two vectors
   //
   // `v1` - An array in the form [x, y]
@@ -108,6 +118,21 @@
     return TANK.Math2D.scale(v2, TANK.Math2D.dot(v2, v1) / TANK.Math2D.lengthSquared(v2));
   };
 
+  // ## Project a point onto a line
+  //
+  // `p` - The point to project
+  //
+  // `linePos` - The origin point of the line
+  //
+  // `lineVec` - A vector denoting the direction of the line
+  //
+  // `return` - The projection of `p` onto the line
+  TANK.Math2D.projectOntoLine = function(p, linePos, lineVec)
+  {
+    var lineVecNorm = TANK.Math2D.normalize(lineVec);
+    return TANK.Math2D.add(linePos, TANK.Math2D.scale(lineVecNorm, TANK.Math2D.dot(TANK.Math2D.subtract(p, linePos), lineVecNorm)));
+  };
+
   // ## Get distance between two points
   //
   // `p1` - An array in the form [x, y]
@@ -118,6 +143,43 @@
   TANK.Math2D.pointDistancePoint = function(p1, p2)
   {
     return Math.sqrt((p1[0] - p2[0]) * (p1[0] - p2[0]) + (p1[1] - p2[1]) * (p1[1] - p2[1]));
+  };
+
+  // ## Get distance from a point to a line
+  //
+  // `p` - The point
+  //
+  // `lineA` - The origin point of the line
+  //
+  // `lineB` - The end point of the line
+  //
+  // `isSegment` - Whether the line should be treated as a segment or an infinite line
+  //
+  // `return` - The scalar distance
+  TANK.Math2D.pointDistanceLine = function(p, lineA, lineB, isSegment)
+  {
+    var lineVec = TANK.Math2D.subtract(lineB, lineA);
+    var lengthSquared = TANK.Math2D.lengthSquared(lineVec);
+
+    // lineA === lineB case
+    if (lengthSquared === 0)
+      return TANK.Math2D.pointDistancePoint(lineA, p);
+
+    // Calculate t, the scalar along the line where the projection of p onto the line falls
+    var t = TANK.Math2D.dot(TANK.Math2D.subtract(p, lineA), lineVec) / lengthSquared;
+
+    // p is off the segment in the < 0 or > 1 cases
+    if (isSegment)
+    {
+      if (t < 0)
+        return TANK.Math2D.pointDistancePoint(p, lineA);
+      else if (t > 1)
+        return TANK.Math2D.pointDistancePoint(p, lineB);
+    }
+
+    // p is on the segment
+    var projection = TANK.Math2D.projectOntoLine(p, lineA, lineVec);
+    return TANK.Math2D.pointDistancePoint(p, projection);
   };
 
   // ## Test a point against an AABB

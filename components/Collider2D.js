@@ -12,6 +12,13 @@
     this.collisionLayer = "";
     this.collidesWith = [""];
   })
+  .serialize(function (serializer)
+  {
+    serializer.property(this, 'width', 0);
+    serializer.property(this, 'height', 0);
+    serializer.property(this, 'collisionLayer', '');
+    serializer.property(this, 'collidesWith', ['']);
+  })
   .initialize(function ()
   {
     this.update = function(dt)

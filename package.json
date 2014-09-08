@@ -26,11 +26,11 @@
   },
   "homepage": "https://github.com/phosphoer/TankJS",
   "devDependencies": {
-    "mocha": "~1.18.2",
     "chai": "~1.9.1",
-    "gulp": "~3.6.0",
-    "gulp-concat": "~2.2.0",
-    "gulp-uglify": "~0.2.1",
-    "gulp-rename": "~1.2.0"
+    "gulp": ">3.8.0",
+    "gulp-concat": "^2.4.0",
+    "gulp-rename": "~1.2.0",
+    "gulp-uglify": "^0.2.1",
+    "mocha": "^1.21.4"
   }
 }

@@ -72,16 +72,23 @@
       this.context.scale(1 / this.camera.z, 1 / this.camera.z);
 
       // Draw all drawables
-      for (var i in this._drawablesSorted)
-        this._drawablesSorted[i].draw(this.context, this.camera, dt);
+      var isDirty = false;
+      var component;
+      for (var i = 0; i < this._drawablesSorted.length; ++i)
+      {
+        component = this._drawablesSorted[i];
+        if (!component._initialized)
+        {
+          delete this._drawables[component._name + component._entity._id];
+          isDirty = true;
+        }
+        else
+          this._drawablesSorted[i].draw(this.context, this.camera, dt);
+      }
       this.context.restore();
-    };
 
-    // Listen to Components being removed
-    this.listenTo(this._entity, "componentremoved", function(component)
-    {
-      delete this._drawables[component._name + component._entity._id];
-      this._sort();
-    });
+      if (isDirty)
+        this._sort();
+    };
   });
 })();

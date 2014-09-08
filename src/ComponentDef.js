@@ -34,6 +34,7 @@
     this._name = name;
     this._includes = [];
     this._construct = function() {};
+    this._serialize = function() {};
     this._initialize = function() {};
     this._uninitialize = function() {};
   };
@@ -71,6 +72,19 @@
   TANK.ComponentDef.prototype.construct = function(func)
   {
     this._construct = func;
+    return this;
+  };
+
+  // ## Define a serialize method
+  // Define a function that will be called when the component is
+  // serialized (either a read or a write).
+  //
+  // `func` - A function that will be used to construct the component.
+  // The function is invoked with `this` pointing at the component
+  // instance. The function takes as a parameter a `Serializer`.
+  TANK.ComponentDef.prototype.serialize = function(func)
+  {
+    this._serialize = func;
     return this;
   };
 

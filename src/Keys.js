@@ -53,6 +53,7 @@
   TANK.Key.Z = 90;
 
   // ## Number keys (not numpad)
+  TANK.Key.NUM0 = 48;
   TANK.Key.NUM1 = 49;
   TANK.Key.NUM2 = 50;
   TANK.Key.NUM3 = 51;
@@ -62,6 +63,5 @@
   TANK.Key.NUM7 = 55;
   TANK.Key.NUM8 = 56;
   TANK.Key.NUM9 = 57;
-  TANK.Key.NUM0 = 48;
 
 })(typeof exports === "undefined" ? (this.TANK = this.TANK || {}) : exports);

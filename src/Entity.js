@@ -209,6 +209,67 @@
     return this;
   };
 
+  // ## Write the entity to a JSON object
+  // Builds a JSON representation of the entity by calling
+  // serialize on every component
+  TANK.Entity.prototype.save = function()
+  {
+    // Save some information about the entity itself
+    var json = {};
+    json.name = this._name;
+
+    // Save each component
+    json.components = {};
+    for (var i = 0; i < this._componentsOrdered.length; ++i)
+    {
+      var c = this._componentsOrdered[i];
+      var writer = new TANK.WriteSerializer();
+      c.serialize(writer);
+
+      json.components[c._name] = writer._writeObj;
+    }
+
+    // Save each child
+    json.children = [];
+    for (var i in this._children)
+    {
+      var child = this._children[i];
+      json.children.push(child.save());
+    }
+
+    return json;
+  };
+
+  // ## Read a JSON object into an entity
+  // Builds the entity from a JSON object by calling
+  // serialize on each component.
+  TANK.Entity.prototype.load = function(json)
+  {
+    // Read some information about the entity itself
+    json.components = json.components || {};
+    json.children = json.children || {};
+    this._name = json.name;
+
+    // Load each component
+    for (var i in json.components)
+    {
+      this.addComponent(i);
+      var c = this._components[i];
+      var reader = new TANK.ReadSerializer(json.components[i]);
+      if (typeof c.serialize === 'function')
+        c.serialize(reader);
+    }
+
+    // Load each child
+    for (var i = 0; i < json.children.length; ++i)
+    {
+      var childObj = json.children[i];
+      var e = TANK.createEntity();
+      e.load(childObj);
+      this.addChild(e);
+    }
+  };
+
   // ## Pause the entity
   TANK.Entity.prototype.pause = function()
   {
@@ -381,6 +442,12 @@
     }
 
     return this;
+  };
+
+  TANK.Entity.prototype.removeAllChildren = function()
+  {
+    for (var i in this._children)
+      this.removeChild(this._children[i]);
   };
 
   // ## Dispatch an event to listeners
