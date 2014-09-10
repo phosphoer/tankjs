@@ -1,12 +1,12 @@
 (function()
 {
-  "use strict";
+  'use strict';
 
   // Register the Enemy component and include
   // the Image, Velocity, and Collider2D components as required
   // components
-  TANK.registerComponent("Enemy")
-  .includes(["Image", "Velocity", "Collider2D"])
+  TANK.registerComponent('Enemy')
+  .includes(['Image', 'Velocity', 'Collider2D'])
   .construct(function()
   {
     //  Set movement speed
@@ -23,7 +23,7 @@
     // Set image source and also the collider width
     // I set the size of the collider manually but it should
     // really be tied to the image
-    this._entity.Image.image.src = "enemy.png";
+    this._entity.Image.image.src = 'enemy.png';
     this._entity.Image.scale = 2;
     this._entity.Collider2D.width = 128;
     this._entity.Collider2D.height = 128;
@@ -32,7 +32,7 @@
     v.x = -this.speed;
 
     // Listen to the collide event on our own entity
-    this.listenTo(this._entity, "collide", function(entity)
+    this.listenTo(this._entity, 'collide', function(entity)
     {
       this._entity._parent.removeChild(this._entity);
       entity._parent.removeChild(entity);

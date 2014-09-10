@@ -1,10 +1,10 @@
 (function()
 {
-  "use strict";
+  'use strict';
 
   // Register the Bullet component
-  TANK.registerComponent("Bullet")
-  .includes(["Velocity", "Collider2D", "ParticleEmitter"])
+  TANK.registerComponent('Bullet')
+  .includes(['Velocity', 'Collider2D', 'ParticleEmitter'])
   .construct(function()
   {
     this.zdepth = 0;
@@ -19,7 +19,7 @@
     var emitter = this._entity.ParticleEmitter;
     emitter.particleDrawFunc = function(p, ctx, camera)
     {
-      ctx.fillStyle = "#fff";
+      ctx.fillStyle = '#fff';
       ctx.fillRect(-5, -5, 10, 10);
     };
 
@@ -44,7 +44,7 @@
     {
       ctx.save();
       ctx.translate(t.x - camera.x, t.y - camera.y);
-      ctx.fillStyle ="#fff";
+      ctx.fillStyle ='#fff';
       ctx.fillRect(0, 0, 5, 5);
       ctx.restore();
     };

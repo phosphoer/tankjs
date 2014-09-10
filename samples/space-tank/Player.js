@@ -1,13 +1,13 @@
 (function()
 {
-  "use strict";
+  'use strict';
 
   // Register the Player component and mark the Image
   // and Velocity components as required.
   // The Image and Velocity components both include
   // Pos2D themselves
-  TANK.registerComponent("Player")
-  .includes(["Image", "Velocity"])
+  TANK.registerComponent('Player')
+  .includes(['Image', 'Velocity'])
   .construct(function()
   {
     // Set some default values for the Player controller
@@ -31,7 +31,7 @@
     var v = this._entity.Velocity;
 
     // Load the image for the player
-    this._entity.Image.image.src = "space-tank.png";
+    this._entity.Image.image.src = 'space-tank.png';
     this._entity.Image.scale = 5;
     this._entity.Image.pivotPoint[1] = -8;
 
@@ -43,7 +43,7 @@
     {
       // Create a new entity using the Bullet component and position it
       // accordingly
-      var e = TANK.createEntity("Bullet");
+      var e = TANK.createEntity('Bullet');
       e.Pos2D.x = t.x + Math.cos(this.gunAngle + t.rotation) * 50;
       e.Pos2D.y = t.y - 40 + Math.sin(this.gunAngle + t.rotation) * 50;
       e.Velocity.x = Math.cos(this.gunAngle + t.rotation) * 700;
@@ -61,7 +61,7 @@
         this.fuel = 10;
 
       // Get the ground component from the Level entity
-      var ground = TANK.main.getChild("Level").Ground;
+      var ground = TANK.main.getChild('Level').Ground;
 
       // Gravity
       var groundHeight = ground.getHeight(t.x);
@@ -89,7 +89,7 @@
 
     // Listen for the keydown event on the main engine entity
     // since that is the one with the Input component on it
-    this.listenTo(TANK.main, "keydown", function(e)
+    this.listenTo(TANK.main, 'keydown', function(e)
     {
       if (e.keyCode === TANK.Key.W)
         this.up = true;
@@ -97,7 +97,7 @@
         this.shoot();
     });
 
-    this.listenTo(TANK.main, "keyup", function(e)
+    this.listenTo(TANK.main, 'keyup', function(e)
     {
       if (e.keyCode === TANK.Key.W)
         this.up = false;
