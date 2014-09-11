@@ -1,6 +1,6 @@
 {
   "name": "tankjs",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "A lightweight Javascript game engine framework.",
   "repository": {
     "type": "git",
