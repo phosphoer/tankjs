@@ -3,7 +3,7 @@
 // Copyright (c) 2013 David Evans
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
+// of this software and associated documentation files (the 'Software'), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
@@ -22,7 +22,7 @@
 // events and be paused individually.
 (function(TANK)
 {
-  "use strict";
+  'use strict';
 
   // ## Entity Constructor
   // Construct a new Entity object. Takes a Component name
@@ -75,14 +75,14 @@
       var componentDef = TANK._registeredComponents[componentName];
       if (!componentDef)
       {
-        console.error("No Component is registered with name: " + componentName + ". Did you include it?");
+        console.error('No Component is registered with name: ' + componentName + '. Did you include it?');
         continue;
       }
 
       // Add placeholder component to prevent duplicate adds while parsing
       // dependencies
-      this._components[componentName] = "Placeholder";
-      this[componentName] = "Placeholder";
+      this._components[componentName] = 'Placeholder';
+      this[componentName] = 'Placeholder';
 
       // Add component dependencies
       for (var j = 0; j < componentDef._includes.length; ++j)
@@ -246,6 +246,7 @@
   TANK.Entity.prototype.load = function(json)
   {
     // Read some information about the entity itself
+    json = JSON.parse(JSON.stringify(json));
     json.components = json.components || {};
     json.children = json.children || {};
     this._name = json.name;
@@ -340,7 +341,7 @@
   };
 
   // ## Get all children with a Component
-  // Get every child Entity with a give component. Runs in O(1) time
+  // Get every child Entity with a given component. Runs in O(1) time
   // as this information is collected as children are added and removed.
   //
   // `componentName` - Name of the component to match Entities with
@@ -349,6 +350,18 @@
   TANK.Entity.prototype.getChildrenWithComponent = function(componentName)
   {
     return this._childComponents[componentName];
+  };
+
+  // ## Get the first parent with the specified component
+  // Walks up the entity hierarchy until an entity with the given
+  // component is found. This runs in O(n) time where n is the number
+  // of parents the entity has.
+  TANK.Entity.prototype.getFirstParentWithComponent = function(componentName)
+  {
+    var e = this;
+    while (e && !e[componentName])
+      e = e._parent;
+    return e;
   };
 
   // ## Get a child Entity
@@ -377,21 +390,21 @@
     // Check if entity is already a child of us
     if (childEntity._parent === this)
     {
-      console.error("An Entity cannot have duplicate children");
+      console.error('An Entity cannot have duplicate children');
       return this;
     }
 
     // The parent of a child must be initialized
     if (!this._initialized && childEntity._initialized)
     {
-      console.error("An initialized Entity cannot have an uninitialized parent");
+      console.error('An initialized Entity cannot have an uninitialized parent');
       return this;
     }
 
     // It is invalid to add a child that already has a parent
     if (childEntity._parent)
     {
-      console.error("An Entity cannot be given multiple parents");
+      console.error('An Entity cannot be given multiple parents');
       return this;
     }
 
@@ -429,7 +442,7 @@
       // Error on double delete
       if (childEntity._deleted)
       {
-        console.error("An Entity was deleted twice");
+        console.error('An Entity was deleted twice');
       }
       this._pendingRemove.push(childEntity);
       childEntity._deleted = true;
@@ -437,7 +450,7 @@
     // Error otherwise
     else
     {
-      console.error("The Entity being removed is not a child of the calling Entity");
+      console.error('The Entity being removed is not a child of the calling Entity');
       return this;
     }
 
@@ -505,4 +518,4 @@
     this._pendingEvents.push(pendingEvent);
   };
 
-})(typeof exports === "undefined" ? (this.TANK = this.TANK || {}) : exports);
+})(typeof exports === 'undefined' ? (this.TANK = this.TANK || {}) : exports);

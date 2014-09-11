@@ -17,19 +17,10 @@
     var t = this._entity.Pos2D;
 
     // Check if we can find a render manager to register with
-    if (!this._entity._parent)
-    {
-      console.error("The Entity the Image component was added to has no parent");
-      return;
-    }
-    else if (!this._entity._parent.Renderer2D)
-    {
-      console.error("The Image component couldn't find a Renderer2D to register with");
-      return;
-    }
-
-    // Add ourselves to render manager
-    this._entity._parent.Renderer2D.add(this);
+    var space = this._entity.getFirstParentWithComponent('Renderer2D');
+    if (!space)
+      console.error('The Image component couldn\'t find a Renderer2D to register with');
+    space.Renderer2D.add(this);
 
     // Draw function
     this.draw = function(ctx, camera)

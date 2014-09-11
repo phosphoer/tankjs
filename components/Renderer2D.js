@@ -1,14 +1,14 @@
 (function()
 {
-  "use strict";
+  'use strict';
 
-  TANK.registerComponent("Renderer2D")
+  TANK.registerComponent('Renderer2D')
 
   .construct(function()
   {
     this.context = null;
     this.camera = {x: 0, y: 0, z: 1};
-    this.clearColor = "#000";
+    this.clearColor = '#000';
     this.nearestNeighbor = true;
     this._drawables = {};
     this._drawablesSorted = [];
@@ -21,7 +21,7 @@
     {
       if (component.zdepth === undefined)
       {
-        console.warn("A component was added to Renderer2D with an undefined zdepth");
+        console.error('A component was added to Renderer2D with an undefined zdepth');
         component.zdepth = 0;
       }
       this._drawables[component._name + component._entity._id] = component;

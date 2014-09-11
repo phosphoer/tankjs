@@ -42,7 +42,11 @@
   })
   .initialize(function ()
   {
-    TANK.main.CollisionManager.add(this);
+    // Check if we can find a render manager to register with
+    var space = this._entity.getFirstParentWithComponent('CollisionManager');
+    if (!space)
+      console.error('The Collider2D component couldn\'t find a CollisionManager to register with');
+    space.CollisionManager.add(this);
   });
 
 })();

@@ -15,11 +15,11 @@
         component.collidesWith = [];
 
       if (!component.width)
-        console.warn('A component was added to CollisionManager with no width');
+        console.error('A component was added to CollisionManager with no width');
       else if (!component.height)
-        console.warn('A component was added to CollisionManager with no height');
+        console.error('A component was added to CollisionManager with no height');
       else if (typeof component.testCollision !== 'function')
-        console.warn('A component was added to CollisionManager with no testCollision function');
+        console.error('A component was added to CollisionManager with no testCollision function');
       else if (!component.collisionLayer && component.collidesWith.length > 0)
         console.error('A component was added to CollisionManager with collidesWith but no collisionLayer');
       else if (!component.collidesWith.length && component.collisionLayer)
