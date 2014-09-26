@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/phosphoer/TankJS.svg)](https://travis-ci.org/phosphoer/TankJS)
 
 # TANK
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/phosphoer/TankJS?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 A lightweight Javascript engine framework focused on the following ideas:
 
