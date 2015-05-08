@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/phosphoer/TankJS.svg)](https://travis-ci.org/phosphoer/TankJS)
+[![Build Status](https://travis-ci.org/phosphoer/tankjs.svg)](https://travis-ci.org/phosphoer/tankjs)
 
 # TANK
 
