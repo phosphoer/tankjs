@@ -24,8 +24,8 @@ All Components can listen to Entities for events. For example, each Entity will 
 # Building
 Before you can run the sample projects, you'll need to build TankJS. Building requires [NodeJS](http://nodejs.org/).
 ```
-$ git clone http://github.com/phosphoer/TankJS.git
-$ cd TankJS
+$ git clone http://github.com/phosphoer/tankjs.git
+$ cd tankjs
 $ sudo npm install -g gulp
 $ npm install
 $ gulp
