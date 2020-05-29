@@ -1,5 +1,9 @@
 [![Build Status](https://travis-ci.org/phosphoer/tankjs.svg)](https://travis-ci.org/phosphoer/tankjs)
 
+# Note 
+
+This project is quite out of date and not really how I'd write a JS library anymore. It should still work though!
+
 # TANK
 
 A lightweight Javascript engine framework focused on the following ideas:
